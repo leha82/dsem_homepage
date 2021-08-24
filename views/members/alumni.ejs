@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>DSEM Lab.</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+    <script src="/js/iconify.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
+    <!-- <script src="/js/AdminLTE/dashboard.js" type="text/javascript"></script> -->
+    <script src="/js/function.js"></script>
+</head>
+
+<body class="skin-black">
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 230px; padding-top: 150px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 400px;">
+                <div class="login-form">
+                    <h1>Login</h1>
+                    <input type="text" id='uId' name="username" placeholder="Username" required>
+                    <input type="password" id='uPw' name="password" placeholder="Password" required>
+                    <input type="submit" onclick="login()" value="Login">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 150px; padding-top: 120px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 550px;">
+                <div class="modal-header" style="height: 40px;">
+                    <center style="font-size: 18px;">New</center>
+                </div>
+                <div class="modal-body">
+                    <% let new_member=['name','department' , 'Email' , 'YearOfAdmission' , 'ResearchTopics' ]; for(let
+                        i=0; i<new_member.length; i++) { %>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+                                <%= new_member[i] + ':' %>
+                            </h13>
+                            <input style="margin-left:50px; width: 350px;" id="<%=new_member[i]%>" />
+                        </div>
+                        <% } %>
+                            <br>
+                            <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
+                        onclick="alumni()">Save</button>
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--#Edit-->
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" style=" padding-left: 150px; padding-top: 120px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 670px;">
+                <div class="modal-header" style="height: 40px;">
+                    <center style="font-size: 18px;">Edit</center>
+                </div>
+                <div class="modal-body">
+                    <% let edit=['name', 'department' , 'laboratory' , 'email' , 'location' , 'research' ]; for(let i=0;
+                        i<edit.length; i++) { %>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13>
+                                <%= edit[i] + ':' %>
+                            </h13>
+                            <input style="margin-left:0px; width: 350px;" id='name' />
+                        </div>
+                        <br>
+                        <% } %>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="save()">Save</button>
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
+        <div class="content-header" style="height: 30px">
+            <h1>Alumni
+                <% if(userInfo!=null) { %>
+                <a href="#" data-toggle="modal" data-target="#edit" type="button" class="btn btn-default"
+                    style="float:right; height: 35px;">
+                    <h14 style="font-size: 15px;">
+                        Edit
+                    </h14>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary"
+                    style="float:right; height: 35px;">
+                    <h14 style="font-size: 15px;">
+                        New
+                    </h14>
+                </a>
+                <% } %></h1>
+        </div>
+        <section class="content">
+            <div class="row" style="padding-left: 12px;">
+                <div class="box box-info">
+                    <div class="box-header">
+                    </div>
+                    <% for(let i=0; i<alumni_results.length; i++) { %>
+                        <div class="box-body">
+                            <img src=<%="/img/" +alumni_results[i][1] + ".jpg" %> align="left"/>
+                            <h10>
+                                <strong>
+                                    <%= alumni_results[i][1] %>
+                                </strong>
+                            </h10>
+                            <li>
+                                Department : <%= alumni_results[i][3]%>
+                            </li>
+                            <li>
+                                E-mail : <%= alumni_results[i][4]%>
+                            </li>
+                            <li>
+                                Year of admission : <%= alumni_results[i][5]%>
+                            </li>
+                            <li>
+                                Year of graduation : <%= alumni_results[i][6]%>
+                            </li>
+                            <li>
+                                Research topics : <%= alumni_results[i][7]%>
+                            </li>
+                            <a href="#" data-toggle="" data-target="#performance" type="button"
+                                style="height: 32px; color: black;" class="btn btn-default">
+                                <h14 style="font-size: 14px;">
+                                    실적보기
+                                </h14>
+                            </a>
+                            <br><br>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+        </section>
+    </aside>
+    </div>
+</body>
+
+</html>
