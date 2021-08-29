@@ -35,6 +35,7 @@
             document.getElementById('conference').className = 'btn btn-primary conferenceBtn';
         })
     </script>
+    <!--  updateBtn -->
     <script>
         let paperInfo = [];
         $(".updateBtn").click(function () {
@@ -42,7 +43,7 @@
 
             var tr = updateBtn.parent().parent().parent();
             var td = tr.children();
-
+            
             td.each(function (i) {
                 paperInfo[i] = td.eq(i).text().trim();
             })
