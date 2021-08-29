@@ -226,12 +226,13 @@
         <div class="content-header" style="height:30px">
             <h1>Researcher
 <%              if(userInfo!=null) { %>
-                <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px;">
+    &nbsp;
+                <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
                     <h14 style="font-size: 15px;">
                         Edit
                     </h14>
                 </a>
-                <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px;">
+                <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
                     <h14 style="font-size: 15px;">
                         New
                     </h14>
@@ -246,7 +247,8 @@
                     </div>
 <%                  for(let i=0; i<researcher_results.length; i++) {        %>
                         <div class="box-body">
-                            <img src= <%="/img/" +researcher_results[i][1] + ".jpg" %> align="left"/>
+
+                        <img src = <%="/img/" +researcher_results[i][1] + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
                             <h10>
                                 <strong>
 <%=                                 researcher_results[i][1]                %>
@@ -273,7 +275,7 @@
                             <research></research>
                             <br>
                         </div>
-                        <% } %>
+<%                  } %>
 
                 </div>
             </div>

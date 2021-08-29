@@ -13,28 +13,319 @@
     <script src="/js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
-    <!-- <script src="/js/AdminLTE/dashboard.js" type="text/javascript"></script> -->
     <script src="/js/function.js"></script>
+
+    <!-- 삭제할 때 테이블의 해당 행 삭제되어 보이도록 함 -->
+    <script>
+        function rowDel(obj) {
+            var Del_tr = obj.parentNode.parentNode.parentNode;
+            console.log(Del_tr);
+            Del_tr.parentNode.removeChild(Del_tr);
+        }
+    </script>
+
+    <!-- Journal, Conference 클릭 시 -->
+    <script>
+        $(".journalBtn").click(function () {
+            document.getElementById('journal').className = 'btn btn-primary journalBtn';
+            document.getElementById('conference').className = 'btn btn-default conferenceBtn';
+        });
+        $(".conferenceBtn").click(function () {
+            document.getElementById('journal').className = 'btn btn-default journalBtn';
+            document.getElementById('conference').className = 'btn btn-primary conferenceBtn';
+        })
+    </script>
+    <script>
+        let paperInfo = [];
+        $(".updateBtn").click(function () {
+            var updateBtn = $(this);
+
+            var tr = updateBtn.parent().parent().parent();
+            var td = tr.children();
+
+            td.each(function (i) {
+                paperInfo[i] = td.eq(i).text().trim();
+            })
+            $("input[name=number]").attr('value', paperInfo[0]);
+            $("input[name=year]").attr('value', paperInfo[1]);
+            $("input[name=part]").attr('value', paperInfo[2]);
+            $("input[name=date]").attr('value', paperInfo[3]);
+            $("input[name=authors]").attr('value', paperInfo[4]);
+            $("input[name=title]").attr('value', paperInfo[5]);
+            $("input[name=journal_name]").attr('value', paperInfo[6]);
+            $("input[name=other]").attr('value', paperInfo[7]);
+            $("input[name=ISSN]").attr('value', paperInfo[8]);
+            $("input[name=paper_index]").attr('value', paperInfo[9]);
+            $("input[name=IF_]").attr('value', paperInfo[10]);
+            $("input[name=found_]").attr('value', paperInfo[11]);
+            $("input[name=doi]").attr('value', paperInfo[12]);
+
+        });
+    </script>
 </head>
 
 <body class="skin-black">
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 230px; padding-top: 150px;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 400px;">
-                <div class="login-form">
-                    <h1>Login</h1>
-                    <input type="text" id='uId' name="username" placeholder="Username" required>
-                    <input type="password" id='uPw' name="password" placeholder="Password" required>
-                    <input type="submit" onclick="login()" value="Login">
-                </div>
+    <%
+                                // DB 데이터 배열에 담기
+                                let year = []; // 존재하는 논문의 년도
+                                for(let i =0; i<paper_results.length; i++) {
+                                    for(let j =0; j<paper_results[i].length; j++) {
+                                        if(year.includes(paper_results[i][j][1])) { 
+                                            continue;
+                                        }
+                                        if(paper_results[i][j][1] != (null || '')) { 
+                                            year.push(paper_results[i][j][1]);                                    
+                                        }
+                                    }
+                                }
+                                year.sort();
+                                year.reverse();
 
+                                let IJ = [], DJ = [], IC = [], DC = [];
+                                for(let i =0; i<paper_results.length; i++) {
+                                    for(let j =0; j<paper_results[i].length; j++) { 
+                                        if(paper_results[i][j][2] == 'IJ') {                                                
+                                            IJ.push(paper_results[i][j]);
+                                        } else if(paper_results[i][j][2] == 'DJ') {
+                                            DJ.push(paper_results[i][j]);
+                                        } else if(paper_results[i][j][2] == 'IC') {
+                                            IC.push(paper_results[i][j]);
+                                        } else if(paper_results[i][j][2] == 'DC') {
+                                            DC.push(paper_results[i][j]);
+                                        }              
+                                    }
+                                }
+%>
+    <!--#New, 논문-->
+    <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 150px; padding-top: 120px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 550px;">
+                <div class="modal-header" style="height: 50px;">
+                    <center style="font-size: 18px;">New</center>
+                </div>
+                <div class="modal-body">
+<%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ];
+                    for(let i=0; i<new_member.length; i++) {
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+<%=                             new_member[i] + ':' %>
+                            </h13>
+                            <input style="margin-left:50px; width: 350px" id='<%= 'researcherInsert_' + new_member[i]%>' />
+                        </div>
+<%                      }           %>
+                        <br>
+                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile"/>
+                </div>
                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
+                        onclick="researcher()">Save</button>
                     <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
                 </div>
             </div>
         </div>
     </div>
+    <!--#list, DB에서 조회-->
+    <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" margin-left: -1210px; padding-top: 40px; ">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content" style="width: 1830px; height: 800px;">
+                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                <div class="modal-header" style="height: 50px;">
+                    <center style="font-size: 18px;">
+                        <string>
+                            Paper list
+                        </string>
+                    </center>
+                </div>
+                &nbsp;
+                <button type="submit" class= "btn btn-primary journalBtn" id = "journal">Journal</button>
+                <button type="submit" class= "btn btn-default conferenceBtn" id = "conference">Conference</button>
+                <br>
+                <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;">
+                    <table class="table table-hover memberTable" id="journalTable">
+                    <thread>
+                        <tr style="width:auto;">
+                            <th>
+                                <center>
+                                    Number
+                                </center>
+                            </th>
+                            <th>
+                                <center>year</center>
+                            </th>
+                            <th>
+                                <center>part</center>
+                            </th>
+                            <th>
+                                <center>date</center>
+                            </th>
+                            <th>
+                                <center>authors</center>
+                            </th>
+                            <th>
+                                <center>title</center>
+                            </th>
+                            <th>
+                                <center>journal_name</center>
+                            </th>
+                            <th>
+                                <center>other</center>
+                            </th>
+                            <th>
+                                <center>ISSN</center>
+                            </th>
+                            <th>
+                                <center>paper_index</center>
+                            </th>
+                            <th>
+                                <center>IF_</center>
+                            </th>
+                            <th>
+                                <center>found_</center>
+                            </th>
+                            <th>
+                                <center>doi</center>
+                            </th>
+                            <th>
+                                <center>Edit</center>
+                            </th>
+                            <th>
+                                <center>Delete</center>
+                            </th>
+                        </tr>
+                    </thread>
+                    <tbody>
+<%                                      
+                        var journal = IJ.concat(DJ);
+%>
+<%                      for(let i=0; i<journal.length; i++) {    %>
+                            <tr style="width:auto;">
+                                <td>
+                                    <center>
+<%=                                     i+1                                 %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     journal[i][1]           %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     journal[i][2]          %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][3]            %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][4]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     journal[i][5]        %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][6]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][7]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][8]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     journal[i][9]     %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     journal[i][10]     %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][11]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    journal[i][12]       %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+                                        <a href="#" class="btn btn-default updateBtn" data-toggle="modal"
+                                            data-target="#edit" type="button">
+                                            수정</a>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+                                        <a type="button" class="btn btn-primary"
+                                            onclick="paper_delete('<%= journal[i][5] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                    </center>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                    </table>
+                </div>
+
+                <br>
+            </div> -->
+        </div>
+    </div>
+    <!--   #list -> #edit   -->
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 60px; padding-top: 40px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 850px;">
+                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right"
+                        onclick="journal_update()">Save</button>
+                <div class="modal-header" style="height: 50px;">
+                    <center style="font-size: 18px;">Edit</center>
+                </div>
+                <div class="modal-body">
+<%                  let edit_paper=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
+                    for(let i=0; i<edit_paper.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+<%=                             edit_paper[i] + ':'    %>
+                            </h13>
+<%                              if(i == 0) {            %>
+                                <input type='text' name='<%=edit_paper[i]%>' id='<%='paperUpdate_' + edit_paper[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
+<%                              } else {                %> 
+                                <input type='text' name='<%=edit_paper[i]%>' id='<%='paperUpdate_' + edit_paper[i]%>'value = '' style="margin-left:50px; width: 350px"/>
+<%                              }                       %>
+                        </div>
+<%                      }                               %>
+                        <br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
     <!--#Edit-->
     <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
@@ -64,20 +355,19 @@
     <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
         <div class="content-header" style="height: 30px;">
             <h1>Paper
-                <% if(userInfo!=null) { %>
-                    <a href="#" data-toggle="modal" data-target="#edit" type="button" class="btn btn-default"
-                        style="float:right; height: 35px;">
-                        <h14 style="font-size: 15px;">
-                            Edit
-                        </h14>
-                    </a>
-                    <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary"
-                        style="float:right; height: 35px;">
-                        <h14 style="font-size: 15px;">
-                            New
-                        </h14>
-                    </a>
-                    <% } %>
+<%              if(userInfo!=null) {     %>
+                &nbsp;
+                <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                    <h14 style="font-size: 15px;">
+                        Edit
+                    </h14>
+                </a>
+                <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                    <h14 style="font-size: 15px;">
+                        New
+                    </h14>
+                </a>
+<%              }                    %>
             </h1>
         </div>
         <section class="content">
@@ -88,66 +378,120 @@
                     <div class="box-body">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#2021" data-toggle="tab">2021</a></li>
-                                <li><a href="#2020" data-toggle="tab">2020</a></li>
-                                <li><a href="#2019" data-toggle="tab">2019</a></li>
-                                <li><a href="#2018" data-toggle="tab">2018</a></li>
-                                <li><a href="#2017" data-toggle="tab">2017</a></li>
+<%                              for(let i =0; i<year.length; i++) {                 %>
+                                    <li>
+                                        <a href="<%= "#"+year[i]%>" data-toggle="tab">
+                                            <%= year[i]%>
+                                        </a>
+                                    </li>
+<%                              }                                                   %>                              
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane active" id="2021">
-                                    <p>&middot;&nbsp;<strong>International Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>International Conference</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Conference</strong></p>
-                                    <br>
-                                </div><!-- /.tab-pane -->
-                                <div class="tab-pane" id="2020">
-                                    <p>&middot;&nbsp;<strong>International Journal</strong></p>
-                                    <li>
-                                        1.
-                                    </li>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>International Conference</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Conference</strong></p>
-                                    <br>
-                                </div><!-- /.tab-pane -->
-                                <div class="tab-pane" id="2019">
-                                    <p>&middot;&nbsp;<strong>International Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>International Conference</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Conference</strong></p>
-                                    <br>
-                                </div><!-- /.tab-pane -->
-                                <div class="tab-pane" id="2018">
-                                    <p>&middot;&nbsp;<strong>International Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>International Conference</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Conference</strong></p>
-                                    <br>
-                                </div><!-- /.tab-pane -->
-                                <div class="tab-pane" id="2017">
-                                    <p>&middot;&nbsp;<strong>International Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Journal</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>International Conference</strong></p>
-                                    <br>
-                                    <p>&middot;&nbsp;<strong>Domestic Conference</strong></p>
-                                    <br>
-                                </div>
+<%                              for(let i =0; i<year.length; i++) {                 %>
+<%                                  if(i == 0) {                                    %>
+                                        <div class="tab-pane active" id="<%=year[i]%>">
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
+                                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    var count = 0;
+                                                    for(let j =0; j<IJ.length; j++) {
+                                                        if(IJ[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>    
+                                                </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                
+                                                    count = 0; 
+                                                    for(let j =0; j<DJ.length; j++) {
+                                                        if(DJ[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length)%>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>    
+                                                </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    count = 0; 
+                                                    for(let j =0; j<IC.length; j++) { 
+                                                        if(IC[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + IC[j].slice(4,IC[j].length)%>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>   
+                                                </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    count = 0;
+                                                    for(let j =0; j<DC.length; j++) { 
+                                                        if(DC[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>     
+                                                </li>
+                                            </div>
+<%                                  } else {                                                 %>
+                                        <div class="tab-pane" id="<%=year[i]%>">
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    count = 0;
+                                                    for(let j =0; j<IJ.length; j++) { 
+                                                        if(IJ[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>    
+                                                </li>
+                                          <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
+                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    count = 0;
+                                                    for(let j =0; j<DJ.length; j++) { 
+                                                        if(DJ[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length) %>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>    
+                                                </li>
+                                          <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
+                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                  
+                                                    count = 0;
+                                                    for(let j =0; j<IC.length; j++) { 
+                                                        if(IC[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + IC[j].slice(4,IC[j].length) %>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>    
+                                                </li>
+                                          <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
+                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                                 
+                                                    count = 0;
+                                                    for(let j =0; j<DC.length; j++) {  
+                                                        if(DC[j][1] == year[i]) {   %>
+                                                            <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
+                                                            <br><br>
+<%                                                          count++;
+                                                        }                           
+                                                    }                               %>   
+                                                </li>
+                                        </div>
+<%                                  }                                                   %>
+<%                              }                                                       %>
                             </div>
                         </div>
                     </div>

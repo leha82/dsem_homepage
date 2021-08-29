@@ -13,7 +13,6 @@
     <script src="/js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
-    <!-- <script src="/js/AdminLTE/dashboard.js" type="text/javascript"></script> -->
     <script src="/js/function.js"></script>
 </head>
 
@@ -25,7 +24,6 @@
                 <div class="modal-header" style="height: 40px;">
                     <center style="font-size: 18px;">Edit</center>
                 </div>
-                <!-- <div class="modal-body">
                 <% let edit=['name', 'department' , 'laboratory' , 'email' , 'location' , 'research' ]; for(let i=0;
                     i<edit.length; i++) { %>
                     <div style="margin-right: 10px; margin-left:50px; width: 60px;">
@@ -65,20 +63,41 @@
                         <div class="box-header">
                         </div>
                         <div class="box-body">
-                            <p><strong>특허</strong></p>
-                            <li>1. 국내 출원 / 2019.10.10. / 10-2019-0125356 / 이석훈, 정동원, 엄창민 / SNS(Social Network
-                                Service) 정보에 따라 위치 기반의 상황 정보 알림을 위한 알림 제공 서버, 분석 서버, 및 사용자 단말과 그 동작 방법들 / 군산대학교산학협력단
-                                / 신진연구지원사업</li>
-                            <br>
-                            <p><strong>수상</strong></p>
-                            <li>1.</li>
-                            <br>
-                            <p><strong>저서</strong></p>
-                            <li>1.</li>
-                            <br>
-                            <p><strong>소프트웨어 등록</strong></p>
-                            <li>1.</li>
-                            <br>
+<%                          
+                            let kinds = ['특허', '수상', '저서', '소프트웨어 등록'];
+                            for(let i =0; i<others_results.length; i++) { 
+%>
+                            <p style="font-size:20px;">&bull;&nbsp;<strong><%=kinds[i]%></strong></p>
+                            </p>
+                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+<%                                  
+                                    var count = 0;
+                                    var str = '';
+                                    for(let j =others_results[i].length-1; j>=0; j--) { 
+                                        str = '';
+                                        if(i == 0) {
+                                            if(others_results[i][j][4] == (null || '')) {
+                                                others_results[i][j][4] = '';
+                                            } else {
+                                                others_results[i][j][4] = others_results[i][j][4] + ' / ';
+                                            }
+                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][4] + others_results[i][j][3] + ' / ' + others_results[i][j][8] + ' / ' + others_results[i][j][6] + ' / ' + others_results[i][j][7];
+                                        } else if(i == 1) {
+                                            str = others_results[i][j][5] + ' / ' + others_results[i][j][2] + ' / ' +others_results[i][j][3] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][1]; 
+                                        } else if(i == 2) {
+                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][3] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][5] + ' / ' + 'ISBN: ' + others_results[i][j][6];
+                                        } else {
+                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][8] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][2] + ' / ' + others_results[i][j][7] + ' / ' + '등록번호: ' + others_results[i][j][3]; 
+                                        }
+                                        %>
+                                        <%= count+1 + ". " + str %>
+                                        <br><br>
+<%                                      count++;
+                                    }                                                %>
+                                </li>
+                                <br>
+                                
+<%                          }           %>
                         </div>
                     </div>
                 </div>
