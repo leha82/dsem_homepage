@@ -7,6 +7,7 @@ const dbcon = mysql.createPool({
     database: "homepage",
     connectionLimit: 10,
     debug: false,
+    multipleStatements:true
 });
 
 module.exports=dbcon;

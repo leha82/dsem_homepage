@@ -29,11 +29,15 @@
         $(".journalBtn").click(function () {
             document.getElementById('journal').className = 'btn btn-primary journalBtn';
             document.getElementById('conference').className = 'btn btn-default conferenceBtn';
+            document.getElementById('journalTable').style.display = 'block';
+            document.getElementById('conferenceTable').style.display = 'none';
         });
         $(".conferenceBtn").click(function () {
             document.getElementById('journal').className = 'btn btn-default journalBtn';
             document.getElementById('conference').className = 'btn btn-primary conferenceBtn';
-        })
+            document.getElementById('journalTable').style.display = 'none';
+            document.getElementById('conferenceTable').style.display = 'block';
+        });
     </script>
     <!--  updateBtn -->
     <script>
@@ -50,7 +54,7 @@
             $("input[name=number]").attr('value', paperInfo[0]);
             $("input[name=year]").attr('value', paperInfo[1]);
             $("input[name=part]").attr('value', paperInfo[2]);
-            $("input[name=date]").attr('value', paperInfo[3]);
+            $("input[name=date]").attr('value',  paperInfo[3]);
             $("input[name=authors]").attr('value', paperInfo[4]);
             $("input[name=title]").attr('value', paperInfo[5]);
             $("input[name=journal_name]").attr('value', paperInfo[6]);
@@ -60,7 +64,6 @@
             $("input[name=IF_]").attr('value', paperInfo[10]);
             $("input[name=found_]").attr('value', paperInfo[11]);
             $("input[name=doi]").attr('value', paperInfo[12]);
-
         });
     </script>
 </head>
@@ -99,30 +102,28 @@
 %>
     <!--#New, 논문-->
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 150px; padding-top: 120px;">
+        style=" padding-left: 150px; padding-top: 20px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 550px;">
+            <div class="modal-content" style="width: 600px; height: 830px;">
+                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" 
+                onclick="journal('<%= paper_results[0].length %>')";>Save</button>
                 <div class="modal-header" style="height: 50px;">
                     <center style="font-size: 18px;">New</center>
                 </div>
                 <div class="modal-body">
-<%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ];
-                    for(let i=0; i<new_member.length; i++) {
+<%                  let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
+                    for(let i=0; i<new_journal.length; i++) {
 %>
                         <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                             <h13 style="margin-left: 50px;">
-<%=                             new_member[i] + ':' %>
+<%=                             new_journal[i] + ':' %>
                             </h13>
-                            <input style="margin-left:50px; width: 350px" id='<%= 'researcherInsert_' + new_member[i]%>' />
+                            <input style="margin-left:50px; width: 350px" id='<%= 'paperInsert_' + new_journal[i]%>' />
                         </div>
 <%                      }           %>
-                        <br>
-                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile"/>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="researcher()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
                 </div>
             </div>
         </div>
@@ -144,8 +145,8 @@
                 <button type="submit" class= "btn btn-primary journalBtn" id = "journal">Journal</button>
                 <button type="submit" class= "btn btn-default conferenceBtn" id = "conference">Conference</button>
                 <br>
-                <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;">
-                    <table class="table table-hover memberTable" id="journalTable">
+                <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;  position:fixed;">
+                    <table class="table table-hover memberTable" id="journalTable" style="display:block;">
                     <thread>
                         <tr style="width:auto;">
                             <th>
@@ -201,7 +202,7 @@
 <%                                      
                         var journal = IJ.concat(DJ);
 %>
-<%                      for(let i=0; i<journal.length; i++) {    %>
+<%                      for(let i=0; i<paper_results[0].length; i++) {    %>
                             <tr style="width:auto;">
                                 <td>
                                     <center>
@@ -210,62 +211,62 @@
                                 </td>
                                 <td>
                                     <center>
-<%=                                     journal[i][1]           %>
+<%=                                     paper_results[0][i][1]           %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                     journal[i][2]          %>
+<%=                                     paper_results[0][i][2]          %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][3]            %>
+<%=                                    paper_results[0][i][3]            %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][4]      %>
+<%=                                    paper_results[0][i][4]      %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                     journal[i][5]        %>
+<%=                                     paper_results[0][i][5]        %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][6]      %>
+<%=                                    paper_results[0][i][6]      %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][7]      %>
+<%=                                    paper_results[0][i][7]      %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][8]      %>
+<%=                                    paper_results[0][i][8]      %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                     journal[i][9]     %>
+<%=                                     paper_results[0][i][9]     %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                     journal[i][10]     %>
+<%=                                     paper_results[0][i][10]     %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][11]      %>
+<%=                                    paper_results[0][i][11]      %>
                                     </center>
                                 </td>
                                 <td>
                                     <center>
-<%=                                    journal[i][12]       %>
+<%=                                    paper_results[0][i][12]       %>
                                     </center>
                                 </td>
                                 <td>
@@ -278,7 +279,130 @@
                                 <td>
                                     <center>
                                         <a type="button" class="btn btn-primary"
-                                            onclick="paper_delete('<%= journal[i][5] %>'); javascript:rowDel(this)">
+                                            onclick="journal_delete('<%= paper_results[0][i][5] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                    </center>
+                                </td>
+                            </tr>
+                            <% } %>
+                    </tbody>
+                    </table>
+                    <table class="table table-hover memberTable" id="conferenceTable" style="display:none;">
+                    <thread>
+                        <tr style="width:auto;">
+                            <th>
+                                <center>
+                                    Number
+                                </center>
+                            </th>
+                            <th>
+                                <center>year</center>
+                            </th>
+                            <th>
+                                <center>part</center>
+                            </th>
+                            <th>
+                                <center>date</center>
+                            </th>
+                            <th>
+                                <center>authors</center>
+                            </th>
+                            <th>
+                                <center>title</center>
+                            </th>
+                            <th>
+                                <center>proceeding</center>
+                            </th>
+                            <th>
+                                <center>ISSN</center>
+                            </th>
+                            <th>
+                                <center>place</center>
+                            </th>
+                            <th>
+                                <center>found</center>
+                            </th>
+                            <th>
+                                <center>remarks</center>
+                            </th>
+                            <th>
+                                <center>Edit</center>
+                            </th>
+                            <th>
+                                <center>Delete</center>
+                            </th>
+                        </tr>
+                    </thread>
+                    <tbody>
+<%                      for(let i=0; i<paper_results[1].length; i++) {    %>
+                            <tr style="width:auto;">
+                                <td>
+                                    <center>
+<%=                                     i+1                                %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     paper_results[1][i][1]           %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     paper_results[1][i][2]          %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    paper_results[1][i][3]            %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    paper_results[1][i][4]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     paper_results[1][i][5]        %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    paper_results[1][i][6]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    paper_results[1][i][7]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                    paper_results[1][i][8]      %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     paper_results[1][i][9]     %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     paper_results[1][i][10]     %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+                                        <a href="#" class="btn btn-default updateBtn" data-toggle="modal"
+                                            data-target="#edit" type="button">
+                                            수정</a>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+                                        <a type="button" class="btn btn-primary"
+                                            onclick="conference_delete('<%= paper_results[1][i][5] %>'); javascript:rowDel(this)">
                                             삭제
                                         </a>
                                     </center>

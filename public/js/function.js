@@ -111,6 +111,7 @@ function alumni() {
     })
     location.reload();
 }
+
 function alumni_delete(delete_name) {
     const alumni_remove_param = {
         delete_member: delete_name,
@@ -140,6 +141,42 @@ function alumni_update() {
 }
 
 // paper
+
+function journal(journal_length) {
+    const journal_save_param = {
+        year: $('#paperInsert_year').val(),
+        part: $('#paperInsert_part').val(),
+        date: $('#paperInsert_date').val(),
+        authors: $('#paperInsert_authors').val(),
+        title: $('#paperInsert_title').val(),
+        journal_name: $('#paperInsert_journal_name').val(),
+        other: $('#paperInsert_other').val(),
+        ISSN: $('#paperInsert_ISSN').val(),
+        paper_index: $('#paperInsert_paper_index').val(),
+        IF_: $('#paperInsert_IF_').val(),
+        found_: $('#paperInsert_found_').val(),
+        doi: $('#paperInsert_doi').val(),
+        journal_length: journal_length,
+    }
+    $.post('/paper/journal', journal_save_param, (returnData) => {
+        if (returnData.key) {
+            location.reload();
+        }
+    })
+    location.reload();
+}
+
+function journal_delete(delete_title) {
+    const journal_remove_param = {
+        delete_journal: delete_title,
+    }
+    $.post('/paper/journal_delete', journal_remove_param, (returnData) => {
+        if (returnData.key) {
+            location.reload();
+        }
+    })
+}
+
 function journal_update() {
     const paper_update_param = {
         id: $('#paperUpdate_number').val(),
