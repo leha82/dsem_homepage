@@ -140,25 +140,23 @@ function alumni_update() {
     location.reload();
 }
 
-// paper
-
-function journal(journal_length) {
+// paper페이지 - conference
+function journal_insert() {
     const journal_save_param = {
-        year: $('#paperInsert_year').val(),
-        part: $('#paperInsert_part').val(),
-        date: $('#paperInsert_date').val(),
-        authors: $('#paperInsert_authors').val(),
-        title: $('#paperInsert_title').val(),
-        journal_name: $('#paperInsert_journal_name').val(),
-        other: $('#paperInsert_other').val(),
-        ISSN: $('#paperInsert_ISSN').val(),
-        paper_index: $('#paperInsert_paper_index').val(),
-        IF_: $('#paperInsert_IF_').val(),
-        found_: $('#paperInsert_found_').val(),
-        doi: $('#paperInsert_doi').val(),
-        journal_length: journal_length,
+        year: $('#journalInsert_year').val(),
+        part: $('#journalInsert_part').val(),
+        date: $('#journalInsert_date').val(),
+        authors: $('#journalInsert_authors').val(),
+        title: $('#journalInsert_title').val(),
+        journal_name: $('#journalInsert_journal_name').val(),
+        other: $('#journalInsert_other').val(),
+        ISSN: $('#journalInsert_ISSN').val(),
+        paper_index: $('#journalInsert_paper_index').val(),
+        IF_: $('#journalInsert_IF_').val(),
+        found_: $('#journalInsert_found_').val(),
+        doi: $('#journalInsert_doi').val(),
     }
-    $.post('/paper/journal', journal_save_param, (returnData) => {
+    $.post('/paper/journal_insert', journal_save_param, (returnData) => {
         if (returnData.key) {
             location.reload();
         }
@@ -178,22 +176,78 @@ function journal_delete(delete_title) {
 }
 
 function journal_update() {
-    const paper_update_param = {
-        id: $('#paperUpdate_number').val(),
-        year: $('#paperUpdate_year').val(),
-        part: $('#paperUpdate_part').val(),
-        date: $('#paperUpdate_date').val(),
-        authors: $('#paperUpdate_authors').val(),
-        title: $('#paperUpdate_title').val(),
-        journal_name: $('#paperUpdate_journal_name').val(),
-        other: $('#paperUpdate_other').val(),
-        ISSN: $('#paperUpdate_ISSN').val(),
-        paper_index: $('#paperUpdate_paper_index').val(),
-        IF_: $('#paperUpdate_IF_').val(),
-        found_: $('#paperUpdate_found_').val(),
-        doi: $('#paperUpdate_doi').val(),
+    const journal_update_param = {
+        id: $('#journalUpdate_number').val(),
+        year: $('#journalUpdate_year').val(),
+        part: $('#journalUpdate_part').val(),
+        date: $('#journalUpdate_date').val(),
+        authors: $('#journalUpdate_authors').val(),
+        title: $('#journalUpdate_title').val(),
+        journal_name: $('#journalUpdate_journal_name').val(),
+        other: $('#journalUpdate_other').val(),
+        ISSN: $('#journalUpdate_ISSN').val(),
+        paper_index: $('#journalUpdate_paper_index').val(),
+        IF_: $('#journalUpdate_IF_').val(),
+        found_: $('#journalUpdate_found_').val(),
+        doi: $('#journalUpdate_doi').val(),
     }
-    $.post('/paper/journal_update', paper_update_param, (returnData) => {
+    $.post('/paper/journal_update', journal_update_param, (returnData) => {
+        if (returnData.key) {
+            location.reload();
+        }
+    })
+    location.reload();
+}
+
+// paper페이지 - conference
+function conference_insert() {
+    const conference_save_param = {
+        year: $('#conferenceInsert_year').val(),
+        part: $('#conferenceInsert_part').val(),
+        date: $('#conferenceInsert_date').val(),
+        authors: $('#conferenceInsert_authors').val(),
+        title: $('#conferenceInsert_title').val(),
+        proceeding: $('#conferenceInsert_proceeding').val(),
+        ISSN: $('#conferenceInsert_ISSN').val(),
+        place: $('#conferenceInsert_place').val(),
+        found: $('#conferenceInsert_found').val(),
+        remarks: $('#conferenceInsert_remarks').val(),
+    }
+    $.post('/paper/conference_insert', conference_save_param, (returnData) => {
+        if (returnData.key) {
+            location.reload();
+        }
+    })
+    location.reload();
+}
+
+function conference_delete(delete_title) {
+    const conference_remove_param = {
+        delete_conference: delete_title,
+    }
+    console.log(conference_remove_param);
+    $.post('/paper/conference_delete', conference_remove_param, (returnData) => {
+        if (returnData.key) {
+            location.reload();
+        }
+    })
+}
+
+function conference_update() {
+    const conference_update_param = {
+        id: $('#conferenceUpdate_number').val(),
+        year: $('#conferenceUpdate_year').val(),
+        part: $('#conferenceUpdate_part').val(),
+        date: $('#conferenceUpdate_date').val(),
+        authors: $('#conferenceUpdate_authors').val(),
+        title: $('#conferenceUpdate_title').val(),
+        proceeding: $('#conferenceUpdate_proceeding').val(),
+        ISSN: $('#conferenceUpdate_ISSN').val(),
+        place: $('#conferenceUpdate_place').val(),
+        found: $('#conferenceUpdate_found').val(),
+        remarks: $('#conferenceUpdate_remarks').val(),
+    }
+    $.post('/paper/conference_update', conference_update_param, (returnData) => {
         if (returnData.key) {
             location.reload();
         }

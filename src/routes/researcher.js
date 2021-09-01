@@ -31,6 +31,9 @@ router.post('/researcher_delete', (req, res)=> {
         con.query('DELETE FROM researcher WHERE koreanName=?', [req.body.delete_member], (err, results) =>{
             if(err) throw err;
         });
+        con.query('set @count = 0;' + 'UPDATE researcher SET id = @count:=@count+1;', (err, results) => {
+            if(err) throw err;
+        });
     });
 });
 

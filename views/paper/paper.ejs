@@ -26,26 +26,40 @@
 
     <!-- Journal, Conference 클릭 시 -->
     <script>
-        $(".journalBtn").click(function () {
-            document.getElementById('journal').className = 'btn btn-primary journalBtn';
-            document.getElementById('conference').className = 'btn btn-default conferenceBtn';
+        $(".list_journalBtn").click(function () {
+            document.getElementById('list_journal').className = 'btn btn-primary list_journal';
+            document.getElementById('list_conference').className = 'btn btn-default list_conference';
             document.getElementById('journalTable').style.display = 'block';
             document.getElementById('conferenceTable').style.display = 'none';
         });
-        $(".conferenceBtn").click(function () {
-            document.getElementById('journal').className = 'btn btn-default journalBtn';
-            document.getElementById('conference').className = 'btn btn-primary conferenceBtn';
+        $(".list_conferenceBtn").click(function () {
+            document.getElementById('list_journal').className = 'btn btn-default list_journal';
+            document.getElementById('list_conference').className = 'btn btn-primary list_conference';
             document.getElementById('journalTable').style.display = 'none';
             document.getElementById('conferenceTable').style.display = 'block';
         });
+
+        $(".new_journalBtn").click(function () {
+            document.getElementById('new_journal').className = 'btn btn-primary new_journalBtn';
+            document.getElementById('new_conference').className = 'btn btn-default new_conferenceBtn';
+            document.getElementById('journal_select').style.display = 'block';
+            document.getElementById('conference_select').style.display = 'none';
+        });
+        $(".new_conferenceBtn").click(function () {
+            document.getElementById('new_journal').className = 'btn btn-default new_journalBtn';
+            document.getElementById('new_conference').className = 'btn btn-primary new_conferenceBtn';
+            document.getElementById('journal_select').style.display = 'none';
+            document.getElementById('conference_select').style.display = 'block';
+        });
+
     </script>
     <!--  updateBtn -->
     <script>
-        let paperInfo = [];
-        $(".updateBtn").click(function () {
-            var updateBtn = $(this);
+        var paperInfo = [];
+        $(".journal_updateBtn").click(function () {
+            var journal_updateBtn = $(this);
 
-            var tr = updateBtn.parent().parent().parent();
+            var tr = journal_updateBtn.parent().parent().parent();
             var td = tr.children();
             
             td.each(function (i) {
@@ -65,6 +79,29 @@
             $("input[name=found_]").attr('value', paperInfo[11]);
             $("input[name=doi]").attr('value', paperInfo[12]);
         });
+        $(".conference_updateBtn").click(function () {
+            var conference_updateBtn = $(this);
+
+            var tr = conference_updateBtn.parent().parent().parent();
+            var td = tr.children();
+            
+            td.each(function (i) {
+                paperInfo[i] = td.eq(i).text().trim();
+            })
+            $("input[name=number]").attr('value', paperInfo[0]);
+            $("input[name=year]").attr('value', paperInfo[1]);
+            $("input[name=part]").attr('value', paperInfo[2]);
+            $("input[name=date]").attr('value',  paperInfo[3]);
+            $("input[name=authors]").attr('value', paperInfo[4]);
+            $("input[name=title]").attr('value', paperInfo[5]);
+            $("input[name=proceeding]").attr('value', paperInfo[6]);
+            $("input[name=ISSN]").attr('value', paperInfo[7]);
+            $("input[name=place]").attr('value', paperInfo[8]);
+            $("input[name=found]").attr('value', paperInfo[9]);
+            $("input[name=remarks]").attr('value', paperInfo[10]);
+        });
+
+
     </script>
 </head>
 
@@ -100,34 +137,56 @@
                                     }
                                 }
 %>
-    <!--#New, 논문-->
+    <!-- #New, 논문-->
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" padding-left: 150px; padding-top: 20px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 830px;">
-                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" 
-                onclick="journal('<%= paper_results[0].length %>')";>Save</button>
-                <div class="modal-header" style="height: 50px;">
-                    <center style="font-size: 18px;">New</center>
+            <div class="modal-content" style="width: 600px; height: 865px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    New
                 </div>
+                &nbsp;
+                <button type="submit" class= "btn btn-primary new_journalBtn" id = "new_journal">Journal</button>
+                <button type="submit" class= "btn btn-default new_conferenceBtn" id = "new_conference">Conference</button>
                 <div class="modal-body">
-<%                  let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
-                    for(let i=0; i<new_journal.length; i++) {
+                    <div class= "journalView" id = "journal_select" style="display:block">
+<%                      let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
+                        for(let i=0; i<new_journal.length; i++) {
 %>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             new_journal[i] + ':' %>
-                            </h13>
-                            <input style="margin-left:50px; width: 350px" id='<%= 'paperInsert_' + new_journal[i]%>' />
-                        </div>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+<%=                                 new_journal[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'journalInsert_' + new_journal[i]%>' />
+                            </div>
 <%                      }           %>
-                </div>
-                <div class="modal-footer">
+                        <br>
+                        <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_insert();"> Save</button>
+                    </div>
+                    <div class= "conferenceView" id = "conference_select" style="display:none">
+<%                      let new_conference=['year','part','date','authors','title','proceeding','ISSN','place','found','remarks'];
+                        for(let i=0; i<new_conference.length; i++) {
+%>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+<%=                                 new_conference[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'conferenceInsert_' + new_conference[i]%>' />
+                            </div>
+<%                      }           %>
+                        <div style="line-height:187%">
+                            <br><br><br><br>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_insert();"> Save</button>
+                    </div>    
                 </div>
             </div>
         </div>
     </div>
+
     <!--#list, DB에서 조회-->
     <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" margin-left: -1210px; padding-top: 40px; ">
@@ -142,8 +201,8 @@
                     </center>
                 </div>
                 &nbsp;
-                <button type="submit" class= "btn btn-primary journalBtn" id = "journal">Journal</button>
-                <button type="submit" class= "btn btn-default conferenceBtn" id = "conference">Conference</button>
+                <button type="submit" class= "btn btn-primary list_journalBtn" id = "list_journal">Journal</button>
+                <button type="submit" class= "btn btn-default list_conferenceBtn" id = "list_conference">Conference</button>
                 <br>
                 <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;  position:fixed;">
                     <table class="table table-hover memberTable" id="journalTable" style="display:block;">
@@ -271,8 +330,8 @@
                                 </td>
                                 <td>
                                     <center>
-                                        <a href="#" class="btn btn-default updateBtn" data-toggle="modal"
-                                            data-target="#edit" type="button">
+                                        <a href="#" class="btn btn-default journal_updateBtn" data-toggle="modal"
+                                            data-target="#journal_edit" type="button">
                                             수정</a>
                                     </center>
                                 </td>
@@ -394,8 +453,8 @@
                                 </td>
                                 <td>
                                     <center>
-                                        <a href="#" class="btn btn-default updateBtn" data-toggle="modal"
-                                            data-target="#edit" type="button">
+                                        <a href="#" class="btn btn-default conference_updateBtn" data-toggle="modal"
+                                            data-target="#conference_edit" type="button">
                                             수정</a>
                                     </center>
                                 </td>
@@ -418,32 +477,64 @@
         </div>
     </div>
     <!--   #list -> #edit   -->
-    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 60px; padding-top: 40px;">
+    <div class="modal fade" id="journal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 60px; padding-top: 0px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 850px;">
-                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right"
-                        onclick="journal_update()">Save</button>
-                <div class="modal-header" style="height: 50px;">
-                    <center style="font-size: 18px;">Edit</center>
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    Journal Edit
                 </div>
                 <div class="modal-body">
-<%                  let edit_paper=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
-                    for(let i=0; i<edit_paper.length; i++) { 
+<%                  let edit_journal=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
+                    for(let i=0; i<edit_journal.length; i++) { 
 %>
                         <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                             <h13 style="margin-left: 50px;">
-<%=                             edit_paper[i] + ':'    %>
+<%=                             edit_journal[i] + ':'    %>
                             </h13>
 <%                              if(i == 0) {            %>
-                                <input type='text' name='<%=edit_paper[i]%>' id='<%='paperUpdate_' + edit_paper[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
+                                    <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
 <%                              } else {                %> 
-                                <input type='text' name='<%=edit_paper[i]%>' id='<%='paperUpdate_' + edit_paper[i]%>'value = '' style="margin-left:50px; width: 350px"/>
+                                    <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value = '' style="margin-left:50px; width: 350px"/>
 <%                              }                       %>
                         </div>
-<%                      }                               %>
-                        <br>
+<%                  }                               %>
+                    <br>
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <div class="modal fade" id="conference_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 60px; padding-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    Conference Edit
+                </div>
+                <div class="modal-body">
+<%                  let edit_conference=['number','year','part','date','authors','title','proceeding','ISSN','place','found','remarks']; 
+                    for(let i=0; i<edit_conference.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+<%=                             edit_conference[i] + ':'    %>
+                            </h13>
+<%                              if(i == 0) {            %>
+                                    <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
+<%                              } else {                %> 
+                                    <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value = '' style="margin-left:50px; width: 350px"/>
+<%                              }                       %>
+                        </div>
+<%                  }                               %>
+                    <div style="line-height:187%">
+                        <br><br><br><br>
+                    </div>
+                    <br>
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_update()">Save</button>
                 </div>
             </div>
         </div>
