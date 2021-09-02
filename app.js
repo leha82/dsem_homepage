@@ -16,6 +16,9 @@ const alumni = require('./src/routes/alumni');
 // 논문 페이지 DB 라우터
 const paper = require('./src/routes/paper');
 
+// Others 페이지 DB 라우터
+const others = require('./src/routes/others');
+
 // bodyParser -->
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -42,73 +45,73 @@ app.use('/professor', professor);
 app.use('/researcher', researcher);
 app.use('/alumni', alumni);
 app.use('/paper', paper);
-
+app.use('/others', others);
 
 // DB 접속하기-->
 // 각각의 페이지에 보내줄 데이터 조회
 const con = require('./src/dbcon');
 
 // 멤버 DB
-let professor_db = function (callback) {
-    con.query('SELECT * FROM professor', function (err, results) {
+let professor_db = function(callback) {
+    con.query('SELECT * FROM professor', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let researcher_db = function (callback) {
-    con.query('SELECT * FROM researcher', function (err, results) {
+let researcher_db = function(callback) {
+    con.query('SELECT * FROM researcher', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let alumni_db = function (callback) {
-    con.query('SELECT * FROM alumni', function (err, results) {
+let alumni_db = function(callback) {
+    con.query('SELECT * FROM alumni', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 // 논문 DB
-let journal_db = function (callback) {
-    con.query('SELECT * FROM journal', function (err, results) {
+let journal_db = function(callback) {
+    con.query('SELECT * FROM journal', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let conference_db = function (callback) {
-    con.query('SELECT * FROM conference', function (err, results) {
+let conference_db = function(callback) {
+    con.query('SELECT * FROM conference', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 // 특허 및 수상 등 DB
-let award_db = function (callback) {
-    con.query('SELECT * FROM award', function (err, results) {
+let award_db = function(callback) {
+    con.query('SELECT * FROM award', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let book_db = function (callback) {
-    con.query('SELECT * FROM book', function (err, results) {
+let book_db = function(callback) {
+    con.query('SELECT * FROM book', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let license_db = function (callback) {
-    con.query('SELECT * FROM license', function (err, results) {
+let license_db = function(callback) {
+    con.query('SELECT * FROM license', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
-let software_db = function (callback) {
-    con.query('SELECT * FROM software', function (err, results) {
+let software_db = function(callback) {
+    con.query('SELECT * FROM software', function(err, results) {
         if (err) throw err;
         callback(null, results);
     });
@@ -136,7 +139,7 @@ app.get("/index", (req, res) => {
 });
 
 app.get("/members/professor", (req, res) => {
-    professor_db(function (err, result) {
+    professor_db(function(err, result) {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
@@ -150,7 +153,7 @@ app.get("/members/professor", (req, res) => {
 });
 
 app.get("/members/researcher", (req, res) => {
-    researcher_db(function (err, results) {
+    researcher_db(function(err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
@@ -169,7 +172,7 @@ app.get("/members/researcher", (req, res) => {
 });
 
 app.get("/members/alumni", (req, res) => {
-    alumni_db(function (err, results) {
+    alumni_db(function(err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
@@ -189,7 +192,7 @@ app.get("/members/alumni", (req, res) => {
 
 app.get("/paper/paper", (req, res) => {
     let paper_results = [];
-    journal_db(function (err, results) {
+    journal_db(function(err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
@@ -200,7 +203,7 @@ app.get("/paper/paper", (req, res) => {
             jo_results[i] = Object.values(results[i]);
         }
         paper_results.push(jo_results);
-        conference_db(function (err, results2) {
+        conference_db(function(err, results2) {
             if (err) {
                 console.log("페이지 로딩 실패");
                 console.log(err.stack);
@@ -223,7 +226,7 @@ app.get("/paper/paper", (req, res) => {
 
 app.get("/others/others", (req, res) => {
     let others_results = [];
-    license_db(function (err, results) {
+    license_db(function(err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
@@ -234,7 +237,7 @@ app.get("/others/others", (req, res) => {
             li_results[i] = Object.values(results[i]);
         }
         others_results.push(li_results);
-        award_db(function (err, results) {
+        award_db(function(err, results) {
             if (err) {
                 console.log("페이지 로딩 실패");
                 console.log(err.stack);
@@ -245,7 +248,7 @@ app.get("/others/others", (req, res) => {
                 aw_results[i] = Object.values(results[i]);
             }
             others_results.push(aw_results);
-            book_db(function (err, results) {
+            book_db(function(err, results) {
                 if (err) {
                     console.log("페이지 로딩 실패");
                     console.log(err.stack);
@@ -256,7 +259,7 @@ app.get("/others/others", (req, res) => {
                     book_results[i] = Object.values(results[i]);
                 }
                 others_results.push(book_results);
-                software_db(function (err, results) {
+                software_db(function(err, results) {
                     if (err) {
                         console.log("페이지 로딩 실패");
                         console.log(err.stack);

@@ -14,46 +14,860 @@
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
     <script src="/js/function.js"></script>
+
+    <!-- 삭제할 때 테이블의 해당 행 삭제되어 보이도록 함 -->
+    <script>
+        function rowDel(obj) {
+            var Del_tr = obj.parentNode.parentNode.parentNode;
+            console.log(Del_tr);
+            Del_tr.parentNode.removeChild(Del_tr);
+        }
+    </script>
+    <!-- New에서 종류별 버튼 클릭 시 -->
+    <script>
+        $(".new_licenseBtn").click(function() {
+            document.getElementById('new_license').className = 'btn btn-primary new_licenseBtn';
+            document.getElementById('new_award').className = 'btn btn-default new_awardBtn';
+            document.getElementById('new_book').className = 'btn btn-default new_bookBtn';
+            document.getElementById('new_software').className = 'btn btn-default new_softwareBtn';
+
+            document.getElementById('license_select').style.display = 'block';
+            document.getElementById('award_select').style.display = 'none';
+            document.getElementById('book_select').style.display = 'none';
+            document.getElementById('software_select').style.display = 'none';
+        });
+        $(".new_awardBtn").click(function() {
+            document.getElementById('new_license').className = 'btn btn-default new_licenseBtn';
+            document.getElementById('new_award').className = 'btn btn-primary new_awardBtn';
+            document.getElementById('new_book').className = 'btn btn-default new_bookBtn';
+            document.getElementById('new_software').className = 'btn btn-default new_softwareBtn';
+
+            document.getElementById('license_select').style.display = 'none';
+            document.getElementById('award_select').style.display = 'block';
+            document.getElementById('book_select').style.display = 'none';
+            document.getElementById('software_select').style.display = 'none';
+
+        });
+        $(".new_bookBtn").click(function() {
+            document.getElementById('new_license').className = 'btn btn-default new_licenseBtn';
+            document.getElementById('new_award').className = 'btn btn-default new_awardBtn';
+            document.getElementById('new_book').className = 'btn btn-primary new_bookBtn';
+            document.getElementById('new_software').className = 'btn btn-default new_softwareBtn';
+
+            document.getElementById('license_select').style.display = 'none';
+            document.getElementById('award_select').style.display = 'none';
+            document.getElementById('book_select').style.display = 'block';
+            document.getElementById('software_select').style.display = 'none';
+        });
+        $(".new_softwareBtn").click(function() {
+            document.getElementById('new_license').className = 'btn btn-default new_licenseBtn';
+            document.getElementById('new_award').className = 'btn btn-default new_awardBtn';
+            document.getElementById('new_book').className = 'btn btn-default new_bookBtn';
+            document.getElementById('new_software').className = 'btn btn-primary new_softwareBtn';
+
+            document.getElementById('license_select').style.display = 'none';
+            document.getElementById('award_select').style.display = 'none';
+            document.getElementById('book_select').style.display = 'none';
+            document.getElementById('software_select').style.display = 'block';
+        });
+    </script>
+    <!-- list에서 종류별 버튼 클릭 시 -->
+    <script>
+        $(".list_licenseBtn").click(function() {
+            document.getElementById('list_license').className = 'btn btn-primary list_license';
+            document.getElementById('list_award').className = 'btn btn-default list_award';
+            document.getElementById('list_book').className = 'btn btn-default list_book';
+            document.getElementById('list_software').className = 'btn btn-default list_software';
+
+            document.getElementById('licenseTable').style.display = 'block';
+            document.getElementById('awardTable').style.display = 'none';
+            document.getElementById('bookTable').style.display = 'none';
+            document.getElementById('softwareTable').style.display = 'none';
+        });
+        $(".list_awardBtn").click(function() {
+            document.getElementById('list_license').className = 'btn btn-default list_license';
+            document.getElementById('list_award').className = 'btn btn-primary list_award';
+            document.getElementById('list_book').className = 'btn btn-default list_book';
+            document.getElementById('list_software').className = 'btn btn-default list_software';
+
+            document.getElementById('licenseTable').style.display = 'none';
+            document.getElementById('awardTable').style.display = 'block';
+            document.getElementById('bookTable').style.display = 'none';
+            document.getElementById('softwareTable').style.display = 'none';
+        });
+        $(".list_bookBtn").click(function() {
+            document.getElementById('list_license').className = 'btn btn-default list_license';
+            document.getElementById('list_award').className = 'btn btn-default list_award';
+            document.getElementById('list_book').className = 'btn btn-primary list_book';
+            document.getElementById('list_software').className = 'btn btn-default list_software';
+
+            document.getElementById('licenseTable').style.display = 'none';
+            document.getElementById('awardTable').style.display = 'none';
+            document.getElementById('bookTable').style.display = 'block';
+            document.getElementById('softwareTable').style.display = 'none';
+        });
+        $(".list_softwareBtn").click(function() {
+            document.getElementById('list_license').className = 'btn btn-default list_license';
+            document.getElementById('list_award').className = 'btn btn-default list_award';
+            document.getElementById('list_book').className = 'btn btn-default list_book';
+            document.getElementById('list_software').className = 'btn btn-primary list_software';
+
+            document.getElementById('licenseTable').style.display = 'none';
+            document.getElementById('awardTable').style.display = 'none';
+            document.getElementById('bookTable').style.display = 'none';
+            document.getElementById('softwareTable').style.display = 'block';
+        });
+    </script>
+    <!-- edit 버튼 클릭 시 데이터 input값 -->
+    <script>
+        var OthersInfo = [];
+        $(".license_updateBtn").click(function() {
+            var license_updateBtn = $(this);
+
+            var tr = license_updateBtn.parent().parent().parent();
+            var td = tr.children();
+
+            td.each(function(i) {
+                OthersInfo[i] = td.eq(i).text().trim();
+            })
+            console.log(OthersInfo);
+            $("input[name=number]").attr('value', OthersInfo[0]);
+            $("input[name=part]").attr('value', OthersInfo[1]);
+            $("input[name=application_date]").attr('value', OthersInfo[2]);
+            $("input[name=application_num]").attr('value', OthersInfo[3]);
+            $("input[name=registration_date]").attr('value', OthersInfo[4]);
+            $("input[name=registration_num]").attr('value', OthersInfo[5]);
+            $("input[name=license_name]").attr('value', OthersInfo[6]);
+            $("input[name=application_place]").attr('value', OthersInfo[7]);
+            $("input[name=inventor]").attr('value', OthersInfo[8]);
+            $("input[name=work]").attr('value', OthersInfo[9]);
+        });
+        $(".award_updateBtn").click(function() {
+            var award_updateBtn = $(this);
+
+            var tr = award_updateBtn.parent().parent().parent();
+            var td = tr.children();
+
+            td.each(function(i) {
+                OthersInfo[i] = td.eq(i).text().trim();
+            })
+            $("input[name=number]").attr('value', OthersInfo[0]);
+            $("input[name=date]").attr('value', OthersInfo[1]);
+            $("input[name=award_organization]").attr('value', OthersInfo[2]);
+            $("input[name=competition_name]").attr('value', OthersInfo[3]);
+            $("input[name=ranking]").attr('value', OthersInfo[4]);
+            $("input[name=person]").attr('value', OthersInfo[5]);
+            $("input[name=remarks]").attr('value', OthersInfo[6]);
+        });
+        $(".book_updateBtn").click(function() {
+            var book_updateBtn = $(this);
+
+            var tr = book_updateBtn.parent().parent().parent();
+            var td = tr.children();
+
+            td.each(function(i) {
+                OthersInfo[i] = td.eq(i).text().trim();
+            })
+            $("input[name=number]").attr('value', OthersInfo[0]);
+            $("input[name=part]").attr('value', OthersInfo[1]);
+            $("input[name=date]").attr('value', OthersInfo[2]);
+            $("input[name=authors]").attr('value', OthersInfo[3]);
+            $("input[name=book_name]").attr('value', OthersInfo[4]);
+            $("input[name=publisher]").attr('value', OthersInfo[5]);
+            $("input[name=ISBN]").attr('value', OthersInfo[6]);
+            $("input[name=remarks]").attr('value', OthersInfo[7]);
+        });
+        $(".software_updateBtn").click(function() {
+            var software_updateBtn = $(this);
+
+            var tr = software_updateBtn.parent().parent().parent();
+            var td = tr.children();
+
+            td.each(function(i) {
+                OthersInfo[i] = td.eq(i).text().trim();
+            })
+            $("input[name=number]").attr('value', OthersInfo[0]);
+            $("input[name=part]").attr('value', OthersInfo[1]);
+            $("input[name=institution]").attr('value', OthersInfo[2]);
+            $("input[name=sw_number]").attr('value', OthersInfo[3]);
+            $("input[name=designation]").attr('value', OthersInfo[4]);
+            $("input[name=writer]").attr('value', OthersInfo[5]);
+            $("input[name=creative_date]").attr('value', OthersInfo[6]);
+            $("input[name=registration_date]").attr('value', OthersInfo[7]);
+            $("input[name=originator]").attr('value', OthersInfo[8]);
+            $("input[name=found_]").attr('value', OthersInfo[9]);
+            $("input[name=remarks]").attr('value', OthersInfo[10]);
+        });
+    </script>
 </head>
 
-    <!--#Edit-->
-    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 150px; padding-top: 120px;">
+<body>
+    <!-- #New, 논문-->
+    <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 150px; padding-top: 60px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 670px;">
-                <div class="modal-header" style="height: 40px;">
-                    <center style="font-size: 18px;">Edit</center>
+            <div class="modal-content" style="width: 600px; height: 750px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    New
                 </div>
-                <% let edit=['name', 'department' , 'laboratory' , 'email' , 'location' , 'research' ]; for(let i=0;
-                    i<edit.length; i++) { %>
-                    <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                        <h13>
-                            <%= edit[i] + ':' %>
-                        </h13>
-                        <input style="margin-left:0px; width: 350px;" id='name' />
+                &nbsp;
+                <button type="submit" class="btn btn-primary new_licenseBtn" id="new_license">License</button>
+                <button type="submit" class="btn btn-default new_awardBtn" id="new_award">Award</button>
+                <button type="submit" class="btn btn-default new_bookBtn" id="new_book">Book</button>
+                <button type="submit" class="btn btn-default new_softwareBtn" id="new_software">Software</button>
+                <div class="modal-body">
+                    <div class="licenseView" id="license_select" style="display:block">
+                        <% let new_license=['part','application_date','application_num','registration_date','registration_num','license_name','application_place','inventor','work'];
+                                for(let i=0; i<new_license.length; i++) {
+%>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%= new_license[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'licenseInsert_' + new_license[i]%>' />
+                            </div>
+                            <%                      }           %>
+                                <div style="line-height:187%">
+                                    <br><br>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="license_insert();"> Save</button>
                     </div>
-                    <br>
-                    <% } %>
-            </div> -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="save()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                    <div class="awardView" id="award_select" style="display:none">
+                        <% let new_award=['date','award_organization','competition_name','ranking','person'];
+                        for(let i=0; i<new_award.length; i++) {
+%>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%= new_award[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'awardInsert_' + new_award[i]%>' />
+                            </div>
+                            <%                      }           %>
+                                <div style="line-height:187%">
+                                    <%for(let i =0; i<10; i++) {%>
+                                        <br>
+                                        <% } %>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="award_insert();"> Save</button>
+                    </div>
+                    <div class="bookView" id="book_select" style="display:none">
+                        <% let new_book=['part','date','authors','book_name','publisher','ISBN','remarks'];
+                        for(let i=0; i<new_book.length; i++) {
+%>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%= new_book[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'bookInsert_' + new_book[i]%>' />
+                            </div>
+                            <%                      }           %>
+                                <div style="line-height:187%">
+                                    <br><br><br><br><br><br>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="book_insert();"> Save</button>
+                    </div>
+                    <div class="softwareView" id="software_select" style="display:none">
+                        <% let new_software=['part','institution','sw_number','designation','writer','creative_date','registration_date','originator','found_','remarks'];
+                        for(let i=0; i<new_software.length; i++) {
+%>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%= new_software[i] + ':' %>
+                                </h13>
+                                <input style="margin-left:50px; width: 350px" id='<%= 'softwareInsert_' + new_software[i]%>' />
+                            </div>
+                            <%                      }           %>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="software_insert();"> Save</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!--#list-->
+    <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" margin-left: -1210px; padding-top: 40px; ">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content" style="width: 1830px; height: 800px;">
+                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                <div class="modal-header" style="height: 50px;">
+                    <center style="font-size: 18px;">
+                        <string>
+                            Others list
+                        </string>
+                    </center>
+                </div>
+                &nbsp;
+                <button type="submit" class="btn btn-primary list_licenseBtn" id="list_license">License</button>
+                <button type="submit" class="btn btn-default list_awardBtn" id="list_award">Award</button>
+                <button type="submit" class="btn btn-default list_bookBtn" id="list_book">Book</button>
+                <button type="submit" class="btn btn-default list_softwareBtn" id="list_software">software</button>
+                <br>
+                <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;  position:fixed;">
+                    <table class="table table-hover memberTable" id="licenseTable" style="display:block;">
+                        <thread>
+                            <tr style="width:auto;">
+                                <th>
+                                    <center>
+                                        Number
+                                    </center>
+                                </th>
+                                <th>
+                                    <center>part</center>
+                                </th>
+                                <th>
+                                    <center>applcation_date</center>
+                                </th>
+                                <th>
+                                    <center>application_num</center>
+                                </th>
+                                <th>
+                                    <center>registration_date</center>
+                                </th>
+                                <th>
+                                    <center>registration_num</center>
+                                </th>
+                                <th>
+                                    <center>license_name</center>
+                                </th>
+                                <th>
+                                    <center>application_place</center>
+                                </th>
+                                <th>
+                                    <center>inventor</center>
+                                </th>
+                                <th>
+                                    <center>work</center>
+                                </th>
+                                <th>
+                                    <center>Edit</center>
+                                </th>
+                                <th>
+                                    <center>Delete</center>
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+                            <%  for(let i=0; i<others_results[0].length; i++) {    %>
+                                <tr style="width:auto;">
+                                    <td>
+                                        <center>
+                                            <%=                                     i+1                                 %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[0][i][1]           %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[0][i][2]          %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[0][i][3]            %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[0][i][4]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[0][i][5]        %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[0][i][6]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[0][i][7]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[0][i][8]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[0][i][9]     %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a href="#" class="btn btn-default license_updateBtn" data-toggle="modal" data-target="#license_edit" type="button">
+                                            수정</a>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a type="button" class="btn btn-primary" onclick="license_delete('<%= others_results[0][i][6] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                        </center>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                    <table class="table table-hover memberTable" id="awardTable" style="display:none;">
+                        <thread>
+                            <tr>
+                                <th>
+                                    <center>
+                                        Number
+                                    </center>
+                                </th>
+                                <th style="width:150px">
+                                    <center>date</center>
+                                </th>
+                                <th style="width:300px">
+                                    <center>award_organization</center>
+                                </th>
+                                <th style="width:300px">
+                                    <center>competition_name</center>
+                                </th>
+                                <th style="width:250px">
+                                    <center>ranking</center>
+                                </th>
+                                <th style="width:450px">
+                                    <center>person</center>
+                                </th>
+                                <th style="width:250px">
+                                    <center>remark</center>
+                                </th>
+                                <th>
+                                    <center>Edit</center>
+                                </th>
+                                <th>
+                                    <center>Delete</center>
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+                            <%  for(let i=0; i<others_results[1].length; i++) {    %>
+                                <tr style="width:auto;">
+                                    <td>
+                                        <center>
+                                            <%=                                     i+1                                %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[1][i][1]           %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[1][i][2]          %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[1][i][3]            %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[1][i][4]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[1][i][5]        %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[1][i][6]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a href="#" class="btn btn-default award_updateBtn" data-toggle="modal" data-target="#award_edit" type="button">
+                                            수정</a>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a type="button" class="btn btn-primary" onclick="award_delete('<%= others_results[1][i][5] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                        </center>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                    <table class="table table-hover memberTable" id="bookTable" style="display:none;">
+                        <thread>
+                            <tr style="width:auto;">
+                                <th>
+                                    <center>
+                                        Number
+                                    </center>
+                                </th>
+                                <th style="width:150px">
+                                    <center>part</center>
+                                </th>
+                                <th style="width:100px">
+                                    <center>date</center>
+                                </th>
+                                <th style="width:400px">
+                                    <center>authors</center>
+                                </th>
+                                <th style="width:400px">
+                                    <center>book_name</center>
+                                </th>
+                                <th style="width:150px">
+                                    <center>publisher</center>
+                                </th>
+                                <th style="width:200px">
+                                    <center>ISBN</center>
+                                </th>
+                                <th style="width:400px">
+                                    <center>remarks</center>
+                                </th>
+                                <th>
+                                    <center>Edit</center>
+                                </th>
+                                <th>
+                                    <center>Delete</center>
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+                            <%  for(let i=0; i<others_results[2].length; i++) {    %>
+                                <tr style="width:auto;">
+                                    <td>
+                                        <center>
+                                            <%=                                     i+1                                %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[2][i][1]           %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[2][i][2]          %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[2][i][3]            %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[2][i][4]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[2][i][5]        %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[2][i][6]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[2][i][7]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a href="#" class="btn btn-default book_updateBtn" data-toggle="modal" data-target="#book_edit" type="button">
+                                            수정</a>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a type="button" class="btn btn-primary" onclick="book_delete('<%= others_results[2][i][4] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                        </center>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                    <table class="table table-hover memberTable" id="softwareTable" style="display:none;">
+                        <thread>
+                            <tr style="width:auto;">
+                                <th>
+                                    <center>
+                                        Number
+                                    </center>
+                                </th>
+                                <th>
+                                    <center>part</center>
+                                </th>
+                                <th>
+                                    <center>institution</center>
+                                </th>
+                                <th>
+                                    <center>sw_number</center>
+                                </th>
+                                <th>
+                                    <center>designation</center>
+                                </th>
+                                <th>
+                                    <center>writer</center>
+                                </th>
+                                <th>
+                                    <center>creative_date</center>
+                                </th>
+                                <th>
+                                    <center>registration_date</center>
+                                </th>
+                                <th>
+                                    <center>originator</center>
+                                </th>
+                                <th>
+                                    <center>found_</center>
+                                </th>
+                                <th>
+                                    <center>remarks</center>
+                                </th>
+                                <th>
+                                    <center>Edit</center>
+                                </th>
+                                <th>
+                                    <center>Delete</center>
+                                </th>
+                            </tr>
+                        </thread>
+                        <tbody>
+                            <%  for(let i=0; i<others_results[3].length; i++) {    %>
+                                <tr style="width:auto;">
+                                    <td>
+                                        <center>
+                                            <%=                                     i+1                                %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[3][i][1]           %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[3][i][2]          %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][3]            %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][4]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                     others_results[3][i][5]        %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][6]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][7]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][8]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][9]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <%=                                    others_results[3][i][10]      %>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a href="#" class="btn btn-default software_updateBtn" data-toggle="modal" data-target="#software_edit" type="button">
+                                            수정</a>
+                                        </center>
+                                    </td>
+                                    <td>
+                                        <center>
+                                            <a type="button" class="btn btn-primary" onclick="software_delete('<%= others_results[3][i][3] %>'); javascript:rowDel(this)">
+                                            삭제
+                                        </a>
+                                        </center>
+                                    </td>
+                                </tr>
+                                <% } %>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <!-- #list -> #edit -->
+    <div class="modal fade" id="license_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    License Edit
+                </div>
+                <div class="modal-body">
+                    <%  let edit_license=['number','part','application_date','application_num','registration_date','registration_num','license_name','application_place','inventor','work']; 
+                    for(let i=0; i<edit_license.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+                                <%=                             edit_license[i] + ':'    %>
+                            </h13>
+                            <%                              if(i == 0) {            %>
+                                <input type='text' name='<%=edit_license[i]%>' id='<%='licenseUpdate_' + edit_license[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+<%                              } else {                %>
+                                <input type='text' name='<%=edit_license[i]%>' id='<%='licenseUpdate_' + edit_license[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                <%                              }                       %>
+                        </div>
+                        <%                  }                               %>
+                            <br>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                            <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="license_update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="award_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    Award Edit
+                </div>
+                <div class="modal-body">
+                    <%  let edit_award=['number','date','award_organization','competition_name','ranking','person','remarks']; 
+                    for(let i=0; i<edit_award.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+                                <%= edit_award[i] + ':'    %>
+                            </h13>
+                            <%                              if(i == 0) {            %>
+                                <input type='text' name='<%=edit_award[i]%>' id='<%='awardUpdate_' + edit_award[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                <%                              } else {                %>
+                                    <input type='text' name='<%=edit_award[i]%>' id='<%='awardUpdate_' + edit_award[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                    <%                              }                       %>
+                        </div>
+                        <%                  }                               %>
+                            <br>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                            <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="award_update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="book_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    Book Edit
+                </div>
+                <div class="modal-body">
+                    <%  let edit_book=['number','part','date','authors','book_name','publisher','ISBN','remarks']; 
+                    for(let i=0; i<edit_book.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+                                <%=                             edit_book[i] + ':'    %>
+                            </h13>
+                            <%                              if(i == 0) {            %>
+                                <input type='text' name='<%=edit_book[i]%>' id='<%='bookUpdate_' + edit_book[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                <%                              } else {                %>
+                                    <input type='text' name='<%=edit_book[i]%>' id='<%='bookUpdate_' + edit_book[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                    <%                              }                       %>
+                        </div>
+                        <%                  }                               %>
+                            <br>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                            <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="book_update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="software_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 890px;">
+                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                    Software Edit
+                </div>
+                <div class="modal-body">
+                    <%  let edit_software=['number','part','institution','sw_number','designation','writer','creative_date','registration_date','originator','found_','remarks']; 
+                    for(let i=0; i<edit_software.length; i++) { 
+%>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13 style="margin-left: 50px;">
+                                <%= edit_software[i] + ':'    %>
+                            </h13>
+                            <%  if(i == 0) {            %>
+                                <input type='text' name='<%=edit_software[i]%>' id='<%='softwareUpdate_' + edit_software[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                <% } else {                %>
+                                    <input type='text' name='<%=edit_software[i]%>' id='<%='softwareUpdate_' + edit_software[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                <%                              }                       %>
+                        </div>
+                        <%                  }                               %>
+                            <br>
+                            <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                            <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="software_update()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
-        <div class="content-header" style="height:30px">
+        <div class="content-header" style="height: 30px;">
             <h1>Others
-                <% if(userInfo!=null) { %>
-                    <a href="#" data-toggle="modal" data-target="#edit" type="button" class="btn btn-default"
-                        style="float:right; height: 35px;">
+                <%              if(userInfo!=null) {     %>
+                    &nbsp;
+                    <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
                         <h14 style="font-size: 15px;">
                             Edit
                         </h14>
                     </a>
-                    <% } %>
+                    <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                        <h14 style="font-size: 15px;">
+                            New
+                        </h14>
+                    </a>
+                    <%              }                    %>
             </h1>
         </div>
         <section class="content">
@@ -63,14 +877,14 @@
                         <div class="box-header">
                         </div>
                         <div class="box-body">
-<%                          
+                            <%                          
                             let kinds = ['특허', '수상', '저서', '소프트웨어 등록'];
                             for(let i =0; i<others_results.length; i++) { 
 %>
-                            <p style="font-size:20px;">&bull;&nbsp;<strong><%=kinds[i]%></strong></p>
-                            </p>
+                                <p style="font-size:20px;">&bull;&nbsp;<strong><%=kinds[i]%></strong></p>
+                                </p>
                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                  
+                                    <%                                  
                                     var count = 0;
                                     var str = '';
                                     for(let j =others_results[i].length-1; j>=0; j--) { 
@@ -91,13 +905,13 @@
                                         }
                                         %>
                                         <%= count+1 + ". " + str %>
-                                        <br><br>
-<%                                      count++;
+                                            <br><br>
+                                            <%                                      count++;
                                     }                                                %>
                                 </li>
                                 <br>
-                                
-<%                          }           %>
+
+                                <%                          }           %>
                         </div>
                     </div>
                 </div>

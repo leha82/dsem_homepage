@@ -26,49 +26,48 @@
 
     <!-- Journal, Conference 클릭 시 -->
     <script>
-        $(".list_journalBtn").click(function () {
-            document.getElementById('list_journal').className = 'btn btn-primary list_journal';
-            document.getElementById('list_conference').className = 'btn btn-default list_conference';
-            document.getElementById('journalTable').style.display = 'block';
-            document.getElementById('conferenceTable').style.display = 'none';
-        });
-        $(".list_conferenceBtn").click(function () {
-            document.getElementById('list_journal').className = 'btn btn-default list_journal';
-            document.getElementById('list_conference').className = 'btn btn-primary list_conference';
-            document.getElementById('journalTable').style.display = 'none';
-            document.getElementById('conferenceTable').style.display = 'block';
-        });
-
-        $(".new_journalBtn").click(function () {
+        $(".new_journalBtn").click(function() {
             document.getElementById('new_journal').className = 'btn btn-primary new_journalBtn';
             document.getElementById('new_conference').className = 'btn btn-default new_conferenceBtn';
             document.getElementById('journal_select').style.display = 'block';
             document.getElementById('conference_select').style.display = 'none';
         });
-        $(".new_conferenceBtn").click(function () {
+        $(".new_conferenceBtn").click(function() {
             document.getElementById('new_journal').className = 'btn btn-default new_journalBtn';
             document.getElementById('new_conference').className = 'btn btn-primary new_conferenceBtn';
             document.getElementById('journal_select').style.display = 'none';
             document.getElementById('conference_select').style.display = 'block';
         });
 
+        $(".list_journalBtn").click(function() {
+            document.getElementById('list_journal').className = 'btn btn-primary list_journal';
+            document.getElementById('list_conference').className = 'btn btn-default list_conference';
+            document.getElementById('journalTable').style.display = 'block';
+            document.getElementById('conferenceTable').style.display = 'none';
+        });
+        $(".list_conferenceBtn").click(function() {
+            document.getElementById('list_journal').className = 'btn btn-default list_journal';
+            document.getElementById('list_conference').className = 'btn btn-primary list_conference';
+            document.getElementById('journalTable').style.display = 'none';
+            document.getElementById('conferenceTable').style.display = 'block';
+        });
     </script>
     <!--  updateBtn -->
     <script>
         var paperInfo = [];
-        $(".journal_updateBtn").click(function () {
+        $(".journal_updateBtn").click(function() {
             var journal_updateBtn = $(this);
 
             var tr = journal_updateBtn.parent().parent().parent();
             var td = tr.children();
-            
-            td.each(function (i) {
+
+            td.each(function(i) {
                 paperInfo[i] = td.eq(i).text().trim();
             })
             $("input[name=number]").attr('value', paperInfo[0]);
             $("input[name=year]").attr('value', paperInfo[1]);
             $("input[name=part]").attr('value', paperInfo[2]);
-            $("input[name=date]").attr('value',  paperInfo[3]);
+            $("input[name=date]").attr('value', paperInfo[3]);
             $("input[name=authors]").attr('value', paperInfo[4]);
             $("input[name=title]").attr('value', paperInfo[5]);
             $("input[name=journal_name]").attr('value', paperInfo[6]);
@@ -79,19 +78,19 @@
             $("input[name=found_]").attr('value', paperInfo[11]);
             $("input[name=doi]").attr('value', paperInfo[12]);
         });
-        $(".conference_updateBtn").click(function () {
+        $(".conference_updateBtn").click(function() {
             var conference_updateBtn = $(this);
 
             var tr = conference_updateBtn.parent().parent().parent();
             var td = tr.children();
-            
-            td.each(function (i) {
+
+            td.each(function(i) {
                 paperInfo[i] = td.eq(i).text().trim();
             })
             $("input[name=number]").attr('value', paperInfo[0]);
             $("input[name=year]").attr('value', paperInfo[1]);
             $("input[name=part]").attr('value', paperInfo[2]);
-            $("input[name=date]").attr('value',  paperInfo[3]);
+            $("input[name=date]").attr('value', paperInfo[3]);
             $("input[name=authors]").attr('value', paperInfo[4]);
             $("input[name=title]").attr('value', paperInfo[5]);
             $("input[name=proceeding]").attr('value', paperInfo[6]);
@@ -100,621 +99,607 @@
             $("input[name=found]").attr('value', paperInfo[9]);
             $("input[name=remarks]").attr('value', paperInfo[10]);
         });
-
-
     </script>
 </head>
 
 <body class="skin-black">
     <%
                                 // DB 데이터 배열에 담기
-                                let year = []; // 존재하는 논문의 년도
-                                for(let i =0; i<paper_results.length; i++) {
-                                    for(let j =0; j<paper_results[i].length; j++) {
-                                        if(year.includes(paper_results[i][j][1])) { 
-                                            continue;
-                                        }
-                                        if(paper_results[i][j][1] != (null || '')) { 
-                                            year.push(paper_results[i][j][1]);                                    
-                                        }
-                                    }
-                                }
-                                year.sort();
-                                year.reverse();
+        let year = []; // 존재하는 논문의 년도
+        for(let i =0; i<paper_results.length; i++) {
+            for(let j =0; j<paper_results[i].length; j++) {
+                if(year.includes(paper_results[i][j][1])) { 
+                    continue;
+                }
+                if(paper_results[i][j][1] != (null || '')) { 
+                    year.push(paper_results[i][j][1]);                                    
+                }
+            }
+        }
+        year.sort();
+        year.reverse();
 
-                                let IJ = [], DJ = [], IC = [], DC = [];
-                                for(let i =0; i<paper_results.length; i++) {
-                                    for(let j =0; j<paper_results[i].length; j++) { 
-                                        if(paper_results[i][j][2] == 'IJ') {                                                
-                                            IJ.push(paper_results[i][j]);
-                                        } else if(paper_results[i][j][2] == 'DJ') {
-                                            DJ.push(paper_results[i][j]);
-                                        } else if(paper_results[i][j][2] == 'IC') {
-                                            IC.push(paper_results[i][j]);
-                                        } else if(paper_results[i][j][2] == 'DC') {
-                                            DC.push(paper_results[i][j]);
-                                        }              
-                                    }
-                                }
+        let IJ = [], DJ = [], IC = [], DC = [];
+        for(let i =0; i<paper_results.length; i++) {
+            for(let j =0; j<paper_results[i].length; j++) { 
+                if(paper_results[i][j][2] == 'IJ') {                                                
+                    IJ.push(paper_results[i][j]);
+                } else if(paper_results[i][j][2] == 'DJ') {
+                    DJ.push(paper_results[i][j]);
+                } else if(paper_results[i][j][2] == 'IC') {
+                    IC.push(paper_results[i][j]);
+                } else if(paper_results[i][j][2] == 'DC') {
+                    DC.push(paper_results[i][j]);
+                }              
+            }
+        }
 %>
-    <!-- #New, 논문-->
-    <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 150px; padding-top: 20px;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 865px;">
-                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
-                    New
-                </div>
-                &nbsp;
-                <button type="submit" class= "btn btn-primary new_journalBtn" id = "new_journal">Journal</button>
-                <button type="submit" class= "btn btn-default new_conferenceBtn" id = "new_conference">Conference</button>
-                <div class="modal-body">
-                    <div class= "journalView" id = "journal_select" style="display:block">
-<%                      let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
+        <!-- #New, 논문-->
+        <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 150px; padding-top: 20px;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 600px; height: 865px;">
+                    <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                        New
+                    </div>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary new_journalBtn" id="new_journal">Journal</button>
+                    <button type="submit" class="btn btn-default new_conferenceBtn" id="new_conference">Conference</button>
+                    <div class="modal-body">
+                        <div class="journalView" id="journal_select" style="display:block">
+                            <%                      let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
                         for(let i=0; i<new_journal.length; i++) {
 %>
-                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                                <h13 style="margin-left: 50px;">
-<%=                                 new_journal[i] + ':' %>
-                                </h13>
-                                <input style="margin-left:50px; width: 350px" id='<%= 'journalInsert_' + new_journal[i]%>' />
-                            </div>
-<%                      }           %>
-                        <br>
-                        <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_insert();"> Save</button>
-                    </div>
-                    <div class= "conferenceView" id = "conference_select" style="display:none">
-<%                      let new_conference=['year','part','date','authors','title','proceeding','ISSN','place','found','remarks'];
+                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                    <h13 style="margin-left: 50px;">
+                                        <%=                                 new_journal[i] + ':' %>
+                                    </h13>
+                                    <input style="margin-left:50px; width: 350px" id='<%= ' journalInsert_ ' + new_journal[i]%>' />
+                                </div>
+                                <%                      }           %>
+                                    <br>
+                                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_insert();"> Save</button>
+                        </div>
+                        <div class="conferenceView" id="conference_select" style="display:none">
+                            <%                      let new_conference=['year','part','date','authors','title','proceeding','ISSN','place','found','remarks'];
                         for(let i=0; i<new_conference.length; i++) {
 %>
-                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                                <h13 style="margin-left: 50px;">
-<%=                                 new_conference[i] + ':' %>
-                                </h13>
-                                <input style="margin-left:50px; width: 350px" id='<%= 'conferenceInsert_' + new_conference[i]%>' />
-                            </div>
-<%                      }           %>
-                        <div style="line-height:187%">
-                            <br><br><br><br>
+                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                    <h13 style="margin-left: 50px;">
+                                        <%=                                 new_conference[i] + ':' %>
+                                    </h13>
+                                    <input style="margin-left:50px; width: 350px" id='<%= ' conferenceInsert_ ' + new_conference[i]%>' />
+                                </div>
+                                <%                      }           %>
+                                    <div style="line-height:187%">
+                                        <br><br><br><br>
+                                    </div>
+                                    <br>
+                                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
+                                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_insert();"> Save</button>
                         </div>
-                        <br>
-                        <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right" onclick="close()">Close</button>
-                        <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_insert();"> Save</button>
-                    </div>    
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!--#list, DB에서 조회-->
-    <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" margin-left: -1210px; padding-top: 40px; ">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content" style="width: 1830px; height: 800px;">
-                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
-                <div class="modal-header" style="height: 50px;">
-                    <center style="font-size: 18px;">
-                        <string>
-                            Paper list
-                        </string>
-                    </center>
-                </div>
-                &nbsp;
-                <button type="submit" class= "btn btn-primary list_journalBtn" id = "list_journal">Journal</button>
-                <button type="submit" class= "btn btn-default list_conferenceBtn" id = "list_conference">Conference</button>
-                <br>
-                <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;  position:fixed;">
-                    <table class="table table-hover memberTable" id="journalTable" style="display:block;">
-                    <thread>
-                        <tr style="width:auto;">
-                            <th>
-                                <center>
-                                    Number
-                                </center>
-                            </th>
-                            <th>
-                                <center>year</center>
-                            </th>
-                            <th>
-                                <center>part</center>
-                            </th>
-                            <th>
-                                <center>date</center>
-                            </th>
-                            <th>
-                                <center>authors</center>
-                            </th>
-                            <th>
-                                <center>title</center>
-                            </th>
-                            <th>
-                                <center>journal_name</center>
-                            </th>
-                            <th>
-                                <center>other</center>
-                            </th>
-                            <th>
-                                <center>ISSN</center>
-                            </th>
-                            <th>
-                                <center>paper_index</center>
-                            </th>
-                            <th>
-                                <center>IF_</center>
-                            </th>
-                            <th>
-                                <center>found_</center>
-                            </th>
-                            <th>
-                                <center>doi</center>
-                            </th>
-                            <th>
-                                <center>Edit</center>
-                            </th>
-                            <th>
-                                <center>Delete</center>
-                            </th>
-                        </tr>
-                    </thread>
-                    <tbody>
-<%                                      
-                        var journal = IJ.concat(DJ);
-%>
-<%                      for(let i=0; i<paper_results[0].length; i++) {    %>
-                            <tr style="width:auto;">
-                                <td>
-                                    <center>
-<%=                                     i+1                                 %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[0][i][1]           %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[0][i][2]          %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][3]            %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][4]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[0][i][5]        %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][6]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][7]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][8]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[0][i][9]     %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[0][i][10]     %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][11]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[0][i][12]       %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-                                        <a href="#" class="btn btn-default journal_updateBtn" data-toggle="modal"
-                                            data-target="#journal_edit" type="button">
+        <!--#list, DB에서 조회-->
+        <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" margin-left: -1210px; padding-top: 40px; ">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content" style="width: 1830px; height: 800px;">
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                    <div class="modal-header" style="height: 50px;">
+                        <center style="font-size: 18px;">
+                            <string>
+                                Paper list
+                            </string>
+                        </center>
+                    </div>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary list_journalBtn" id="list_journal">Journal</button>
+                    <button type="submit" class="btn btn-default list_conferenceBtn" id="list_conference">Conference</button>
+                    <br>
+                    <div style="width: 1820px; height:700px; overflow: auto; font-size: 15px;  position:fixed;">
+                        <table class="table table-hover memberTable" id="journalTable" style="display:block;">
+                            <thread>
+                                <tr style="width:auto;">
+                                    <th>
+                                        <center>
+                                            Number
+                                        </center>
+                                    </th>
+                                    <th>
+                                        <center>year</center>
+                                    </th>
+                                    <th>
+                                        <center>part</center>
+                                    </th>
+                                    <th>
+                                        <center>date</center>
+                                    </th>
+                                    <th>
+                                        <center>authors</center>
+                                    </th>
+                                    <th>
+                                        <center>title</center>
+                                    </th>
+                                    <th>
+                                        <center>journal_name</center>
+                                    </th>
+                                    <th>
+                                        <center>other</center>
+                                    </th>
+                                    <th>
+                                        <center>ISSN</center>
+                                    </th>
+                                    <th>
+                                        <center>paper_index</center>
+                                    </th>
+                                    <th>
+                                        <center>IF_</center>
+                                    </th>
+                                    <th>
+                                        <center>found_</center>
+                                    </th>
+                                    <th>
+                                        <center>doi</center>
+                                    </th>
+                                    <th>
+                                        <center>Edit</center>
+                                    </th>
+                                    <th>
+                                        <center>Delete</center>
+                                    </th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <%                      for(let i=0; i<paper_results[0].length; i++) {    %>
+                                    <tr style="width:auto;">
+                                        <td>
+                                            <center>
+                                                <%=                                     i+1                                 %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[0][i][1]           %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[0][i][2]          %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][3]            %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][4]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[0][i][5]        %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][6]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][7]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][8]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[0][i][9]     %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[0][i][10]     %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][11]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[0][i][12]       %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <a href="#" class="btn btn-default journal_updateBtn" data-toggle="modal" data-target="#journal_edit" type="button">
                                             수정</a>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-                                        <a type="button" class="btn btn-primary"
-                                            onclick="journal_delete('<%= paper_results[0][i][5] %>'); javascript:rowDel(this)">
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <a type="button" class="btn btn-primary" onclick="journal_delete('<%= paper_results[0][i][5] %>'); javascript:rowDel(this)">
                                             삭제
                                         </a>
-                                    </center>
-                                </td>
-                            </tr>
-                            <% } %>
-                    </tbody>
-                    </table>
-                    <table class="table table-hover memberTable" id="conferenceTable" style="display:none;">
-                    <thread>
-                        <tr style="width:auto;">
-                            <th>
-                                <center>
-                                    Number
-                                </center>
-                            </th>
-                            <th>
-                                <center>year</center>
-                            </th>
-                            <th>
-                                <center>part</center>
-                            </th>
-                            <th>
-                                <center>date</center>
-                            </th>
-                            <th>
-                                <center>authors</center>
-                            </th>
-                            <th>
-                                <center>title</center>
-                            </th>
-                            <th>
-                                <center>proceeding</center>
-                            </th>
-                            <th>
-                                <center>ISSN</center>
-                            </th>
-                            <th>
-                                <center>place</center>
-                            </th>
-                            <th>
-                                <center>found</center>
-                            </th>
-                            <th>
-                                <center>remarks</center>
-                            </th>
-                            <th>
-                                <center>Edit</center>
-                            </th>
-                            <th>
-                                <center>Delete</center>
-                            </th>
-                        </tr>
-                    </thread>
-                    <tbody>
-<%                      for(let i=0; i<paper_results[1].length; i++) {    %>
-                            <tr style="width:auto;">
-                                <td>
-                                    <center>
-<%=                                     i+1                                %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[1][i][1]           %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[1][i][2]          %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[1][i][3]            %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[1][i][4]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[1][i][5]        %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[1][i][6]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[1][i][7]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                    paper_results[1][i][8]      %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[1][i][9]     %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-<%=                                     paper_results[1][i][10]     %>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-                                        <a href="#" class="btn btn-default conference_updateBtn" data-toggle="modal"
-                                            data-target="#conference_edit" type="button">
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                            </tbody>
+                        </table>
+                        <table class="table table-hover memberTable" id="conferenceTable" style="display:none;">
+                            <thread>
+                                <tr style="width:auto;">
+                                    <th>
+                                        <center>
+                                            Number
+                                        </center>
+                                    </th>
+                                    <th>
+                                        <center>year</center>
+                                    </th>
+                                    <th>
+                                        <center>part</center>
+                                    </th>
+                                    <th>
+                                        <center>date</center>
+                                    </th>
+                                    <th>
+                                        <center>authors</center>
+                                    </th>
+                                    <th>
+                                        <center>title</center>
+                                    </th>
+                                    <th>
+                                        <center>proceeding</center>
+                                    </th>
+                                    <th>
+                                        <center>ISSN</center>
+                                    </th>
+                                    <th>
+                                        <center>place</center>
+                                    </th>
+                                    <th>
+                                        <center>found</center>
+                                    </th>
+                                    <th>
+                                        <center>remarks</center>
+                                    </th>
+                                    <th>
+                                        <center>Edit</center>
+                                    </th>
+                                    <th>
+                                        <center>Delete</center>
+                                    </th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <%                      for(let i=0; i<paper_results[1].length; i++) {    %>
+                                    <tr style="width:auto;">
+                                        <td>
+                                            <center>
+                                                <%=                                     i+1                                %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[1][i][1]           %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[1][i][2]          %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[1][i][3]            %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[1][i][4]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[1][i][5]        %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[1][i][6]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[1][i][7]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                    paper_results[1][i][8]      %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[1][i][9]     %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <%=                                     paper_results[1][i][10]     %>
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <a href="#" class="btn btn-default conference_updateBtn" data-toggle="modal" data-target="#conference_edit" type="button">
                                             수정</a>
-                                    </center>
-                                </td>
-                                <td>
-                                    <center>
-                                        <a type="button" class="btn btn-primary"
-                                            onclick="conference_delete('<%= paper_results[1][i][5] %>'); javascript:rowDel(this)">
+                                            </center>
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <a type="button" class="btn btn-primary" onclick="conference_delete('<%= paper_results[1][i][5] %>'); javascript:rowDel(this)">
                                             삭제
                                         </a>
-                                    </center>
-                                </td>
-                            </tr>
-                            <% } %>
-                    </tbody>
-                    </table>
-                </div>
+                                            </center>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                            </tbody>
+                        </table>
+                    </div>
 
-                <br>
-            </div> -->
+                    <br>
+                </div> -->
+            </div>
         </div>
-    </div>
-    <!--   #list -> #edit   -->
-    <div class="modal fade" id="journal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 60px; padding-top: 0px;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 890px;">
-                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
-                    Journal Edit
-                </div>
-                <div class="modal-body">
-<%                  let edit_journal=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
+        <!--   #list -> #edit   -->
+        <div class="modal fade" id="journal_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 600px; height: 890px;">
+                    <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                        Journal Edit
+                    </div>
+                    <div class="modal-body">
+                        <%                  let edit_journal=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
                     for(let i=0; i<edit_journal.length; i++) { 
 %>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             edit_journal[i] + ':'    %>
-                            </h13>
-<%                              if(i == 0) {            %>
-                                    <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
-<%                              } else {                %> 
-                                    <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value = '' style="margin-left:50px; width: 350px"/>
-<%                              }                       %>
-                        </div>
-<%                  }                               %>
-                    <br>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_update()">Save</button>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%=                             edit_journal[i] + ':'    %>
+                                </h13>
+                                <%                              if(i == 0) {            %>
+                                    <input type='text' name='<%=edit_journal[i]%>' id='<%=' journalUpdate_ ' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                    <%                              } else {                %>
+                                        <input type='text' name='<%=edit_journal[i]%>' id='<%=' journalUpdate_ ' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                        <%                              }                       %>
+                            </div>
+                            <%                  }                               %>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_update()">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
- 
-    <div class="modal fade" id="conference_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 60px; padding-top: 0px;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 890px;">
-                <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
-                    Conference Edit
-                </div>
-                <div class="modal-body">
-<%                  let edit_conference=['number','year','part','date','authors','title','proceeding','ISSN','place','found','remarks']; 
+
+        <div class="modal fade" id="conference_edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 60px; padding-top: 0px;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 600px; height: 890px;">
+                    <div class="modal-header" style="height: 50px; text-align:center; font-size:18px;">
+                        Conference Edit
+                    </div>
+                    <div class="modal-body">
+                        <%                  let edit_conference=['number','year','part','date','authors','title','proceeding','ISSN','place','found','remarks']; 
                     for(let i=0; i<edit_conference.length; i++) { 
 %>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             edit_conference[i] + ':'    %>
-                            </h13>
-<%                              if(i == 0) {            %>
-                                    <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
-<%                              } else {                %> 
-                                    <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value = '' style="margin-left:50px; width: 350px"/>
-<%                              }                       %>
-                        </div>
-<%                  }                               %>
-                    <div style="line-height:187%">
-                        <br><br><br><br>
+                            <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                <h13 style="margin-left: 50px;">
+                                    <%=                             edit_conference[i] + ':'    %>
+                                </h13>
+                                <%                              if(i == 0) {            %>
+                                    <input type='text' name='<%=edit_conference[i]%>' id='<%=' conferenceUpdate_ ' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                    <%                              } else {                %>
+                                        <input type='text' name='<%=edit_conference[i]%>' id='<%=' conferenceUpdate_ ' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                        <%                              }                       %>
+                            </div>
+                            <%                  }                               %>
+                                <div style="line-height:187%">
+                                    <br><br><br><br>
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_update()">Save</button>
                     </div>
-                    <br>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="conference_update()">Save</button>
                 </div>
             </div>
         </div>
-    </div>
 
 
 
 
-    <!--#Edit-->
-    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" padding-left: 150px; padding-top: 120px;">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 670px;">
-                <div class="modal-header" style="height: 40px;">
-                    <center style="font-size: 18px;">Edit</center>
-                </div>
-                <% let edit=['name', 'department' , 'laboratory' , 'email' , 'location' , 'research' ]; for(let i=0;
+        <!--#Edit-->
+        <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 150px; padding-top: 120px;">
+            <div class="modal-dialog">
+                <div class="modal-content" style="width: 600px; height: 670px;">
+                    <div class="modal-header" style="height: 40px;">
+                        <center style="font-size: 18px;">Edit</center>
+                    </div>
+                    <% let edit=['name', 'department' , 'laboratory' , 'email' , 'location' , 'research' ]; for(let i=0;
                     i<edit.length; i++) { %>
-                    <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                        <h13>
-                            <%= edit[i] + ':' %>
-                        </h13>
-                        <input style="margin-left:50px; width: 350px;" id='<%= edit[i]%>' />
-                    </div>
-                    <br>
-                    <% } %>
-            </div> -->
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="save()">Save</button>
-                <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                            <h13>
+                                <%= edit[i] + ':' %>
+                            </h13>
+                            <input style="margin-left:50px; width: 350px;" id='<%= edit[i]%>' />
+                        </div>
+                        <br>
+                        <% } %>
+                </div> -->
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal" onclick="save()">Save</button>
+                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                </div>
             </div>
         </div>
-    </div>
-    <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
-        <div class="content-header" style="height: 30px;">
-            <h1>Paper
-<%              if(userInfo!=null) {     %>
-                &nbsp;
-                <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
-                    <h14 style="font-size: 15px;">
-                        Edit
-                    </h14>
-                </a>
-                <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
-                    <h14 style="font-size: 15px;">
-                        New
-                    </h14>
-                </a>
-<%              }                    %>
-            </h1>
-        </div>
-        <section class="content">
-            <div class="row" style="padding-left: 12px;">
-                <div class="box box-info">
-                    <div class="box-header">
-                    </div>
-                    <div class="box-body">
-                        <div class="nav-tabs-custom">
-                            <ul class="nav nav-tabs">
-<%                              for(let i =0; i<year.length; i++) {                 %>
-                                    <li>
-                                        <a href="<%= "#"+year[i]%>" data-toggle="tab">
-                                            <%= year[i]%>
-                                        </a>
-                                    </li>
-<%                              }                                                   %>                              
-                            </ul>
-                            <div class="tab-content">
-<%                              for(let i =0; i<year.length; i++) {                 %>
-<%                                  if(i == 0) {                                    %>
-                                        <div class="tab-pane active" id="<%=year[i]%>">
-                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
+        <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
+            <div class="content-header" style="height: 30px;">
+                <h1>Paper
+                    <%              if(userInfo!=null) {     %>
+                        &nbsp;
+                        <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                            <h14 style="font-size: 15px;">
+                                Edit
+                            </h14>
+                        </a>
+                        <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                            <h14 style="font-size: 15px;">
+                                New
+                            </h14>
+                        </a>
+                        <%              }                    %>
+                </h1>
+            </div>
+            <section class="content">
+                <div class="row" style="padding-left: 12px;">
+                    <div class="box box-info">
+                        <div class="box-header">
+                        </div>
+                        <div class="box-body">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <%                              for(let i =0; i<year.length; i++) {                 %>
+                                        <li>
+                                            <a href="<%= " # "+year[i]%>" data-toggle="tab">
+                                                <%= year[i]%>
+                                            </a>
+                                        </li>
+                                        <%                              }                                                   %>
+                                </ul>
+                                <div class="tab-content">
+                                    <%                              for(let i =0; i<year.length; i++) {                 %>
+                                        <%                                  if(i == 0) {                                    %>
+                                            <div class="tab-pane active" id="<%=year[i]%>">
+                                                <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                                    <%                                                  
                                                     var count = 0;
                                                     for(let j =0; j<IJ.length; j++) {
                                                         if(IJ[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
+                                                        <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
                                                             <br><br>
-<%                                                          count++;
+                                                            <%                                                          count++;
                                                         }                           
-                                                    }                               %>    
+                                                    }                               %>
                                                 </li>
-                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
-                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                
+                                                <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
+                                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                    <%                                                
                                                     count = 0; 
                                                     for(let j =0; j<DJ.length; j++) {
                                                         if(DJ[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length)%>
+                                                        <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length)%>
                                                             <br><br>
-<%                                                          count++;
+                                                            <%                                                          count++;
                                                         }                           
-                                                    }                               %>    
+                                                    }                               %>
                                                 </li>
-                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
-                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                                <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
+                                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                    <%                                                  
                                                     count = 0; 
                                                     for(let j =0; j<IC.length; j++) { 
                                                         if(IC[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + IC[j].slice(4,IC[j].length)%>
+                                                        <%= count+1 + ". " + IC[j].slice(4,IC[j].length)%>
                                                             <br><br>
-<%                                                          count++;
+                                                            <%                                                          count++;
                                                         }                           
-                                                    }                               %>   
+                                                    }                               %>
                                                 </li>
-                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
-                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                                <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
+                                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                    <%                                                  
                                                     count = 0;
                                                     for(let j =0; j<DC.length; j++) { 
                                                         if(DC[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
+                                                        <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
                                                             <br><br>
-<%                                                          count++;
+                                                            <%                                                          count++;
                                                         }                           
-                                                    }                               %>     
+                                                    }                               %>
                                                 </li>
                                             </div>
-<%                                  } else {                                                 %>
-                                        <div class="tab-pane" id="<%=year[i]%>">
-                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
-                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                            <%                                  } else {                                                 %>
+                                                <div class="tab-pane" id="<%=year[i]%>">
+                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
+                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                        <%                                                  
                                                     count = 0;
                                                     for(let j =0; j<IJ.length; j++) { 
                                                         if(IJ[j][1] == year[i]) {   %>
                                                             <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
-                                                            <br><br>
-<%                                                          count++;
+                                                                <br><br>
+                                                                <%                                                          count++;
                                                         }                           
-                                                    }                               %>    
-                                                </li>
-                                          <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
-                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                                    }                               %>
+                                                    </li>
+                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
+                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                        <%                                                  
                                                     count = 0;
                                                     for(let j =0; j<DJ.length; j++) { 
                                                         if(DJ[j][1] == year[i]) {   %>
                                                             <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length) %>
-                                                            <br><br>
-<%                                                          count++;
+                                                                <br><br>
+                                                                <%                                                          count++;
                                                         }                           
-                                                    }                               %>    
-                                                </li>
-                                          <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
-                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                  
+                                                    }                               %>
+                                                    </li>
+                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
+                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                        <%                                                  
                                                     count = 0;
                                                     for(let j =0; j<IC.length; j++) { 
                                                         if(IC[j][1] == year[i]) {   %>
                                                             <%= count+1 + ". " + IC[j].slice(4,IC[j].length) %>
-                                                            <br><br>
-<%                                                          count++;
+                                                                <br><br>
+                                                                <%                                                          count++;
                                                         }                           
-                                                    }                               %>    
-                                                </li>
-                                          <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
-                                          <li style="font-size: 16px; font-weight: 500; list-style: none;">
-<%                                                 
+                                                    }                               %>
+                                                    </li>
+                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
+                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                        <%                                                 
                                                     count = 0;
                                                     for(let j =0; j<DC.length; j++) {  
                                                         if(DC[j][1] == year[i]) {   %>
                                                             <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
-                                                            <br><br>
-<%                                                          count++;
+                                                                <br><br>
+                                                                <%                                                          count++;
                                                         }                           
-                                                    }                               %>   
-                                                </li>
-                                        </div>
-<%                                  }                                                   %>
-<%                              }                                                       %>
+                                                    }                               %>
+                                                    </li>
+                                                </div>
+                                                <%                                  }                                                   %>
+                                                    <%                              }                                                       %>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-        </section>
-    </aside>
-    </div>
+            </section>
+        </aside>
+        </div>
 </body>
 
 </html>
