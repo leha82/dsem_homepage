@@ -100,18 +100,36 @@
             $("input[name=remarks]").attr('value', paperInfo[10]);
         });
     </script>
+    <script>
+        $(window).scroll( function() {
+            if ($( this).scrollTop() > 200 ) {
+                $('.top').fadeIn();
+            } else {
+                $('.top').fadeOut();
+            }
+        });
+        $('.top').click( function() {
+            $('html, body').animate({scrollTop : 0}, 400);
+            return false;
+        });
+    </script>
+    <!-- 페이지 로딩될 때 탭 #All은 항상 데이터 띄워주기 -->
+    <!-- <script>
+        $(document).ready(function() {
+            $('All').attr('class', 'tab-pane active All');
+        });
+    </script> -->
 </head>
 
 <body class="skin-black">
     <%
                                 // DB 데이터 배열에 담기
-        let year = []; // 존재하는 논문의 년도
+        let year = ['All']; // 존재하는 논문의 년도
         for(let i =0; i<paper_results.length; i++) {
             for(let j =0; j<paper_results[i].length; j++) {
                 if(year.includes(paper_results[i][j][1])) { 
                     continue;
-                }
-                if(paper_results[i][j][1] != (null || '')) { 
+                } else {
                     year.push(paper_results[i][j][1]);                                    
                 }
             }
@@ -146,14 +164,15 @@
                     <button type="submit" class="btn btn-default new_conferenceBtn" id="new_conference">Conference</button>
                     <div class="modal-body">
                         <div class="journalView" id="journal_select" style="display:block">
-                            <%                      let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
+                        <%  let new_journal=['year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
+                            let new_journal_placeholder = ['','ex) IJ or DJ','','','','','','','','','',''];
                         for(let i=0; i<new_journal.length; i++) {
 %>
                                 <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                                     <h13 style="margin-left: 50px;">
                                         <%=                                 new_journal[i] + ':' %>
                                     </h13>
-                                    <input style="margin-left:50px; width: 350px" id='<%= ' journalInsert_ ' + new_journal[i]%>' />
+                                    <input style="margin-left:50px; width: 350px" id='<%= 'journalInsert_' + new_journal[i]%>' placeholder = '<%=new_journal_placeholder[i]%>' />
                                 </div>
                                 <%                      }           %>
                                     <br>
@@ -161,14 +180,15 @@
                                     <button type="submit" class="btn btn-primary" data-dismiss="modal" style="float:right" onclick="journal_insert();"> Save</button>
                         </div>
                         <div class="conferenceView" id="conference_select" style="display:none">
-                            <%                      let new_conference=['year','part','date','authors','title','proceeding','ISSN','place','found','remarks'];
+                            <%  let new_conference=['year','part','date','authors','title','proceeding','ISSN','place','found','remarks'];
+                            let new_confereence_placeholder = ['','ex) IC or DC','','','','','','','','','',''];
                         for(let i=0; i<new_conference.length; i++) {
 %>
                                 <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                                     <h13 style="margin-left: 50px;">
                                         <%=                                 new_conference[i] + ':' %>
                                     </h13>
-                                    <input style="margin-left:50px; width: 350px" id='<%= ' conferenceInsert_ ' + new_conference[i]%>' />
+                                    <input style="margin-left:50px; width: 350px" id='<%= 'conferenceInsert_' + new_conference[i]%>' placeholder = '<%= new_confereence_placeholder[i]%>'/>
                                 </div>
                                 <%                      }           %>
                                     <div style="line-height:187%">
@@ -253,7 +273,7 @@
                                 </tr>
                             </thread>
                             <tbody>
-                                <%                      for(let i=0; i<paper_results[0].length; i++) {    %>
+                                <%  for(let i=0; i<paper_results[0].length; i++) {    %>
                                     <tr style="width:auto;">
                                         <td>
                                             <center>
@@ -472,7 +492,7 @@
                         Journal Edit
                     </div>
                     <div class="modal-body">
-                        <%                  let edit_journal=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi']; 
+                        <%  let edit_journal=['number','year','part','date','authors','title','journal_name','other','ISSN','paper_index','IF_','found_','doi'];
                     for(let i=0; i<edit_journal.length; i++) { 
 %>
                             <div style="margin-right: 10px; margin-left:50px; width: 60px;">
@@ -480,9 +500,9 @@
                                     <%=                             edit_journal[i] + ':'    %>
                                 </h13>
                                 <%                              if(i == 0) {            %>
-                                    <input type='text' name='<%=edit_journal[i]%>' id='<%=' journalUpdate_ ' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                    <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
                                     <%                              } else {                %>
-                                        <input type='text' name='<%=edit_journal[i]%>' id='<%=' journalUpdate_ ' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                        <input type='text' name='<%=edit_journal[i]%>' id='<%='journalUpdate_' + edit_journal[i]%>'value='' style="margin-left:50px; width: 350px" />
                                         <%                              }                       %>
                             </div>
                             <%                  }                               %>
@@ -509,9 +529,9 @@
                                     <%=                             edit_conference[i] + ':'    %>
                                 </h13>
                                 <%                              if(i == 0) {            %>
-                                    <input type='text' name='<%=edit_conference[i]%>' id='<%=' conferenceUpdate_ ' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
+                                    <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px;" readonly/>
                                     <%                              } else {                %>
-                                        <input type='text' name='<%=edit_conference[i]%>' id='<%=' conferenceUpdate_ ' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px" />
+                                        <input type='text' name='<%=edit_conference[i]%>' id='<%='conferenceUpdate_' + edit_conference[i]%>'value='' style="margin-left:50px; width: 350px" />
                                         <%                              }                       %>
                             </div>
                             <%                  }                               %>
@@ -556,14 +576,14 @@
         <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
             <div class="content-header" style="height: 30px;">
                 <h1>Paper
-                    <%              if(userInfo!=null) {     %>
+                    <%  if(userInfo!=null) {     %>
                         &nbsp;
-                        <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                        <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" id="EditBtn" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
                             <h14 style="font-size: 15px;">
                                 Edit
                             </h14>
                         </a>
-                        <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                        <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" id="NewBtn" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
                             <h14 style="font-size: 15px;">
                                 New
                             </h14>
@@ -579,123 +599,219 @@
                         <div class="box-body">
                             <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                    <%                              for(let i =0; i<year.length; i++) {                 %>
-                                        <li>
-                                            <a href="<%= " # "+year[i]%>" data-toggle="tab">
-                                                <%= year[i]%>
-                                            </a>
-                                        </li>
-                                        <%                              }                                                   %>
+<%                                  for(let i =0; i<year.length; i++) {                 
+                                        if(i == 0) { %>
+                                            <li class="nav-item active">
+                                                <a class="nav-link" href="<%="#"+year[i]%>" data-toggle="tab" id="<%="#"+year[i]%>">
+                                                    <%= year[i]%>
+                                                </a>
+                                            </li>
+<%                                      } else { %>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="<%="#"+year[i]%>" data-toggle="tab" id="<%="#"+year[i]%>">
+                                                    <%= year[i]%>
+                                                </a>
+                                            </li>
+<%                                      }                                                   %>
+<%                                  }                                                   %>
                                 </ul>
-                                <div class="tab-content">
-                                    <%                              for(let i =0; i<year.length; i++) {                 %>
-                                        <%                                  if(i == 0) {                                    %>
-                                            <div class="tab-pane active" id="<%=year[i]%>">
+                            </div>
+                            <div class="tab-content">
+                                <% 
+                                    function regularExpression(str) {
+                                        str = str.replace(/,{2,}/gi, ",");
+                                        str = str.replace(".,",",");
+                                        str = str.replace(/,\s{1,}/gi, ", ");
+                                        str = str.replace(/, ,{1,}/gi, "");
+                                        str = str.replace(/,\s*$/, "");
+
+                                        return str; 
+                                }
+                                %>
+<%                              for(let i =0; i<year.length; i++) {                 %>
+<%                                  if(i == 0) {                                    %>
+                                        <div class="tab-pane active" id="<%=year[i]%>">
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
                                                     <%                                                  
-                                                    var count = 0;
-                                                    for(let j =0; j<IJ.length; j++) {
-                                                        if(IJ[j][1] == year[i]) {   %>
-                                                        <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
-                                                            <br><br>
-                                                            <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
+                                                    for(let j = 0; j<IJ.length; j++) { 
+                                                        str = '';
+                                                        for(let k = 3; k<IJ[j].length-5; k++) { 
+                                                            str += IJ[j][k] + ", ";
+                                                        }
+                                                        str = regularExpression(str);
+                                                    %>
+                                                        <%= j+1 + ". " + str%>
+                                                        <br>
+                                                        <h11><%="ISSN: " + IJ[j][8] + ", "%></h11>
+                                                        <a href="<%=IJ[j][12]%>" target="_blank">
+                                                            <%= IJ[j][12]%>
+                                                        </a>
+                                                        <br><br>
+                                                    <% } %>
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
                                                     <%                                                
-                                                    count = 0; 
-                                                    for(let j =0; j<DJ.length; j++) {
-                                                        if(DJ[j][1] == year[i]) {   %>
-                                                        <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length)%>
-                                                            <br><br>
-                                                            <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
+                                                    for(let j =0; j<DJ.length; j++) { 
+                                                        str = '';
+                                                        for(let k = 3; k<DJ[j].length-5; k++) {
+                                                            str += DJ[j][k] + ", ";
+                                                        }
+                                                        str = regularExpression(str);  
+                                                    %>
+                                                        <%= j+1 + ". " + str%>
+                                                        <br>
+                                                        <h11><%="ISSN: " + DJ[j][8] + ", "%></h11>
+                                                        <a href="<%=DJ[j][12]%>" target="_blank">
+                                                            <%= DJ[j][12]%>
+                                                        </a>
+                                                        <br><br>                     
+                                                    <% } %>
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
                                                     <%                                                  
-                                                    count = 0; 
                                                     for(let j =0; j<IC.length; j++) { 
-                                                        if(IC[j][1] == year[i]) {   %>
-                                                        <%= count+1 + ". " + IC[j].slice(4,IC[j].length)%>
-                                                            <br><br>
-                                                            <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
+                                                        str = '';
+                                                        for(let k = 3; k<IC[j].length-2; k++) {
+                                                            if(k == 3) {
+                                                                str += IC[j][k].slice(0,11) + ", ";
+                                                            } else {
+                                                                str += IC[j][k] + ", ";
+                                                            }
+                                                        }
+                                                        str = regularExpression(str);
+                                                    %>
+                                                        <%= j+1 + ". " + str%>
+                                                        <br><br>
+                                           <%         }                               %>
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
                                                     <%                                                  
-                                                    count = 0;
                                                     for(let j =0; j<DC.length; j++) { 
-                                                        if(DC[j][1] == year[i]) {   %>
-                                                        <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
-                                                            <br><br>
-                                                            <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
+                                                        str = '';
+                                                        for(let k =3; k<DC[j].length-2; k++) {
+                                                            if(k == 3) {
+                                                                str += DC[j][k].slice(0,11) + ", ";
+                                                            } else {
+                                                                str += DC[j][k] + ", ";
+                                                            }
+                                                        }
+                                                        str = regularExpression(str);
+                                                    %>
+                                                        <%= j+1 + ". " + str%>
+                                                        <%= ", " + DC[j][10]%>
+                                                        <br><br>
+                                  <%                  }                           %>
                                                 </li>
-                                            </div>
-                                            <%                                  } else {                                                 %>
-                                                <div class="tab-pane" id="<%=year[i]%>">
-                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
-                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                        <%                                                  
-                                                    count = 0;
-                                                    for(let j =0; j<IJ.length; j++) { 
-                                                        if(IJ[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + IJ[j].slice(4,IJ[j].length)%>
-                                                                <br><br>
-                                                                <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
-                                                    </li>
-                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
-                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                        <%                                                  
-                                                    count = 0;
-                                                    for(let j =0; j<DJ.length; j++) { 
-                                                        if(DJ[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + DJ[j].slice(4,DJ[j].length) %>
-                                                                <br><br>
-                                                                <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
-                                                    </li>
-                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
-                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                        <%                                                  
-                                                    count = 0;
-                                                    for(let j =0; j<IC.length; j++) { 
-                                                        if(IC[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + IC[j].slice(4,IC[j].length) %>
-                                                                <br><br>
-                                                                <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
-                                                    </li>
-                                                    <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
-                                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                        <%                                                 
-                                                    count = 0;
-                                                    for(let j =0; j<DC.length; j++) {  
-                                                        if(DC[j][1] == year[i]) {   %>
-                                                            <%= count+1 + ". " + DC[j].slice(4,DC[j].length) %>
-                                                                <br><br>
-                                                                <%                                                          count++;
-                                                        }                           
-                                                    }                               %>
-                                                    </li>
-                                                </div>
-                                                <%                                  }                                                   %>
-                                                    <%                              }                                                       %>
-                                </div>
+                                        </div>
+<%                                  } else {                                                 %>
+                                        <div class="tab-pane" id="<%=year[i]%>">
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                            <%                                                  
+                                            count = 0;
+                                            for(let j =0; j<IJ.length; j++) { 
+                                                str = '';
+                                                if(IJ[j][1] == year[i]) {   
+                                                    for(let k =3; k<IJ[j].length-5; k++) {
+                                                        str += IJ[j][k] + ", "; 
+                                                    }
+                                                    str = regularExpression(str);
+                                            %>
+                                                    <%= count+1 + ". " + str%>
+                                                    <br>
+                                                    <h11><%="ISSN: " + IJ[j][8] + ", "%></h11>
+                                                    <a href="<%=IJ[j][12]%>" target="_blank">
+                                                        <%= IJ[j][12]%>
+                                                    </a>
+                                                    <% count++; %>
+                                                    <br><br>
+                                            <%  
+                                                }                           
+                                            }                               %>
+                                            </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                <%                                                  
+                                            count = 0;
+                                            for(let j =0; j<DJ.length; j++) { 
+                                                str = '';
+                                                if(DJ[j][1] == year[i]) {   
+                                                    for(let k =3; k<DJ[j].length-5; k++) {
+                                                        str += DJ[j][k] + ", "; 
+                                                    }
+                                                    str = regularExpression(str);
+                                            %>
+                                                    <%= count+1 + ". " + str%>
+                                                    <br>
+                                                    <h11><%="ISSN: " + DJ[j][8] + ", "%></h11>
+                                                    <a href="<%=DJ[j][12]%>" target="_blank">
+                                                        <%= DJ[j][12]%>
+                                                    </a>
+                                                    <% count++; %>
+                                                    <br><br>
+                                            <%  
+                                                }                           
+                                            }                               %>
+                                            </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                            <%                                                  
+                                            count = 0;
+                                            for(let j =0; j<IC.length; j++) { 
+                                                str = '';
+                                                if(IC[j][1] == year[i]) {   
+                                                    for(let k =3; k<IC[j].length-2; k++) {
+                                                        if(k == 3) {
+                                                            str += IC[j][k].slice(0,11) + ", ";
+                                                        } else {
+                                                            str += IC[j][k] + ", ";
+                                                        }
+                                                    }
+                                                    str = regularExpression(str);
+                                                %>
+                                                    <%= count+1 + ". " + str%>
+                                                    <%  count++; %>
+                                                    <br><br>
+                                            <%
+                                                }                           
+                                            }                               %>
+                                            </li>
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                                <%                                                 
+                                            count = 0;
+                                            for(let j =0; j<DC.length; j++) {  
+                                                str = '';
+                                                if(DC[j][1] == year[i]) {   
+                                                    for(let k =3; k<DC[j].length-2; k++) {
+                                                        if(k == 3) {
+                                                            str += DC[j][k].slice(0,11) + ", ";
+                                                        } else {
+                                                            str += DC[j][k] + ", ";
+                                                        }
+                                                    }
+                                                    str = regularExpression(str);
+                                                %>
+                                                    <%= count+1 + ". " + str%>
+                                                    <%= ", " + DC[j][10]%>
+                                                    <%  count++; %>
+                                                    <br><br>
+                                            <%
+                                                }                           
+                                            }                               %>
+                                            </li>
+                                        </div>
+<%                                  }                                                   %>
+<%                              }                                                       %>
                             </div>
                         </div>
+                        <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
+                            <i class="fas fa-arrow-up"></i>
+                        </a>
                     </div>
             </section>
         </aside>

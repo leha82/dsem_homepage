@@ -286,7 +286,7 @@ function license_insert() {
 function license_delete(delete_title) {
     const license_remove_param = {
         delete_license: delete_title,
-    }
+    }``
     $.post('/others/license_delete', license_remove_param, (returnData) => {
         if (returnData.key) {
             location.reload();

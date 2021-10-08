@@ -13,11 +13,8 @@ router.post('/login', (req, res)=> {
         con.query(`SELECT * FROM login WHERE uid=? AND pw=?`,[req.body.uid,req.body.pw],(err,result)=>{
             if(err) throw err;
             else if(result[0]) {
-                console.log("로그인 성공 -> 아이디, 비밀번호: " + Object.values(result[0]));
                 req.session.user = result[0];
                 res.json({message:'로그인 하였습니다.', key:1});
-
-
             }
             else res.json({message:'ID와 PW를 다시 확인해주세요'});
         });

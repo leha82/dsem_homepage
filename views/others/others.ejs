@@ -199,9 +199,63 @@
             $("input[name=remarks]").attr('value', OthersInfo[10]);
         });
     </script>
+    <script>
+        $(window).scroll( function() {
+            if ($( this).scrollTop() > 200 ) {
+                $('.top').fadeIn();
+            } else {
+                $('.top').fadeOut();
+            }
+        });
+        $('.top').click( function() {
+            $('html, body').animate({scrollTop : 0}, 400);
+            return false;
+        });
+    </script>
 </head>
 
 <body>
+<% 
+    let year = ['특허', '수상', '저서', 'SW'];
+    /*
+    for(let i =0; i<others_results.length; i++) {
+        for(let j =0; j<others_results[i].length; j++) {
+            switch (i) {
+                case 0:
+                    if(year.includes(others_results[i][j][4].slice(0,4))) {
+                        continue;
+                    } else {
+                        year.push(others_results[i][j][4].slice(0,4));
+                    }
+                    break;
+                case 1:
+                    if(year.includes(others_results[i][j][1].slice(0,4))) {
+                        continue;
+                    } else {
+                        year.push(others_results[i][j][1].slice(0,4));
+                    }
+                    break;
+                case 2:
+                    if(year.includes(others_results[i][j][2].slice(0,4))) {
+                        continue;
+                    } else {
+                        year.push(others_results[i][j][2].slice(0,4));
+                    }
+                    break;
+                case 3:
+                    if(year.includes(others_results[i][j][6].slice(0,4))) {
+                        continue;
+                    } else {
+                        year.push(others_results[i][j][6].slice(0,4));
+                    }
+                    break;
+            }
+        }
+    }
+    year.sort();
+    year.reverse();
+    */
+%> 
     <!-- #New, 논문-->
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 150px; padding-top: 60px;">
         <div class="modal-dialog">
@@ -877,48 +931,130 @@
                         <div class="box-header">
                         </div>
                         <div class="box-body">
-                            <%                          
-                            let kinds = ['특허', '수상', '저서', '소프트웨어 등록'];
-                            for(let i =0; i<others_results.length; i++) { 
-%>
-                                <p style="font-size:20px;">&bull;&nbsp;<strong><%=kinds[i]%></strong></p>
-                                </p>
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item active">
+                                        <a class="nav-link active" href="#All" data-toggle="tab" id="#All">
+                                            All
+                                        </a>
+                                    </li>
+                                    <% for(let i = 0; i<year.length; i++) { %>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="<%="#"+year[i]%>" data-toggle="tab" id="<%="#"+year[i]%>">
+                                                <%= year[i]%>
+                                            </a>
+                                        </li>
+                                    <% }%>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                            <% 
+                                function regularExpression(str) {
+                                    str = str.replace(/,{2,}/gi, ",");
+                                    str = str.replace(".,",",");
+                                    str = str.replace(/,\s{1,}/gi, ", ");
+                                    str = str.replace(/, ,{1,}/gi, "");
+                                    str = str.replace(/,\s*$/, "");
+
+                                    return str; 
+                                }
+                            %>
+                                <div class="tab-pane active" id="All">
+                                <p style="font-size:20px;">&bull;&nbsp;<strong>특허</strong></p>
                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                    <%                                  
+                                    <%                                                  
                                     var count = 0;
-                                    var str = '';
-                                    for(let j =others_results[i].length-1; j>=0; j--) { 
-                                        str = '';
-                                        if(i == 0) {
-                                            if(others_results[i][j][4] == (null || '')) {
-                                                others_results[i][j][4] = '';
+                                    var str = ''; 
+                                        for(let j = 0; j<others_results[0].length; j++) {
+                                            if(others_results[0][j][4] != '') {
+                                            str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
                                             } else {
-                                                others_results[i][j][4] = others_results[i][j][4] + ' / ';
+                                                str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
                                             }
-                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][4] + others_results[i][j][3] + ' / ' + others_results[i][j][8] + ' / ' + others_results[i][j][6] + ' / ' + others_results[i][j][7];
-                                        } else if(i == 1) {
-                                            str = others_results[i][j][5] + ' / ' + others_results[i][j][2] + ' / ' +others_results[i][j][3] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][1]; 
-                                        } else if(i == 2) {
-                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][3] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][5] + ' / ' + 'ISBN: ' + others_results[i][j][6];
-                                        } else {
-                                            str = others_results[i][j][1] + ' / ' + others_results[i][j][8] + ' / ' + others_results[i][j][4] + ' / ' + others_results[i][j][2] + ' / ' + others_results[i][j][7] + ' / ' + '등록번호: ' + others_results[i][j][3]; 
-                                        }
+                                            str = regularExpression(str);
+                                            %>
+                                            <%= count+1 + ". " + str%>
+                                            <br><br>
+                                            <% count++ 
+                                        } %>
+                                </li>
+                                <br>
+                                <p style="font-size:20px;">&bull;&nbsp;<strong>수상</strong></p>
+                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                    <%                                                
+                                    count = 0;
+                                    str = ''; 
+                                    for(let j =0; j<others_results[1].length; j++) {
+                                        str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4]; 
+                                        str = regularExpression(str);
+                                        %>
+                                        <%= count+1 + ". " + str%>
+                                            <br><br>
+                                            <% count++;                          
+                                    }  %>
+                                </li>
+                                <br>
+                                <p style="font-size:20px;">&bull;&nbsp;<strong>저서</strong></p>
+                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                    <%                                                  
+                                    count = 0; 
+                                    for(let j =0; j<others_results[2].length; j++) { 
+                                        str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
+                                        str = regularExpression(str);
+                                        %>
+                                        <%= count+1 + ". " + str%>
+                                            <br><br>
+                                            <%                                                          count++;                          
+                                    }                               %>
+                                </li>
+                                <br>
+                                <p style="font-size:20px;">&bull;&nbsp;<strong>소프트웨어 등록</strong></p>
+                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                    <%                                                  
+                                    count = 0;
+                                    for(let j =0; j<others_results[3].length; j++) {
+                                        str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
+                                        str = regularExpression(str);
                                         %>
                                         <%= count+1 + ". " + str %>
                                             <br><br>
-                                            <%                                      count++;
-                                    }                                                %>
+                                        <%  count++;                           
+                                    }                               %>
                                 </li>
-                                <br>
-
-                                <%                          }           %>
+                                </div>
+                                <% for(let i =0; i<others_results.length; i++) { %>
+                                    <div class="tab-pane" id="<%=year[i]%>">
+                                        <p style="font-size:20px;">&bull;&nbsp;<strong><%=year[i]%></strong></p>
+                                        <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                        <% for(let j = 0; j<others_results[i].length; j++) { 
+                                            str = '' 
+                                            switch(i) {
+                                                case 0:
+                                                    if(others_results[0][j][4] != '') {
+                                                        str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                        } else {
+                                                            str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                        }
+                                                    break;
+                                                case 1:
+                                                    str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4];
+                                                    break;
+                                                case 2:
+                                                    str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
+                                                    break;
+                                                case 3:
+                                                    str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
+                                                    break;
+                                            }
+                                            str = regularExpression(str);
+                                            %> 
+                                            <%= j+1 + ". " + str%> 
+                                            <br><br>
+                                        <% } %>
+                                        </li>
+                                    </div>
+                                <% } %>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </aside>
-    </div>
-</body>
-
-</html>
+                        <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
+                            <i class="fas fa-arrow-up"

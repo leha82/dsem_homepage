@@ -45,6 +45,152 @@
             $("input[name=researchTopics]").attr('value', memberInfo[5]);
         });
     </script>
+    <!-- 스크롤 일정이하로 내려가면 위로가기 버튼 생성 -->
+    <script>
+        $(window).scroll(function() {
+            if ($( this).scrollTop() > 200 ) {
+                $('.top').fadeIn();
+            } else {
+                $('.top').fadeOut();
+            }
+        });
+        $('.top').click( function() {
+            $('html, body').animate({scrollTop : 0}, 400);
+            return false;
+        });
+    </script>
+    <!-- 실적보기 클릭 시 해당 연구원이 들어간 논문리스트 리턴-->
+    <script>
+
+        function regularExpression(str) {
+            //str = str.replace(/^,/,"");
+            
+            str = str.replace(/,{2,}/gi, ",");
+            str = str.replace(".,",",");
+            str = str.replace(/,/gi, ", ");
+            
+            return str;
+        }
+        
+        function selectPerformance(name) {
+            let performanceList = [];
+            let journal_strArray = '<%=paper_results[0]%>'.split("^");
+            let conference_strArray = '<%=paper_results[1]%>'.split("^");
+            let IJ = [], DJ = [];
+            let IC= [], DC = [];
+            /*
+            if(str.indexOf("IJ") != -1) {
+                str = str.substring(str.indexOf("IJ")+3, str.length);
+            } else if(str.indexOf("DJ") != -1) {
+                str = str.substring(str.indexOf("DJ")+3, str.length);
+            } else if(str.indexOf("IC") != -1) {
+                str = str.substring(str.indexOf("IC")+3, str.length);
+            } else if(str.indexOf("DC") != -1) {
+                str = str.substring(str.indexOf("DC")+3, str.length);
+            }
+            */
+
+            for(let i =0; i<journal_strArray.length; i++) {
+                if(journal_strArray[i].includes(name)) {
+                    if(journal_strArray[i].indexOf("IJ") != -1) {
+                        journal_strArray[i] = journal_strArray[i].substring(journal_strArray[i].indexOf("IJ")+3, journal_strArray[i].length);
+                        let journal_IJ = regularExpression(journal_strArray[i]);
+                        IJ.push(journal_IJ);
+                    } else if(journal_strArray[i].indexOf("DJ") != -1) {
+                        journal_strArray[i] = journal_strArray[i].substring(journal_strArray[i].indexOf("DJ")+3, journal_strArray[i].length);
+                        let journal_DJ = regularExpression(journal_strArray[i]);
+                        DJ.push(journal_DJ); 
+                    }
+                }
+            }
+            
+            
+            for(let i =0; i<conference_strArray.length; i++) {
+                if(conference_strArray[i].includes(name)) {
+                    if(conference_strArray[i].indexOf("IC") != -1) {
+                        conference_strArray[i] = conference_strArray[i].substring(conference_strArray[i].indexOf("IC")+3, conference_strArray[i].length);
+                        let conference_IC = regularExpression(conference_strArray[i]);
+                        IC.push(conference_IC);
+                    } else if(conference_strArray[i].indexOf("DC") != -1) {
+                        conference_strArray[i] = conference_strArray[i].substring(conference_strArray[i].indexOf("DC")+3, conference_strArray[i].length);
+                        let conference_DC = regularExpression(conference_strArray[i]);
+                        DC.push(conference_DC);
+                    }
+               }
+            }
+            
+            performanceList.push(IJ);
+            performanceList.push(DJ);
+            performanceList.push(IC);
+            performanceList.push(DC);
+            if(IJ,DJ,IC,DC.length < 1) {
+                return "연구실적이 없습니다."
+            } else {
+                return performanceList;
+            }
+        }
+    </script>
+    <script>
+        var researcherName = [];
+        var name = $('div .researcherName').text().replace(/(\s*)/g,"");
+        var tmp = '';
+
+        for(let i =0; i<name.length; i+=3) {
+            tmp = name.substring(i, i+3);
+            researcherName.push(tmp);
+        }
+
+        for(let i =0; i<researcherName.length; i++) {
+            $(".memberName"+researcherName[i]).click(function () {
+                var performanceList = selectPerformance(researcherName[i]);
+                var target = $(".memberName"+researcherName[i]).text().replace(/(\s*)/g,"");
+                if(target == "실적보기") {
+                    if(performanceList != "연구실적이 없습니다.") {
+                        var all_tag = [];
+                        if(performanceList[0].length > 0) { // International Journal
+                            var IJ_tag = "<div class= 'performance"+researcherName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Journal</strong></p></div>";
+                            for(let i =0; i<performanceList[0].length; i++) {
+                                IJ_tag += "<h11>" +(i+1) + ". " + performanceList[0][i] +"<br></h11>";
+                            }
+                            all_tag.push(IJ_tag);
+                        }
+                        if(performanceList[1].length > 0) {
+                            var DJ_tag = "<div class= 'performance"+researcherName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Journal</strong></div>";
+                            for(let i =0; i<performanceList[1].length; i++) {
+                                DJ_tag += "<h11>" +(i+1) + ". " + performanceList[1][i] + "<br></h11>";
+                            }
+                            all_tag.push(DJ_tag);
+                        }
+                        if(performanceList[2].length > 0) {
+                            var IC_tag = "<div class= 'performance"+researcherName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Conference</strong></p></div>";
+                            for(let i =0; i<performanceList[2].length; i++) {
+                                IC_tag += "<h11>" +(i+1) + ". " + performanceList[2][i] +"<br></h11>";
+                            }
+                            all_tag.push(IC_tag);
+                        }
+                        if(performanceList[3].length > 0) {
+                            var DC_tag = "<div class= 'performance"+researcherName[i]+"'"+ "style='width: 1500px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Conference</strong></p></div>";
+                            for(let i =0; i<performanceList[3].length; i++) {
+                                DC_tag += "<h11>" +(i+1) + ". " + performanceList[3][i] +"<br></h11>";
+                            }
+                            all_tag.push(DC_tag);
+                        }
+                    } else {
+                        var null_tag = "<div class= 'performance"+researcherName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><h11><br>" + "연구실적이 없습니다." +"<br></h11></div>";
+                    }
+                    if(performanceList != "연구실적이 없습니다.") {
+                        $("div .performance"+researcherName[i]).append(all_tag);
+                    } else {
+                        $("div .performance"+researcherName[i]).append(null_tag);
+                    }
+                    $(".memberName"+researcherName[i]).text("실적닫기");
+                } else if(target == "실적닫기") {
+                    $("div .performance"+researcherName[i]).empty();
+                    $(".memberName"+researcherName[i]).text("실적보기");
+                }
+            });
+        }
+    </script>
 </head>
 
 <body class="skin-black">
@@ -58,13 +204,14 @@
                 </div>
                 <div class="modal-body">
 <%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ];
+                    let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', ''];
                     for(let i=0; i<new_member.length; i++) {
 %>
                         <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                             <h13 style="margin-left: 50px;">
 <%=                             new_member[i] + ':' %>
                             </h13>
-                            <input style="margin-left:50px; width: 350px" id='<%= 'researcherInsert_' + new_member[i]%>' />
+                            <input style="margin-left:50px; width: 350px" id='<%= 'researcherInsert_' + new_member[i]%>' placeholder = '<%=placeholder_member[i]%>'/>
                         </div>
 <%                      }           %>
                         <br>
@@ -181,7 +328,6 @@
             </div> -->
         </div>
     </div>
-
     <!--   #list -> #edit   -->
     <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" padding-left: 70px; padding-top: 80px;">
@@ -221,7 +367,6 @@
     </div>
 
 
-
     <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
         <div class="content-header" style="height:30px">
             <h1>Researcher
@@ -247,38 +392,39 @@
                     </div>
 <%                  for(let i=0; i<researcher_results.length; i++) {        %>
                         <div class="box-body">
-
-                        <img src = <%="/img/" +researcher_results[i][1] + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
-                            <h10>
-                                <strong>
-<%=                                 researcher_results[i][1]                %>
-                                </strong>
-                            </h10>
-                            <li>
-                                Department : <%= researcher_results[i][4]%>
-                            </li>
-                            <li>
-                                E-mail : <%= researcher_results[i][5]%>
-                            </li>
-                            <li>
-                                Year of admission : <%= researcher_results[i][6]%>
-                            </li>
-                            <li>
-                                Research topics :<%= researcher_results[i][7]%>
-                            </li>
-                            <a href="#" data-toggle="" data-target="#performance" type="button"
-                                style="height: 32px; color: black;" class="btn btn-default">
-                                <h14 style="font-size: 14px;">
-                                    실적보기
-                                </h14>
-                            </a>
-                            <research></research>
-                            <br>
+                            <img src = <%="/img/" +researcher_results[i][1] + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
+                            <div class="researcherName">
+                                <h11>
+                                    <strong>
+    <%=                                 researcher_results[i][1]                %>
+                                    </strong>
+                                </h11>
+                            </div>
+                                <li>
+                                    Department : <%= researcher_results[i][4]%>
+                                </li>
+                                <li>
+                                    E-mail : <%= researcher_results[i][5]%>
+                                </li>
+                                <li>
+                                    Year of admission : <%= researcher_results[i][6]%>
+                                </li>
+                                <li>
+                                    Research topics :<%= researcher_results[i][7]%>
+                                </li>
+                                
+                            <button class="<%="memberName"+researcher_results[i][1]%>" style="border: 0; outline:0; height: 32px; color: black; font-size:14px;" >
+                                실적보기
+                                <br>
+                            </button>
+                            <div class="<%="performance"+researcher_results[i][1]%>">
+                            </div>
                         </div>
-<%                  } %>
-
-                </div>
-            </div>
+                        <%                  } %>
+                    </div>
+                    <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
+                        <i class="fas fa-arrow-up"></i>
+                    </a>
         </section>
     </aside>
 

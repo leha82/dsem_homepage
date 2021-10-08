@@ -1,0 +1,5 @@
+Device Registry,Device Registry.svg,http://dsem.kunsan.ac.kr:8080/dsemdr
+Monitoring Tool,Monitoring Tool.svg,http://dsem.kunsan.ac.kr:10204
+Visualization Tool,Visualization Tool.svg,http://dsem.kunsan.ac.kr:10101/public
+DSEM Trello,DSEM Trello.png,https://trello.com/dsemlab/home
+DSEM Notion,DSEM Notion.svg,https://www.notion.so/sukhoon/DSEM-Lab-s-page-7b0d192ce5c549c29aea326b42e08762
