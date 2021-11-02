@@ -43,6 +43,8 @@
             $("input[name=Email]").attr('value', memberInfo[3]);
             $("input[name=yearOfAdmission]").attr('value', memberInfo[4]);
             $("input[name=researchTopics]").attr('value', memberInfo[5]);
+            $("input[name=beforeName]").attr('value', memberInfo[1]);
+            //$("label[name=labelImg]").text(memberInfo[1]+".jpg");
         });
     </script>
     <!-- 스크롤 일정이하로 내려가면 위로가기 버튼 생성 -->
@@ -199,28 +201,31 @@
         style=" padding-left: 150px; padding-top: 120px;">
         <div class="modal-dialog">
             <div class="modal-content" style="width: 600px; height: 550px;">
-                <div class="modal-header" style="height: 50px;">
-                    <center style="font-size: 18px;">New</center>
+                <div class="modal-header" style="height: 50px; text-align:center;">
+                    New
                 </div>
                 <div class="modal-body">
-<%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ];
-                    let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', ''];
-                    for(let i=0; i<new_member.length; i++) {
-%>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             new_member[i] + ':' %>
-                            </h13>
-                            <input style="margin-left:50px; width: 350px" id='<%= 'researcherInsert_' + new_member[i]%>' placeholder = '<%=placeholder_member[i]%>'/>
+                    <form method="POST" enctype="multipart/form-data" action="/researcherUpload" style="width:550px">
+                        <div class="form-group">
+        <%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ];
+                            let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', ''];
+                            for(let i=0; i<new_member.length; i++) {
+        %>
+                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                    <h13 style="margin-left: 50px;">
+                            <%=         new_member[i] + ':' %>
+                                    </h13>
+                                    <input class='<%=new_member[i]%>' name='<%=new_member[i]%>' id='<%=new_member[i]%>' style="margin-left:50px; width: 350px" value='' placeholder = '<%=placeholder_member[i]%>'/>
+                                </div>
+        <%                      }                                       %>
+                        </div> 
+                        <div class="form-group">
+                            <input type="file" name="researcherUpload" id="file" style = "width:400px; margin-left: 100px;" placeholder="파일 선택"/>
                         </div>
-<%                      }           %>
                         <br>
-                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="researcher()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                        <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                        <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -338,29 +343,33 @@
                     <center style="font-size: 18px;">Edit</center>
                 </div>
                 <div class="modal-body">
-<%                  let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ]; 
-                    for(let i=0; i<edit_member.length; i++) { 
-%>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             edit_member[i] + ':'    %>
-                            </h13>
-<%                              if(i == 0) {            %>
-                                <input type='text' name='<%=edit_member[i]%>' id='<%='researcherUpdate_' +
-                                    edit_member[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
-<%                              } else {                %> 
-                                <input type='text' name='<%=edit_member[i]%>' id='<%='researcherUpdate_' +
-                                    edit_member[i]%>'value = '' style="margin-left:50px; width: 350px"/>
-<%                              }                       %>
+                    <form method="POST" enctype="multipart/form-data" action="/researcherUpdate" style="width:550px">
+                        <div class="form-group">
+<%                          let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ]; 
+                            for(let i=0; i<edit_member.length; i++) { %>
+                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                    <h13 style="margin-left: 50px;">
+    <%=                                 edit_member[i] + ':'    %>
+                                    </h13>
+    <%                              if(i == 0) {            %>
+                                        <input type='text' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' value = '' style="margin-left:50px; width: 350px;" readonly/>
+    <%                              } else {                %> 
+                                        <input class='<%=edit_member[i]%>' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' style="margin-left:50px; width: 350px" value=''/>
+    <%                              }                       %>
+                                </div>
+<%                          }                               %>
+                            <input type='hidden' name='beforeName' id='beforeName' value = '' style="margin-left:50px; width: 350px;"/>
                         </div>
-<%                      }                               %>
+                        <div class="form-group">
+                            <!-- <label class="btn btn-primary btn-file" style="margin-left: 100px;" name="labelImg" for="file"> -->
+                                <!-- 파일추가 -->
+                                <input type="file" name="researcherUpdate" id="file" id="file" >
+                            <!-- </label> -->
+                        </div>
                         <br>
-                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile" />
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="researcher_update()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                        <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
+                    </form>
                 </div>
             </div>
         </div>

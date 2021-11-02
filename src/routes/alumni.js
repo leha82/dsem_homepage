@@ -1,25 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const con = require('../dbcon');
-
-router.post('/alumni', (req, res)=> {
-    console.log("alumni 라우트 접속");
-    con.getConnection(function (err, connection) {
-        if(err) {
-            connection.release();
-            callback(err, null);
-        }
-        let sql = 'INSERT INTO alumni(koreanName,department,email,admissionYear,graduationYear, interest) VALUES(?,?,?,?,?,?)';
-        // console.log(sql);
-        let parameter= [req.body.name,req.body.department,req.body.Email,req.body.YearOfAdmission,req.body.YearOfGraduation,req.body.ResearchTopics];
-        con.query(sql, parameter, function(err, results, fields) {
-            if(err) throw err;
-            console.log(results)
-        });
-    });
-});
+const fs = require("fs");
 
 router.post('/alumni_delete', (req, res)=> {
+    fs.stat(__dirname + '../../../public/img/' + req.body.delete_img, (err1) => {
+        if (err1) {
+            if (err1.code == "ENOENT") {
+                console.log("파일 없음");
+            }
+        } else {
+            console.log("파일있음");
+            fs.unlink(__dirname + '../../../public/img/' + req.body.delete_img, (err2) => {
+                if (err2) throw err2;
+            });
+        }
+    });
     con.getConnection(function (err, connection) {
         if(err) {
             connection.release();
@@ -35,24 +31,5 @@ router.post('/alumni_delete', (req, res)=> {
         });
     });
 });
-
-router.post('/alumni_update', (req, res)=> {
-    con.getConnection(function (err, connection) {
-        if(err) {
-            connection.release();
-            callback(err, null);
-            return;
-        }
-        let sql = 'UPDATE alumni SET koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=? WHERE id=?';
-        let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.YearOfGraduation, req.body.ResearchTopics, req.body.id];
-        console.log(updateParameter);
-        con.query(sql, updateParameter, (err, results, fields) =>{
-            if(err) throw err;
-            console.log(results);
-        });
-    });
-});
-
-
 
 module.exports=router;

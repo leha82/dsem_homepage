@@ -42,7 +42,9 @@
             $("input[name=department]").attr('value', memberInfo[2]);
             $("input[name=Email]").attr('value', memberInfo[3]);
             $("input[name=yearOfAdmission]").attr('value', memberInfo[4]);
-            $("input[name=researchTopics]").attr('value', memberInfo[5]);
+            $("input[name=graduationYear]").attr('value', memberInfo[5]);
+            $("input[name=researchTopics]").attr('value', memberInfo[6]);
+            $("input[name=beforeName]").attr('value', memberInfo[7]);
         });
     </script>
     <script>
@@ -195,24 +197,27 @@
                     <center style="font-size: 18px;">New</center>
                 </div>
                 <div class="modal-body">
-<%                  let new_member=['name','department' , 'Email' , 'yearOfAdmission' , 'yearOfGraduation','researchTopics' ];
-                    let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', '',''];
-                    for(let i=0; i<new_member.length; i++) {
-%>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             new_member[i] + ':' %>
-                            </h13>
-                            <input style="margin-left:50px; width: 350px" id='<%= 'alumniInsert_' + new_member[i]%>' placeholder='<%=placeholder_member[i]%>'/>
+                    <form method="POST" enctype="multipart/form-data" action="/alumniUpload" style="width:550px">
+                        <div class="form-group">
+        <%                  let new_member=['name','department' , 'Email' , 'YearOfAdmission' , 'YearOfGraduation','ResearchTopics' ];
+                            let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', '',''];
+                            for(let i=0; i<new_member.length; i++) {
+        %>
+                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
+                                    <h13 style="margin-left: 50px;">
+        <%=                             new_member[i] + ':' %>
+                                    </h13>
+                                    <input class='<%=new_member[i]%>' name='<%=new_member[i]%>' id='<%=new_member[i]%>' style="margin-left:50px; width: 350px" value='' placeholder = '<%=placeholder_member[i]%>'/>
+                                </div>
+        <%                      }           %>
                         </div>
-<%                      }           %>
+                        <div class="form-group">
+                            <input type="file" name="alumniUpload" id="file" style = "width:400px; margin-left: 100px;" placeholder="파일 선택"/>
+                        </div>
                         <br>
-                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="alumni()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                        <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                        <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -220,9 +225,9 @@
 
     <!--#list, DB에서 조회-->
     <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
-        style=" margin-left: -400px; padding-top: 80px;">
+        style=" margin-left: -300px; padding-top: 70px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 1050px; height: 600px;">
+            <div class="modal-content" style="width: 1100px; height: 700px; margin-right:200px">
                 <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
                 <div class="modal-header" style="height: 50px;">
                     <center style="font-size: 18px;">
@@ -232,7 +237,7 @@
                     </center>
                 </div>
                 <!-- <br> -->
-                <table class="table table-hover memberTable" id="memberTable" style="margin-left:10px; width:1000px">
+                <table class="table table-hover memberTable" id="memberTable" style="margin-left:10px; width:1050px">
                     <thread>
                         <tr>
                             <th>
@@ -240,7 +245,7 @@
                                     Number
                                 </center>
                             </th>
-                            <th>
+                            <th style="width: 150px;">
                                 <center>Name</center>
                             </th>
                             <th>
@@ -251,6 +256,9 @@
                             </th>
                             <th>
                                 <center>YearOfAdmission</center>
+                            </th>
+                            <th>
+                                <center>graduationYear</center>
                             </th>
                             <th>
                                 <center>ResearchTopics</center>
@@ -274,6 +282,11 @@
                                 <td>
                                     <center>
 <%=                                     alumni_results[i][1]            %>
+                                    </center>
+                                </td>
+                                <td>
+                                    <center>
+<%=                                     alumni_results[i][3]            %>
                                     </center>
                                 </td>
                                 <td>
@@ -331,29 +344,32 @@
                     <center style="font-size: 18px;">Edit</center>
                 </div>
                 <div class="modal-body">
-<%                  let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission' , 'researchTopics' ]; 
+                    <form method="POST" enctype="multipart/form-data" action="/alumniUpdate" style="width:550px">
+<%                  let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission', 'graduationYear','researchTopics' ]; 
                     for(let i=0; i<edit_member.length; i++) { 
 %>
                         <div style="margin-right: 10px; margin-left:50px; width: 60px;">
                             <h13 style="margin-left: 50px;">
 <%=                             edit_member[i] + ':'    %>
                             </h13>
-<%                              if(i == 0) {            %>
-                                <input type='text' name='<%=edit_member[i]%>' id='<%='alumniUpdate_' +
-                                    edit_member[i]%>'value = '' style="margin-left:50px; width: 350px;" readonly/>
-<%                              } else {                %> 
-                                <input type='text' name='<%=edit_member[i]%>' id='<%='alumniUpdate_' +
-                                    edit_member[i]%>'value = '' style="margin-left:50px; width: 350px"/>
-<%                              }                       %>
+<%                          if(i == 0) {            %>
+                                <input type='text' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' value = '' style="margin-left:50px; width: 350px;" readonly/>
+<%                          } else {                %> 
+                                <input class='<%=edit_member[i]%>' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' style="margin-left:50px; width: 350px" value=''/>
+<%                          }                       %>
                         </div>
 <%                      }                               %>
-                        <br>
-                        <input type="file" accept="image/*" style="margin-left:100px; width: 350px;" id="imgFile" />
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal"
-                        onclick="alumni_update()">Save</button>
-                    <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type='hidden' name='beforeName' id='beforeName' value = '' style="margin-left:50px; width: 350px;"/>
+                    <div class="form-group">
+                        <!-- <label class="btn btn-primary btn-file" style="margin-left: 100px;" name="labelImg" for="file"> -->
+                            <!-- 파일추가 -->
+                            <input type="file" name="alumniUpdate" id='updateImg'>
+                        <!-- </label> -->
+                    </div>
+                    <br>
+                    <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                    <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
+                    </form>
                 </div>
             </div>
         </div>

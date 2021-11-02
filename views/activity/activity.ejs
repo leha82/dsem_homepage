@@ -13,61 +13,320 @@
     <script src="/js/jquery-ui-1.10.3.min.js" type="text/javascript"></script>
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
-    <!-- <script src="/js/AdminLTE/dashboard.js" type="text/javascript"></script> -->
     <script src="/js/function.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100i,300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Allura" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/scrollreveal.js/3.3.1/scrollreveal.min.js"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-
     <script>
-        window.fbAsyncInit = function() {
+        window.fbAsyncInit = async function() {
             FB.init({
                 appId : '248031003784537',
                 autoLogAppEvents : true,
                 xfbml : true,
-                version : 'v12.0'
+                version : 'v12.0',
+                cookie:true,
+                xfbml:true
             });
-            FB.api("https://graph.facebook.com/v12.0/248031003784537/feed?fields=created_time%2Cmessage%2Cfull_picture&access_token=EAAC3aQ4N3rEBAM0RU7ATTQdkC1BHp7rPNJ13ULU11ntFrSx95ak4BbnxqIZB0Hjn4n8oKVp4w5RyHlLUaXZAQjlJeb5TnxPn9wactSLZAm4Wg3xRU9CtrM9wtZBypDFZAooOR2lFCY4jMZA6ZA8nmjnHoup0GCdCXQZAZCx85HGVam4V9YTlRCXZAw",
+            
+            FB.api("https://graph.facebook.com/v12.0/248031003784537/feed?fields=created_time%2Cmessage%2Cfull_picture&access_token=EAAC3aQ4N3rEBALPK5SukiEtBWSs7rJA3wh9wmDGMDEyZA5QuJxHuUgB2EUVdZBlYZB4tYCkcD00v0iarvonCe20Sg9FWstj3bKhUcfNM2PxMkoL4Txpk1PmZC6vFrRffJKUrwOuFJXQ2YYMjsckm8puhGWV3DopMxytyTQy8xje28xAZC1vxX",
                 function(response) {
-                    console.log(response);
                     var data = response.data;
                     var html = "";
+                    /*
                     for(var i=0; i<data.length-1; i++){ 
-                        console.log("Info: ", data[i]);
-                        console.log("Info: ", data[i].full_picture);
                         if(data[i].full_picture != null) {
-                            html += '<div class="col-sm-6 col-md-4" style="width:250px; height:400px; margin-right:10px">';
-                            html +='<div class="thumbnail" style="width:250px; height:400px;">'
-                            html += '<img id="image' + i + '"src="' + data[i].full_picture + '"style="' + "width:240px; height:70%" + '"/>';
-                            //html +='<img id="image' + i + '" src="' + data[i].full_picture + '" style=height:100%; width:50%"/>'
-                            html +='<div class="caption">'
-                            html +='<h11 style="text-overflow:clip;">'
-                            html += "- " + data[i].message;
-                            html += '</h11></div></div></div>'
-                          //html += '<h1 id="title'+ i +'">' + data[i].name + '</h1>';
-                          //html += '<p id="contents' + i + '">' + data[i].message + '</p>'
-                          //html += '<img id="image' + i + '" src="' + data[i].full_picture + '" width="250" height="200">'
+                            html +='<div class="thumbnail">';
+                            html += '<img class="images" id="image' + i + '"src="' + data[i].full_picture + '"/>';
+                            html +='<span class="textView">&nbsp;' + data[i].message + '</span>';
+                            html += '</div>'
                         } else {
-                            //html += '<h1 id="title'+ i +'">' + data[i].name + '</h1>';
-                            html += '<p id="contents' + i + '">' + data[i].message + '</p>'
+                            html +='<div class="thumbnail">';
+                            html += '<img class="images" id="image' + i + '"src="img/logo_1.jpg"/>';
+                            html +='<span class="textView">&nbsp;' + data[i].message + '</span>';
+                            html += '</div>'
                         }
                     }
-                    $(".row2").html(html)
+                    */
+                    /* 타임라인 구성 */
+                    html += '<section class="timeline">';
+                    html += '<div class="container">';
+                    for(let i=0; i<data.length-1; i++) {
+                        if(data[i].full_picture != null) {
+                            /* 총 개수만큼의 timeline-item 구성 */
+                            html += '<div class="timeline-item">'
+                            /* 타임라인 원모양의 디자인 */
+                            html += '<div class="timeline-img"></div>';
+                            /* 타임라인 세션 구성 */
+                            html += '<div class="timeline-content timeline-card js--fadeInRight">';
+                            /* 이미지구성 */
+                            html += '<div class="timeline-img-header">';
+                            html += '<img class="images" id="image" src="' + data[i].full_picture + '"' + '/>';
+                            html += '</div>';
+                            /* 날짜구성 */
+                            let tmp = data[i].created_time.split("T");
+                            data[i].created_time = tmp[0];
+                            html += '<div class="date">';
+                            html += data[i].created_time;
+                            html += '</div>';
+                            /* 내용구성 */
+                            html += '<p>';
+                            html += data[i].message;
+                            html += '</p>';
+                            html += '</div></div></div>';
+                        } else {
+                            /* 총 개수만큼의 timeline-item 구성 */
+                            html += '<div class="timeline-item">'
+                            /* 타임라인 원모양의 디자인 */
+                            html += '<div class="timeline-img"></div>';
+                            /* 타임라인 세션 구성 */
+                            html += '<div class="timeline-content timeline-card js--fadeInRight">';
+                            /* 날짜구성 */
+                            html += '<div class="date">';
+                            html += data[i].created_time;
+                            html += '</div>';
+                            /* 내용구성 */
+                            html += '<p>';
+                            html += data[i].message;
+                            html += '</p>';
+                            html += '</div>';
+                        }
+                    }
+                    $(".TLine").html(html)
               }
-      );
-    };
+            );
+        };
     </script>
+    <!-- <script>
+        $(function(){
+            window.sr = ScrollReveal();
+            if ($(window).width() < 768) {
+                if ($('.timeline-content').hasClass('js--fadeInLeft')) {
+                    $('.timeline-content').removeClass('js--fadeInLeft').addClass('js--fadeInRight');
+                }
+                sr.reveal('.js--fadeInRight', {
+                  origin: 'right',
+                  distance: '300px',
+                  easing: 'ease-in-out',
+                  duration: 800,
+                });
+            } else {
+                sr.reveal('.js--fadeInLeft', {
+                  origin: 'left',
+                  distance: '300px',
+                    easing: 'ease-in-out',
+                  duration: 800,
+                });
+                sr.reveal('.js--fadeInRight', {
+                  origin: 'right',
+                  distance: '300px',
+                  easing: 'ease-in-out',
+                  duration: 800,
+                });
+            }
+            sr.reveal('.js--fadeInLeft', {
+                  origin: 'left',
+                  distance: '300px',
+                    easing: 'ease-in-out',
+                  duration: 800,
+                });
+                sr.reveal('.js--fadeInRight', {
+                  origin: 'right',
+                  distance: '300px',
+                  easing: 'ease-in-out',
+                  duration: 800,
+                });
+          });
+    </script> -->
 </head>
+<style>
+    /*
+      .TLine {
+        background-color: #eee;
+      }
+      */
+      .timeline {
+        position: relative;
+      }
+      .timeline::before {
+        content: "";
+        background: #C5CAE9;
+        width: 5px;
+        height: 95%;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .timeline-item {
+        width: 100%;
+        margin-bottom: 70px;
+      }
+      .timeline-item:nth-child(even) .timeline-content {
+        margin-right:350px;
+        float: right;
+        padding: 40px 30px 10px 30px;
+      }
+      .timeline-item:nth-child(even) .timeline-content .date {
+        right: auto;
+        left: 0;
+      }
+      .timeline-item:nth-child(even) .timeline-content::after {
+        content: "";
+        position: absolute;
+        border-style: solid;
+        width: 0;
+        height: 0;
+        top: 30px;
+        left: -15px;
+        border-width: 10px 15px 10px 0;
+        border-color: transparent #f5f5f5 transparent transparent;
+      }
+      .timeline-item::after {
+        content: "";
+        display: block;
+        clear: both;
+        margin-right:350px;
+      }
+      
+      .timeline-content {
+        position: relative;
+        width: 400px;
+        padding: 10px 30px;
+        border-radius: 4px;
+        background: #f5f5f5;
+        box-shadow: 0 20px 25px -15px rgba(0, 0, 0, 0.3);
+      }
+      .timeline-content::after {
+        content: "";
+        position: absolute;
+        border-style: solid;
+        width: 0;
+        height: 0;
+        top: 30px;
+        right: -15px;
+        border-width: 10px 0 10px 15px;
+        border-color: transparent transparent transparent #f5f5f5;
+      }
+      
+      .timeline-img {
+        width: 30px;
+        height: 30px;
+        background: #3F51B5;
+        border-radius: 50%;
+        position: absolute;
+        left: 50%;
+        margin-top: 25px;
+        margin-left: -15px;
+      }
+
+      a:hover, a:active, a:focus {
+        color: #FFFFFF;
+        text-decoration: none;
+      }
+      
+      .timeline-card {
+        padding: 0 !important;
+        margin-left:100px
+      }
+      .timeline-card p {
+        padding: 0 20px;
+      }
+      .timeline-card a {
+        margin-left: 20px;
+      }
+      
+      .timeline-item .timeline-img-header {
+        background-size: 500;
+      }
+      
+      .timeline-img-header {
+        height: 300px;
+        position: relative;
+        margin-bottom: 20px;
+      }
+      .timeline-img-header img {
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 400px;
+        height: 300px;
+      }
+
+      .timeline-img-header h2 {
+        color: #FFFFFF;
+        position: absolute;
+        bottom: 5px;
+        left: 20px;
+      }
+/*
+      blockquote {
+        margin-top: 30px;
+        color: #757575;
+        border-left-color: #3F51B5;
+        padding: 0 20px;
+      }
+  */    
+      .date {
+        background: #FF4081;
+        display: inline-block;
+        color: #FFFFFF;
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      
+      @media screen and (max-width: 768px) {
+        .timeline::before {
+          left: 50px;
+        }
+        .timeline .timeline-img {
+          left: 50px;
+        }
+        .timeline .timeline-content {
+          max-width: 100%;
+          width: auto;
+          margin-left: 70px;
+        }
+        .timeline .timeline-item:nth-child(even) .timeline-content {
+          float: none;
+        }
+        .timeline .timeline-item:nth-child(odd) .timeline-content::after {
+          content: "";
+          position: absolute;
+          border-style: solid;
+          width: 0;
+          height: 0;
+          top: 30px;
+          left: -15px;
+          border-width: 10px 15px 10px 0;
+          border-color: transparent #f5f5f5 transparent transparent;
+        }
+      }
+</style>
+<body>
+<div class="modal fade" id="View" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" margin-left: -200px; padding-top: 130px;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 800px; height: 800px;">
+            <div class="modal-header" style="height: 100px; text-align:left; font-size:18px;">
+                <img src="img/logo_2.png" class="image" alt="User Image" style="width:200px; height: 70px;"/>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
     <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
-        <div class="content-header" style="height:30px">
+        <div class="content-header" style="height:30px;">
             <h1>Activity
-                <% if(userInfo!=null) { %>
-                    <a href="#" data-toggle="modal" data-target="#edit" type="button" class="btn btn-default"
-                        style="float:right; height: 35px;">
-                        <h11 style="font-size: 15px;">
-                            Edit
-                        </h11>
-                    </a>
-                    <% } %>
+                <a class="button" href='https://www.facebook.com/profile.php?id=100057329179873' target="_black" style="font-size : 25px; height: 40px;">
+                    <i>
+                        <img src = "img/facebook.svg" style="width:25px; height:25px"/>
+                    </i>
+                </a>
             </h1>
         </div>
         <section class="content">
@@ -75,15 +334,120 @@
                 <div class="col-md-6">
                     <div class="box box-info">
                         <div class="box-header">
-                            <!-- <div id ="dv"></div> -->
                         </div>
-                        <div class="box-body" style="width: auto; height:800px;">
-                            <div class="row2">
-                                <!-- <div class="col-sm-6 col-md-4">
-                                    <div class="thumbnail">
+                        <div class="box-body" style="width: auto;">
+                            <div class="TLine" style="overflow-y: auto; width: 100%; height:700px;">
+                            <!-- <section class="timeline">
+                                <div class="container">
+                                  <div class="timeline-item">
+                                    <div class="timeline-img"></div>
+                              
+                                    <div class="timeline-content js--fadeInLeft">
+                                      <h2>Title</h2>
+                                      <div class="date">1 MAY 2016</div>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
                                     </div>
-                                </div> -->
+                                  </div> 
+                              
+                                  <div class="timeline-item">
+                                    <div class="timeline-img"></div>
+                                    <div class="timeline-content timeline-card js--fadeInRight">
+                                      <div class="timeline-img-header">
+                                        <h2>Card Title</h2>
+                                      </div>
+                                      <div class="date">25 MAY 2016</div>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                              
+                                  </div>   
+                              
+                                  <div class="timeline-item">
+                                    <div class="timeline-img"></div>
+                                    <div class="timeline-content js--fadeInLeft">
+                                      <div class="date">3 JUN 2016</div>
+                                      <h2>Quote</h2>
+                                      <blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta explicabo debitis omnis dolor iste fugit totam quasi inventore!</blockquote>
+                                    </div>
+                                  </div>   
+                              
+                                  <div class="timeline-item">
+                                    <div class="timeline-img"></div>
+                                    <div class="timeline-content js--fadeInRight">
+                                      <h2>Title</h2>
+                                      <div class="date">22 JUN 2016</div>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                                  </div>   
+                              
+                                  <div class="timeline-item">
+                              
+                                    <div class="timeline-img"></div>
+                              
+                                    <div class="timeline-content timeline-card js--fadeInLeft">
+                                      <div class="timeline-img-header">
+                                        <h2>Card Title</h2>
+                                      </div>
+                                      <div class="date">10 JULY 2016</div>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                                  </div>   
+                              
+                                  <div class="timeline-item">
+                              
+                                    <div class="timeline-img"></div>
+                              
+                                    <div class="timeline-content timeline-card js--fadeInRight">
+                                      <div class="timeline-img-header">
+                                        <h2>Card Title</h2>
+                                      </div>
+                                      <div class="date">30 JULY 2016</div>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                                  </div>  
+                              
+                                  <div class="timeline-item">
+                              
+                                    <div class="timeline-img"></div>
+                              
+                                    <div class="timeline-content js--fadeInLeft">
+                                      <div class="date">5 AUG 2016</div>
+                                      <h2>Quote</h2>
+                                      <blockquote>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dicta explicabo debitis omnis dolor iste fugit totam quasi inventore!</blockquote>
+                                    </div>
+                                  </div>   
+                              
+                                <div class="timeline-item">
+                                    <div class="timeline-img">
+                                    </div>
+                                    <div class="timeline-content timeline-card js--fadeInRight">
+                                        <div class="timeline-img-header">
+                                        <h2>Card Title</h2>
+                                    </div>
+                                    <div class="date">19 AUG 2016</div>
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                        <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                                </div>  
+                              
+                                  <div class="timeline-item">
+                                    <div class="timeline-img"></div>
+                                    <div class="timeline-content js--fadeInLeft">
+                                      <div class="date">1 SEP 2016</div>
+                                      <h2>Title</h2>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime ipsa ratione omnis alias cupiditate saepe atque totam aperiam sed nulla voluptatem recusandae dolor, nostrum excepturi amet in dolores. Alias, ullam.</p>
+                                      <a class="bnt-more" href="javascript:void(0)">More</a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </section>  -->
                             </div>
+                            <!-- <div class="row2" id="row2">
+                            </div> -->
                         </div>
                     </div>
                 </div>

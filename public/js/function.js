@@ -47,102 +47,112 @@ function professor_update() {
 }
 
 // researcher 
-function researcher() {
-    const researcher_save_param = {
-        name: $('#researcherInsert_name').val(),
-        department: $('#researcherInsert_department').val(),
-        Email: $('#researcherInsert_Email').val(),
-        YearOfAdmission: $('#researcherInsert_yearOfAdmission').val(),
-        ResearchTopics: $('#researcherInsert_researchTopics').val(),
-    }
-    $.post('/researcher/researcher', researcher_save_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        } else {
-            $('#researcherInsert_name').val('');
-            $('#researcherInsert_department').val('');
-            $('#researcherInsert_Email').val('');
-            $('#researcherInsert_yearOfAdmission').val('');
-            $('#researcherInsert_researchTopics').val('');
-        }
-    })
-    location.reload();
-}
+// function researcher() {
+//     const researcher_save_param = {
+//         name: $('#researcherInsert_name').val(),
+//         department: $('#researcherInsert_department').val(),
+//         Email: $('#researcherInsert_Email').val(),
+//         YearOfAdmission: $('#researcherInsert_yearOfAdmission').val(),
+//         ResearchTopics: $('#researcherInsert_researchTopics').val(),
+//     }
+//     $.post('/researcher/researcher', researcher_save_param, (returnData) => {
+//         if (returnData.key) {
+//             location.reload();
+//         } else {
+//             $('#researcherInsert_name').val('');
+//             $('#researcherInsert_department').val('');
+//             $('#researcherInsert_Email').val('');
+//             $('#researcherInsert_yearOfAdmission').val('');
+//             $('#researcherInsert_researchTopics').val('');
+//         }
+//     })
+//     location.reload();
+// }
 
 function researcher_delete(delete_name) {
     const researcher_remove_param = {
-        delete_member: delete_name,
+        delete_img: delete_name + ".jpg",
+        delete_member: delete_name
     }
-    $.post('/researcher/researcher_delete', researcher_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/researcher/researcher_delete', researcher_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        });
+    } else {
+        return;
+    }
 }
 
-function researcher_update() {
-    const researcher_update_param = {
-        id: $('#researcherUpdate_number').val(),
-        name: $('#researcherUpdate_name').val(),
-        department: $('#researcherUpdate_department').val(),
-        Email: $('#researcherUpdate_Email').val(),
-        YearOfAdmission: $('#researcherUpdate_yearOfAdmission').val(),
-        ResearchTopics: $('#researcherUpdate_researchTopics').val(),
-    }
-    $.post('/researcher/researcher_update', researcher_update_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
-    location.reload();
-}
+// function researcher_update() {
+//     const researcher_update_param = {
+//         id: $('#researcherUpdate_number').val(),
+//         name: $('#researcherUpdate_name').val(),
+//         department: $('#researcherUpdate_department').val(),
+//         Email: $('#researcherUpdate_Email').val(),
+//         YearOfAdmission: $('#researcherUpdate_yearOfAdmission').val(),
+//         ResearchTopics: $('#researcherUpdate_researchTopics').val(),
+//     }
+//     $.post('/researcher/researcher_update', researcher_update_param, (returnData) => {
+//         if (returnData.key) {
+//             location.reload();
+//         }
+//     })
+//     location.reload();
+// }
 
 // alumni 
-function alumni() {
-    const alumni_save_param = {
-        name: $('#alumniInsert_name').val(),
-        department: $('#alumniInsert_department').val(),
-        Email: $('#alumniInsert_Email').val(),
-        YearOfAdmission: $('#alumniInsert_yearOfAdmission').val(),
-        YearOfGraduation: $('#alumniInsert_yearOfGraduation').val(),
-        ResearchTopics: $('#alumniInsert_researchTopics').val(),
-    }
-    $.post('/alumni/alumni', alumni_save_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
-    location.reload();
-}
+// function alumni() {
+//     const alumni_save_param = {
+//         name: $('#alumniInsert_name').val(),
+//         department: $('#alumniInsert_department').val(),
+//         Email: $('#alumniInsert_Email').val(),
+//         YearOfAdmission: $('#alumniInsert_yearOfAdmission').val(),
+//         YearOfGraduation: $('#alumniInsert_yearOfGraduation').val(),
+//         ResearchTopics: $('#alumniInsert_researchTopics').val(),
+//     }
+//     $.post('/alumni/alumni', alumni_save_param, (returnData) => {
+//         if (returnData.key) {
+//             location.reload();
+//         }
+//     })
+//     location.reload();
+// }
 
 function alumni_delete(delete_name) {
     const alumni_remove_param = {
-        delete_member: delete_name,
+        delete_img: delete_name + ".jpg",
+        delete_member: delete_name
     }
-    $.post('/alumni/alumni_delete', alumni_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/alumni/alumni_delete', alumni_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
-function alumni_update() {
-    const researcher_update_param = {
-        id: $('#alumniUpdate_number').val(),
-        name: $('#alumniUpdate_name').val(),
-        department: $('#alumniUpdate_department').val(),
-        Email: $('#alumniUpdate_Email').val(),
-        YearOfAdmission: $('#alumniUpdate_yearOfAdmission').val(),
-        YearOfGraduation: $('#alumniUpdate_yearOfGraduation').val(),
-        ResearchTopics: $('#alumniUpdate_researchTopics').val(),
-    }
-    $.post('/alumni/alumni_update', researcher_update_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
-    location.reload();
-}
+// function alumni_update() {
+//     const researcher_update_param = {
+//         id: $('#alumniUpdate_number').val(),
+//         name: $('#alumniUpdate_name').val(),
+//         department: $('#alumniUpdate_department').val(),
+//         Email: $('#alumniUpdate_Email').val(),
+//         YearOfAdmission: $('#alumniUpdate_yearOfAdmission').val(),
+//         YearOfGraduation: $('#alumniUpdate_yearOfGraduation').val(),
+//         ResearchTopics: $('#alumniUpdate_researchTopics').val(),
+//     }
+//     $.post('/alumni/alumni_update', researcher_update_param, (returnData) => {
+//         if (returnData.key) {
+//             location.reload();
+//         }
+//     })
+//     location.reload();
+// }
 
 // paper페이지 - conference
 function journal_insert() {
@@ -172,11 +182,15 @@ function journal_delete(delete_title) {
     const journal_remove_param = {
         delete_journal: delete_title,
     }
-    $.post('/paper/journal_delete', journal_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/paper/journal_delete', journal_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function journal_update() {
@@ -229,12 +243,15 @@ function conference_delete(delete_title) {
     const conference_remove_param = {
         delete_conference: delete_title,
     }
-    console.log(conference_remove_param);
-    $.post('/paper/conference_delete', conference_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/paper/conference_delete', conference_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function conference_update() {
@@ -286,12 +303,16 @@ function license_insert() {
 function license_delete(delete_title) {
     const license_remove_param = {
         delete_license: delete_title,
-    }``
-    $.post('/others/license_delete', license_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    }
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/others/license_delete', license_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function license_update() {
@@ -338,11 +359,15 @@ function award_delete(delete_title) {
     const award_remove_param = {
         delete_award: delete_title,
     }
-    $.post('/others/award_delete', award_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/others/award_delete', award_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function award_update() {
@@ -386,11 +411,15 @@ function book_delete(delete_title) {
     const book_remove_param = {
         delete_book: delete_title,
     }
-    $.post('/others/book_delete', book_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/others/book_delete', book_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function book_update() {
@@ -426,11 +455,15 @@ function software_insert() {
         found_: $('#softwareInsert_found_').val(),
         remarks: $('#softwareInsert_remarks').val(),
     }
-    $.post('/others/software_insert', software_save_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/others/software_insert', software_save_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
     location.reload();
 }
 
@@ -438,11 +471,15 @@ function software_delete(delete_title) {
     const software_remove_param = {
         delete_software: delete_title,
     }
-    $.post('/others/software_delete', software_remove_param, (returnData) => {
-        if (returnData.key) {
-            location.reload();
-        }
-    })
+    if (confirm("삭제하시겠습니까?") == true) {
+        $.post('/others/software_delete', software_remove_param, (returnData) => {
+            if (returnData.key) {
+                location.reload();
+            }
+        })
+    } else {
+        return;
+    }
 }
 
 function software_update() {
