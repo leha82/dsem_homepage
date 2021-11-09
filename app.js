@@ -25,7 +25,8 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+app.use('/node_modules',express.static(path.join(__dirname+'/node_modules')));
 
 // ejs views 미들웨어 + 템플릿 엔진(engine: html <-> ejs 렌더링) -->
 app.set('views', __dirname + '/views');
@@ -195,6 +196,8 @@ app.post('/alumniUpload', memberUpload.single('alumniUpload'), function (req, re
     });
     res.redirect("/");
 });
+
+
 app.post('/alumniUpdate', memberUpload.single('alumniUpdate'), function (req, res) {
     fs.stat(__dirname + '/public/img/' + req.body.beforeName + ".jpg", (err, result) => { // 이미지파일 존재하는지 검사
         if (err) { // 기존 이미지가 없음
@@ -342,6 +345,21 @@ app.post('/iconUpdate', function (req, res) {
     res.redirect("/");
 });
 
+// 메인 페이지 수정
+const homeUpload = multer({ dest: 'views/home/'});
+app.post('/homeUpdate', homeUpload.single('homeUpload'), function(req, res) {
+    console.log("들어옴");
+    console.log("req.file.filename: ", req.file.filename);
+
+    fs.rename(__dirname + '/views/home/' + req.file.filename, __dirname + '/views/home/' + 'home' + path.extname(req.file.originalname), function(err) {
+        if (err) throw err;
+        console.log("변경성공!");
+    })
+
+    res.redirect("/");
+})
+
+
 // DB 접속하기-->
 // 각각의 페이지에 보내줄 데이터 조회
 const con = require('./src/dbcon');
@@ -417,6 +435,14 @@ let software_db = function (callback) {
 app.use(express.static("public"));
 
 app.get("/members/professor", (req, res) => {
+    let iconInfo = [];
+    let tmp = [];
+    let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    let lineArray = text.toString().split('\n');
+    for (i in lineArray) {
+        let str = lineArray[i].split(",", 3);
+        iconInfo.push(str);
+    }
     professor_db(function (err, result) {
         if (err) {
             console.log("페이지 로딩 실패");
@@ -425,12 +451,21 @@ app.get("/members/professor", (req, res) => {
         }
         res.render("members/professor", {
             userInfo: req.session.user,
-            professor_results: Object.values(result)
+            professor_results: Object.values(result),
+            iconInfo: iconInfo
         });
     });
 });
 
 app.get("/members/researcher", (req, res) => {
+    let iconInfo = [];
+    let tmp = [];
+    let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    let lineArray = text.toString().split('\n');
+    for (i in lineArray) {
+        let str = lineArray[i].split(",", 3);
+        iconInfo.push(str);
+    }
     researcher_db(function (err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
@@ -468,6 +503,7 @@ app.get("/members/researcher", (req, res) => {
                     userInfo: req.session.user,
                     researcher_results: Object.values(re_results),
                     paper_results: Object.values(paper_results),
+                    iconInfo: iconInfo
                 });
             });
         });
@@ -475,6 +511,14 @@ app.get("/members/researcher", (req, res) => {
 });
 
 app.get("/members/alumni", (req, res) => {
+    let iconInfo = [];
+    let tmp = [];
+    let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    let lineArray = text.toString().split('\n');
+    for (i in lineArray) {
+        let str = lineArray[i].split(",", 3);
+        iconInfo.push(str);
+    }
     alumni_db(function (err, results) {
         if (err) {
             console.log("페이지 로딩 실패");
@@ -512,7 +556,8 @@ app.get("/members/alumni", (req, res) => {
                 res.render("members/alumni", {
                     userInfo: req.session.user,
                     alumni_results: Object.values(al_results),
-                    paper_results: Object.values(paper_results)
+                    paper_results: Object.values(paper_results),
+                    iconInfo: iconInfo
                 });
             });
         });
@@ -520,6 +565,14 @@ app.get("/members/alumni", (req, res) => {
 });
 
 app.get("/paper/paper", (req, res) => {
+    let iconInfo = [];
+    let tmp = [];
+    let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    let lineArray = text.toString().split('\n');
+    for (i in lineArray) {
+        let str = lineArray[i].split(",", 3);
+        iconInfo.push(str);
+    }
     let paper_results = [];
     journal_db(function (err, results) {
         if (err) {
@@ -547,6 +600,7 @@ app.get("/paper/paper", (req, res) => {
             res.render("paper/paper", {
                 userInfo: req.session.user,
                 paper_results: Object.values(paper_results),
+                iconInfo: iconInfo
             })
         });
     });
@@ -555,6 +609,14 @@ app.get("/paper/paper", (req, res) => {
 
 
 app.get("/others/others", (req, res) => {
+    let iconInfo = [];
+    let tmp = [];
+    let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    let lineArray = text.toString().split('\n');
+    for (i in lineArray) {
+        let str = lineArray[i].split(",", 3);
+        iconInfo.push(str);
+    }
     let others_results = [];
     license_db(function (err, results) {
         if (err) {
@@ -603,7 +665,8 @@ app.get("/others/others", (req, res) => {
                     others_results.push(so_results);
                     res.render("others/others", {
                         userInfo: req.session.user,
-                        others_results: Object.values(others_results)
+                        others_results: Object.values(others_results),
+                        iconInfo:iconInfo
                     });
                 });
             });
@@ -641,6 +704,22 @@ app.get("/link/linkEdit", (req, res) => {
     });
 });
 
+app.get("/home/home", (req, res) => {
+    // let iconInfo = [];
+    // let tmp = [];
+    // let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
+    // let lineArray = text.toString().split('\n');
+    // for (i in lineArray) {
+    //     let str = lineArray[i].split(",", 3);
+    //     iconInfo.push(str);
+    // }
+    res.render("home/home", {
+        userInfo: req.session.user,
+        iconInfo: iconInfo
+    });
+});
+
+
 
 // 각각의 페이지들 -->
 app.get("/", (req, res) => {
@@ -664,6 +743,11 @@ app.get("/index", (req, res) => {
         iconInfo: iconInfo
     });
 });
+
+app.get("/sampleDownload", (req, res) => {
+    filepath = __dirname + "/views/home/sample.ejs"
+    res.download(filepath);
+})
 
 require('greenlock-express').init({
     packageRoot: __dirname,

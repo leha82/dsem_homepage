@@ -14,8 +14,10 @@
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
     <script src="/js/function.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-a11y="true"></script>
 
     <script>
+        $(document).ready(function() {
             var innerText = [];
             innerText.push(document.getElementById('name').innerText);
             innerText.push(document.getElementById('department').innerText);
@@ -30,11 +32,97 @@
             $("input[name=Email]").attr('value', innerText[3]);
             $("input[name=Location]").attr('value', innerText[4]);
             $("input[name=FieldOfResearch]").attr('value', innerText[5]);
+    });
+    </script>
+    <script>
+        $(document).on('click', '.menuSelect', function () {
+            // id_value = $(this).attr("id");
+            if($(this).attr("id") == "Home") {
+                location.href = "/"
+            } else if ($(this).attr("id") == "Professor") {
+                location.href = "../members/professor"
+                //$("#row").load("/members/Professor");
+            } else if ($(this).attr("id") == "Researcher") {
+                location.href = "../members/researcher"
+                //$("#row").load("/members/researcher");
+            } else if ($(this).attr("id") == "Alumni") {
+                location.href = "../members/alumni"
+                //$("#row").load("/members/alumni");
+            } else if ($(this).attr("id") == "Paper") {
+                location.href = "../paper/paper"
+                //$("#row").load("/paper/paper");
+            } else if ($(this).attr("id") == "Others") {
+                location.href = "../others/others"
+                //$("#row").load("/others/others");
+            } else if ($(this).attr("id") == "Activity") {
+                location.href = "../activity/activity";
+                //$("#row").load("/activity/activity");
+            } else if ($(this).attr("id") == "linkUpdate") {
+                location.href = "../link/linkEdit";
+                //$("#row").load("/link/linkEdit");
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#login-form").keypress(function (e) {
+                if(e.keyCode == 13) {
+                    login();
+                }
+            });
+    });
     </script>
 </head>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    style=" padding-left: 230px; padding-top: 150px;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 400px;">
+            <div class="login-form" id="login-form">
+                <h1>Login</h1>
+                <input type="text" id='uId' name="username" placeholder="Username" required>
+                <input type="password" id='uPw' name="password" placeholder="Password" required>
+                <input type="submit" onclick="login()" value="Login">
+            </div>
 
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <body class="skin-black">
-    <!--#Edit 교수님 정보 수정, 진행 중--> 
+    <header class="header">
+        <a href="/" class="logo">
+            <br>Data Semantics Lab.
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li id='loginBtn'>
+                        <% if(userInfo==null){ %>
+                            <a href="#" data-toggle="modal" data-target="#myModal" type="button">
+                                <h11
+                                    style="font-size: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">
+                                    <strong>Login</strong>
+                                </h11>
+                                <span class="iconify" data-icon="entypo:login" data-inline="false"
+                                    style="font-size: 25px;">
+                            </a>
+                            <% } else { %>
+                                <a href="#" type="button" onclick="logout()">
+                                    <h11
+                                        style="font-size: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">
+                                        <strong>Logout</strong>
+                                    </h11>
+                                    <span class="iconify" data-icon="entypo:login" data-inline="false"
+                                        style="font-size: 25px;">
+                                </a>
+                            <% } %>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
     <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" padding-left: 70px; padding-top: 80px;">
 
@@ -65,8 +153,102 @@
             </div>
         </div>
     </div>
-
-    <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <aside class="left-side sidebar-offcanvas">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="../../img/logo_1.jpg" class="image" alt="User Image" />
+                    </div>
+                </div>
+                <form action="#" method="get" class="sidebar-form"></form>
+                <ul class="sidebar-menu">
+                    <li>
+                        <!-- <a href="/"> -->
+                        <a class="menuSelect" id="Home" style="cursor:pointer; ">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>Members</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a class="menuSelect" id="Professor" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Professor
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menuSelect" id="Researcher" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Researcher
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menuSelect" id="Alumni" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Alumni
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Paper" style="cursor:pointer; ">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <span>Paper</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Others" style="cursor:pointer; ">
+                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            <span>Others</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Activity" style="cursor:pointer; ">
+                            <i class="fa fa-tasks fa-1x" aria-hidden="true"></i>
+                            <span>Activity</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a class="menuSelect" href="#" style="cursor:pointer; ">
+                            <i class="fa fa-share" aria-hidden="true"></i>
+                            <span>Link</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <% for(let i =0; i<iconInfo.length; i++) {%>
+                                <li>
+                                    <a class="menuSelect" href='<%=iconInfo[i][2]%>' target="_blank" id="<%=iconInfo[i][0]%>" style="cursor:pointer;">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        <%=iconInfo[i][0]%>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% if(userInfo != null) { %>
+                                <li>
+                                    <a class="menuSelect" id="linkUpdate" style="cursor:pointer; ">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Edit
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                </ul>
+                <div>
+                </div>
+            </section>
+        </aside>
+    <aside class="right-side" style="margin-left: 220px; margin-top: 30px;">
         <div class="content-header" style="height:30px">
             <h1>Professor
                 <% if(userInfo!=null) { %>
@@ -80,50 +262,52 @@
             </h1>
         </div>
         <section class="content">
-            <div class="row" style="padding-left: 12px;">
-                <div class="box box-info">
-                    <div class="box-header">
-                    </div>
-                    <div class="box-body">
-                        <% let professor_name = professor_results[0].name.slice(0,3);%>
-                        <img src = <%="/img/" + professor_name + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
-                        <h10>
-                            <professor>
-                                <name class = "Name" id= 'name' style="font-weight: 700;">
-                                    <%=professor_results[0].name%>
-                                </name>
-                            </professor>
-                        </h10>
-                        <li>
-                            Department :
-                            <department class= "Department" id = 'department'>
-                                <%=professor_results[0].department%>
-                            </department>
-                        </li>
-                        <li>
-                            Laboratory :
-                            <laboratory class = "Laboratory" id = 'laboratory'>
-                                <%=professor_results[0].laboratory%>
-                            </laboratory>
-                        </li>
-                        <li>
-                            e-mail :
-                            <email class= "Email" id = 'email'>
-                                <%=professor_results[0].email%>
-                            </email>
-                        </li>
-                        <li>
-                            Location :
-                            <location class="Location" id='location'>
-                                <%=professor_results[0].location%>
-                            </location>
-                        </li>
-                        <li>
-                            Field of research :
-                            <research class="Research" id='research'>
-                                <%=professor_results[0].fieldOfResearch%>
-                            </research>
-                        </li>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="box box-info">
+                        <div class="box-header">
+                        </div>
+                        <div class="box-body">
+                            <% let professor_name = professor_results[0].name.slice(0,3);%>
+                            <img src = <%="/img/" + professor_name + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
+                            <h10>
+                                <professor>
+                                    <name class = "Name" id= 'name' style="font-weight: 700;">
+                                        <%=professor_results[0].name%>
+                                    </name>
+                                </professor>
+                            </h10>
+                            <li>
+                                Department :
+                                <department class= "Department" id = 'department'>
+                                    <%=professor_results[0].department%>
+                                </department>
+                            </li>
+                            <li>
+                                Laboratory :
+                                <laboratory class = "Laboratory" id = 'laboratory'>
+                                    <%=professor_results[0].laboratory%>
+                                </laboratory>
+                            </li>
+                            <li>
+                                e-mail :
+                                <email class= "Email" id = 'email'>
+                                    <%=professor_results[0].email%>
+                                </email>
+                            </li>
+                            <li>
+                                Location :
+                                <location class="Location" id='location'>
+                                    <%=professor_results[0].location%>
+                                </location>
+                            </li>
+                            <li>
+                                Field of research :
+                                <research class="Research" id='research'>
+                                    <%=professor_results[0].fieldOfResearch%>
+                                </research>
+                            </li>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -14,55 +14,69 @@
     <script src="/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="/js/AdminLTE/app_homepage.js" type="text/javascript"></script>
     <script src="/js/function.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-a11y="true"></script>
+    <script>
+        $(document).ready(function() {
+            $("#login-form").keypress(function (e) {
+                if(e.keyCode == 13) {
+                    login();
+                }
+            });
+    });
+    </script>
 
     <!-- 삭제할 때 테이블의 해당 행 삭제되어 보이도록 함 -->
     <script>
-        function rowDel(obj) {
-            var Del_tr = obj.parentNode.parentNode.parentNode;
-            console.log(Del_tr);
-            Del_tr.parentNode.removeChild(Del_tr);
-        }
+        $(document).ready(function() {
+            function rowDel(obj) {
+                var Del_tr = obj.parentNode.parentNode.parentNode;
+                console.log(Del_tr);
+                Del_tr.parentNode.removeChild(Del_tr);
+            }
+        });
     </script>
 
     <!-- 수정할 때 테이블의 해당 행의 정보가 미리 input값으로 존재 -->
     <script>
+        $(document).ready(function() {
+            let memberInfo = [];
+            $(".updateBtn").click(function () {
+                var updateBtn = $(this);
 
-        let memberInfo = [];
-        $(".updateBtn").click(function () {
-            var updateBtn = $(this);
+                var tr = updateBtn.parent().parent().parent();
+                var td = tr.children();
 
-            var tr = updateBtn.parent().parent().parent();
-            var td = tr.children();
-
-            td.each(function (i) {
-                memberInfo[i] = td.eq(i).text().trim();
-            })
-            $("input[name=number]").attr('value', memberInfo[0]);
-            $("input[name=name]").attr('value', memberInfo[1]);
-            $("input[name=department]").attr('value', memberInfo[2]);
-            $("input[name=Email]").attr('value', memberInfo[3]);
-            $("input[name=yearOfAdmission]").attr('value', memberInfo[4]);
-            $("input[name=graduationYear]").attr('value', memberInfo[5]);
-            $("input[name=researchTopics]").attr('value', memberInfo[6]);
-            $("input[name=beforeName]").attr('value', memberInfo[7]);
+                td.each(function (i) {
+                    memberInfo[i] = td.eq(i).text().trim();
+                })
+                $("input[name=number]").attr('value', memberInfo[0]);
+                $("input[name=name]").attr('value', memberInfo[1]);
+                $("input[name=department]").attr('value', memberInfo[2]);
+                $("input[name=Email]").attr('value', memberInfo[3]);
+                $("input[name=yearOfAdmission]").attr('value', memberInfo[4]);
+                $("input[name=graduationYear]").attr('value', memberInfo[5]);
+                $("input[name=researchTopics]").attr('value', memberInfo[6]);
+                $("input[name=beforeName]").attr('value', memberInfo[7]);
+            });
         });
     </script>
     <script>
-        $(window).scroll( function() {
-            if ($( this).scrollTop() > 200 ) {
-                $('.top').fadeIn();
-            } else {
-                $('.top').fadeOut();
-            }
-        });
-        $('.top').click( function() {
-            $('html, body').animate({scrollTop : 0}, 400);
-            return false;
+        $(document).ready(function() {
+            $(window).scroll( function() {
+                if ($( this).scrollTop() > 200 ) {
+                    $('.top').fadeIn();
+                } else {
+                    $('.top').fadeOut();
+                }
+            });
+            $('.top').click( function() {
+                $('html, body').animate({scrollTop : 0}, 400);
+                return false;
+            });
         });
     </script>
     <!-- 실적보기 클릭 시 해당 연구원이 들어간 논문리스트 리턴-->
     <script>
-
         function regularExpression(str) {
             //str = str.replace(/^,/,"");
 
@@ -93,8 +107,6 @@
                     }
                }
             }
-            
-
             for(let i =0; i<conference_strArray.length; i++) {
                 if(conference_strArray[i].includes(name)) {
                     if(conference_strArray[i].indexOf("IC") != -1) {
@@ -108,7 +120,6 @@
                     }
                }
             }
-
             performanceList.push(IJ);
             performanceList.push(DJ);
             performanceList.push(IC);
@@ -121,73 +132,154 @@
         }
     </script>
     <script>
-        var alumniName = [];
-        var name = $('div .alumniName').text().replace(/(\s*)/g,"");
-        var tmp = '';
+        $(document).ready(function() {
+            var alumniName = [];
+            var name = $('div .alumniName').text().replace(/(\s*)/g,"");
+            var tmp = '';
 
-        for(let i =0; i<name.length; i+=3) {
-            tmp = name.substring(i, i+3);
-            alumniName.push(tmp);
-        }
+            for(let i =0; i<name.length; i+=3) {
+                tmp = name.substring(i, i+3);
+                alumniName.push(tmp);
+            }
 
-        for(let i =0; i<alumniName.length; i++) {
-            $(".memberName"+alumniName[i]).click(function () {
-                var performanceList = selectPerformance(alumniName[i]);
-                console.log(performanceList);
+            for(let i =0; i<alumniName.length; i++) {
+                $(".memberName"+alumniName[i]).click(function () {
+                    var performanceList = selectPerformance(alumniName[i]);
+                    console.log(performanceList);
 
-                var target = $(".memberName"+alumniName[i]).text().replace(/(\s*)/g,"");
-                if(target == "실적보기") {
-                    if(performanceList != "연구실적이 없습니다.") {
-                        var all_tag = [];
-                        if(performanceList[0].length > 0) { // International Journal
-                            var IJ_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Journal</strong></p></div>";
-                            for(let i =0; i<performanceList[0].length; i++) {
-                                IJ_tag += "<h11>" +(i+1) + ". " + performanceList[0][i] +"<br></h11>";
+                    var target = $(".memberName"+alumniName[i]).text().replace(/(\s*)/g,"");
+                    if(target == "실적보기") {
+                        if(performanceList != "연구실적이 없습니다.") {
+                            var performanceStr = "";
+                            var tagStr = "<div class='all' style='border:1px solid;'>";
+                            performanceStr += tagStr;
+                            if(performanceList[0].length > 0) { // International Journal
+                                var IJ_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Journal</strong></p></div>";
+                                for(let i =0; i<performanceList[0].length; i++) {
+                                    IJ_tag += "<h11>" +(i+1) + ". " + performanceList[0][i] +"<br></h11>";
+                                }
+                                performanceStr += IJ_tag;
                             }
-                            all_tag.push(IJ_tag);
-                        }
-                        if(performanceList[1].length > 0) {
-                            var DJ_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Journal</strong></div>";
-                            for(let i =0; i<performanceList[1].length; i++) {
-                                DJ_tag += "<h11>" +(i+1) + ". " + performanceList[1][i] + "<br></h11>";
+                            if(performanceList[1].length > 0) {
+                                var DJ_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Journal</strong></div>";
+                                for(let i =0; i<performanceList[1].length; i++) {
+                                    DJ_tag += "<h11>" +(i+1) + ". " + performanceList[1][i] + "<br></h11>";
+                                }
+                                performanceStr += DJ_tag;
                             }
-                            all_tag.push(DJ_tag);
-                        }
-                        if(performanceList[2].length > 0) {
-                            var IC_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Conference</strong></p></div>";
-                            for(let i =0; i<performanceList[2].length; i++) {
-                                IC_tag += "<h11>" +(i+1) + ". " + performanceList[2][i] +"<br></h11>";
+                            if(performanceList[2].length > 0) {
+                                var IC_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>International Conference</strong></p></div>";
+                                for(let i =0; i<performanceList[2].length; i++) {
+                                    IC_tag += "<h11>" +(i+1) + ". " + performanceList[2][i] +"<br></h11>";
+                                }
+                                performanceStr += IC_tag;
                             }
-                            all_tag.push(IC_tag);
-                        }
-                        if(performanceList[3].length > 0) {
-                            var DC_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1500px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Conference</strong></p></div>";
-                            for(let i =0; i<performanceList[3].length; i++) {
-                                DC_tag += "<h11>" +(i+1) + ". " + performanceList[3][i] +"<br></h11>";
+                            if(performanceList[3].length > 0) {
+                                var DC_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1500px; height: auto; color: black;'><br><p style='font-size:20px;'>&bull;&nbsp;<strong>Domestic Conference</strong></p></div>";
+                                for(let i =0; i<performanceList[3].length; i++) {
+                                    DC_tag += "<h11>" +(i+1) + ". " + performanceList[3][i] +"<br></h11>";
+                                }
+                                performanceStr += DC_tag;
                             }
-                            all_tag.push(DC_tag);
+                        } else {
+                            var null_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><h11><br>" + "연구실적이 없습니다." +"<br></h11></div>";
                         }
-                    } else {
-                        var null_tag = "<div class= 'performance"+alumniName[i]+"'"+ "style='width: 1600px; height: auto; color: black;'><h11><br>" + "연구실적이 없습니다." +"<br></h11></div>";
+                        performanceStr += "</div>";
+                        if(performanceList != "연구실적이 없습니다.") {
+                            $("div .performance"+alumniName[i]).append(performanceStr);
+                        } else {
+                            $("div .performance"+alumniName[i]).append(null_tag);
+                        }
+                        $(".memberName"+alumniName[i]).text("실적닫기");
+                    } else if(target == "실적닫기") {
+                        $("div .performance"+alumniName[i]).empty();
+                        $(".memberName"+alumniName[i]).text("실적보기");
                     }
-                    if(performanceList != "연구실적이 없습니다.") {
-                        $("div .performance"+alumniName[i]).append(all_tag);
-                    } else {
-                        $("div .performance"+alumniName[i]).append(null_tag);
-                    }
-                    $(".memberName"+alumniName[i]).text("실적닫기");
-                } else if(target == "실적닫기") {
-                    $("div .performance"+alumniName[i]).empty();
-                    $(".memberName"+alumniName[i]).text("실적보기");
-                }
-            });
-        }
+                });
+            }
+        });
+    </script>
+    <script>
+        $(document).on('click', '.menuSelect', function () {
+            // id_value = $(this).attr("id");
+            if($(this).attr("id") == "Home") {
+                location.href = "/"
+            } else if ($(this).attr("id") == "Professor") {
+                location.href = "../members/professor"
+                //$("#row").load("/members/Professor");
+            } else if ($(this).attr("id") == "Researcher") {
+                location.href = "../members/researcher"
+                //$("#row").load("/members/researcher");
+            } else if ($(this).attr("id") == "Alumni") {
+                location.href = "../members/alumni"
+                //$("#row").load("/members/alumni");
+            } else if ($(this).attr("id") == "Paper") {
+                location.href = "../paper/paper"
+                //$("#row").load("/paper/paper");
+            } else if ($(this).attr("id") == "Others") {
+                location.href = "../others/others"
+                //$("#row").load("/others/others");
+            } else if ($(this).attr("id") == "Activity") {
+                location.href = "../activity/activity";
+                //$("#row").load("/activity/activity");
+            } else if ($(this).attr("id") == "linkUpdate") {
+                location.href = "../link/linkEdit";
+                //$("#row").load("/link/linkEdit");
+            }
+        });
     </script>
 
-
 </head>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+    style=" padding-left: 230px; padding-top: 150px;">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 400px;">
+            <div class="login-form" id="login-form">
+                <h1>Login</h1>
+                <input type="text" id='uId' name="username" placeholder="Username" required>
+                <input type="password" id='uPw' name="password" placeholder="Password" required>
+                <input type="submit" onclick="login()" value="Login">
+            </div>
 
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <body class="skin-black">
+    <header class="header">
+        <a href="/" class="logo">
+            <br>Data Semantics Lab.
+        </a>
+        <nav class="navbar navbar-static-top" role="navigation">
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li id='loginBtn'>
+                        <% if(userInfo==null){ %>
+                            <a href="#" data-toggle="modal" data-target="#myModal" type="button">
+                                <h11
+                                    style="font-size: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">
+                                    <strong>Login</strong>
+                                </h11>
+                                <span class="iconify" data-icon="entypo:login" data-inline="false"
+                                    style="font-size: 25px;">
+                            </a>
+                            <% } else { %>
+                                <a href="#" type="button" onclick="logout()">
+                                    <h11
+                                        style="font-size: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">
+                                        <strong>Logout</strong>
+                                    </h11>
+                                    <span class="iconify" data-icon="entypo:login" data-inline="false"
+                                        style="font-size: 25px;">
+                                </a>
+                            <% } %>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
     <!--#New, 연구원 데이터 등록-->
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" padding-left: 150px; padding-top: 120px;">
@@ -375,8 +467,102 @@
         </div>
     </div>
 
-
-    <aside class="right-side" style="margin-left: 0px; margin-top: 0px;">
+    <div class="wrapper row-offcanvas row-offcanvas-left">
+        <aside class="left-side sidebar-offcanvas">
+            <section class="sidebar">
+                <div class="user-panel">
+                    <div class="pull-left image">
+                        <img src="../../img/logo_1.jpg" class="image" alt="User Image" />
+                    </div>
+                </div>
+                <form action="#" method="get" class="sidebar-form"></form>
+                <ul class="sidebar-menu">
+                    <li>
+                        <!-- <a href="/"> -->
+                        <a class="menuSelect" id="Home" style="cursor:pointer; ">
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            <span>Home</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>Members</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a class="menuSelect" id="Professor" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Professor
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menuSelect" id="Researcher" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Researcher
+                                </a>
+                            </li>
+                            <li>
+                                <a class="menuSelect" id="Alumni" style="cursor:pointer; ">
+                                    <i class="fa fa-angle-double-right">
+                                    </i>
+                                    Alumni
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Paper" style="cursor:pointer; ">
+                            <i class="fa fa-file" aria-hidden="true"></i>
+                            <span>Paper</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Others" style="cursor:pointer; ">
+                            <i class="fa fa-plus-square" aria-hidden="true"></i>
+                            <span>Others</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="menuSelect" id="Activity" style="cursor:pointer; ">
+                            <i class="fa fa-tasks fa-1x" aria-hidden="true"></i>
+                            <span>Activity</span>
+                        </a>
+                    </li>
+                    <li class="treeview">
+                        <a class="menuSelect" href="#" style="cursor:pointer; ">
+                            <i class="fa fa-share" aria-hidden="true"></i>
+                            <span>Link</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <% for(let i =0; i<iconInfo.length; i++) {%>
+                                <li>
+                                    <a class="menuSelect" href='<%=iconInfo[i][2]%>' target="_blank" id="<%=iconInfo[i][0]%>" style="cursor:pointer;">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        <%=iconInfo[i][0]%>
+                                    </a>
+                                </li>
+                            <% } %>
+                            <% if(userInfo != null) { %>
+                                <li>
+                                    <a class="menuSelect" id="linkUpdate" style="cursor:pointer; ">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Edit
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </li>
+                </ul>
+                <div>
+                </div>
+            </section>
+        </aside>
+        <aside class="right-side" style="margin-left: 220px; margin-top: 30px;">
         <div class="content-header" style="height:30px">
             <h1>alumni
 <%              if(userInfo!=null) { %>

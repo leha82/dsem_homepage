@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 
 const dbcon = mysql.createPool({
-    host: "203.234.62.144",
-    user: "root",
-    password: '144dsem',
+    host: "203.234.62.111",
+    user: "dsem_homepage",
+    password: 'dsem_homepage',
     database: "homepage",
     connectionLimit: 10,
     debug: false,

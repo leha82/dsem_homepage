@@ -15,36 +15,113 @@
     <script src="js/AdminLTE/app_homepage.js" type="text/javascript"></script>
     <!-- <script src="js/AdminLTE/dashboard.js" type="text/javascript"></script> -->
     <script src="js/function.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" data-auto-a11y="true"></script>
 
     <!-- 페이지 뿌려주는 jquery-->
     <script>
-        // var id_value = '';
         $(document).on('click', '.menuSelect', function () {
             // id_value = $(this).attr("id");
             if ($(this).attr("id") == "Professor") {
-                $("#row").load("/members/Professor");
+                location.href = "/members/professor"
+                //$("#row").load("/members/Professor");
             } else if ($(this).attr("id") == "Researcher") {
-                $("#row").load("/members/researcher");
+                location.href = "/members/researcher"
+                //$("#row").load("/members/researcher");
             } else if ($(this).attr("id") == "Alumni") {
-                $("#row").load("/members/alumni");
+                location.href = "/members/alumni"
+                //$("#row").load("/members/alumni");
             } else if ($(this).attr("id") == "Paper") {
-                $("#row").load("/paper/paper");
+                location.href = "/paper/paper"
+                //$("#row").load("/paper/paper");
             } else if ($(this).attr("id") == "Others") {
-                $("#row").load("/others/others");
+                location.href = "/others/others"
+                //$("#row").load("/others/others");
             } else if ($(this).attr("id") == "Activity") {
-                $("#row").load("/activity/activity");
+                location.href = "/activity/activity";
+                //$("#row").load("/activity/activity");
             } else if ($(this).attr("id") == "linkUpdate") {
-                $("#row").load("/link/linkEdit");
+                location.href = "/link/linkEdit";
+                //$("#row").load("/link/linkEdit");
             }
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $("#row").load("/home/home");
+        });
+    </script>
+    <script>
+        function getFileDown() {
+            window.location = "/sampleDownload";
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#file").on('change',function(){
+                var fileName = $("#file").val();
+                $(".filePath").val(fileName);
+            });
+        });
+    </script>
+    <!-- <script>
+        $(document).ready(function() {
+            $('#modal').modal("hide");
+        });
+    </script> -->
+    <script>
+        $(document).ready(function() {
+            $("#login-form").keypress(function (e) {
+                if(e.keyCode == 13) {
+                    login();
+                }
+            });
+    });
+    </script>
 </head>
+<style>
+    .form-group .filePath, .imgName, .imgLink {
+        display: inline-block;
+        height: 40px;
+        padding: 0 10px;
+        vertical-align: middle;
+        border: 1px solid #dddddd;
+        width: 78%;
+        color: #999999;
+    }
+    .form-group label {
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        vertical-align: middle;
+        background-color: #999999;
+        cursor: pointer;
+        height: 40px;
+        margin-left: 10px;
+    }
+    .form-group input[type="file"] {
+        position: absolute;
+        width: 0;
+        height: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+    }
+    select {
+        width:350px;
+        height: 32px;
+        margin-left:10px;
+        padding:5px;
+        font-family:'Nanumgothic';
+        
+        border-radius:3px;
+   }
+</style>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
     style=" padding-left: 230px; padding-top: 150px;">
     <div class="modal-dialog">
         <div class="modal-content" style="width: 400px;">
-            <div class="login-form">
+            <div class="login-form" id="login-form">
                 <h1>Login</h1>
                 <input type="text" id='uId' name="username" placeholder="Username" required>
                 <input type="password" id='uPw' name="password" placeholder="Password" required>
@@ -52,11 +129,38 @@
             </div>
 
             <div class="modal-footer">
-                <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="close()">Close</button>
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+        style=" padding-left: 70px; padding-top: 80px;">
+
+        <div class="modal-dialog">
+            <div class="modal-content" style="width: 600px; height: 300px;">
+                <div class="modal-header" style="height: 50px; font-size: 18px; text-align: center;">
+                    페이지 수정
+                </div>
+                <div class="modal-body">
+                    <input type="button" value="여기를 눌러 샘플파일을 다운로드하세요." class="imgPath" style="width:400px; background-color:white" onclick="getFileDown()" readonly>
+                    <form method="POST" enctype="multipart/form-data" action="/homeUpdate" style="width:550px">
+                        <!-- <div class="form-group">
+                        </div> -->
+                        <div class="form-group">
+                            <input class="filePath" placeholder="파일 적용은 *.ejs로 하시기 바랍니다." style="width:400px" readonly>
+                            <label for="file">파일찾기</label>
+                            <input type="file" name="homeUpload" id="file" style = "width:400px" placeholder="파일 선택"/>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn btn-primary" style="font-size: 16px;float:left;">Save</button>
+                        <button type="button" class="btn btn-default" style="font-size: 16px;float:left; margin-left:5px" data-dismiss="modal">Close</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <body class="skin-black">
     <header class="header">
@@ -91,7 +195,6 @@
             </div>
         </nav>
     </header>
-
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <aside class="left-side sidebar-offcanvas">
             <section class="sidebar">
@@ -104,6 +207,7 @@
                 <ul class="sidebar-menu">
                     <li>
                         <a href="/">
+                        <!-- <a class="menuSelect" id="Home" style="cursor:pointer; "> -->
                             <i class="fa fa-home" aria-hidden="true"></i>
                             <span>Home</span>
                         </a>
@@ -188,13 +292,21 @@
                 
             </section>
         </aside>
-        <aside class="right-side">
-            <div class="content-header" id="content-header">
+        <aside class="right-side" style="margin-left: 220px;">
+            <div class="content-header" id="content-header" >
+                <% if(userInfo!=null) { %>
+                    <a href="#" data-toggle="modal" data-target="#edit" type="button" class="btn btn-primary"
+                        style="position: absolute; float:right; width: 160px; height: 35px;">
+                        <h14 style="font-size: 15px;">
+                            메인페이지 수정하기
+                        </h14>
+                    </a>
+                <% } %>
             </div>
             <section class="content">
                 <div class="row" id="row">
                     <div class="col-md-6">
-                        <div class="box box-info">
+                        <div class="box box-info" style="margin-top: 30px; margin-left: 5px;">
                             <div class="box-header">
                                 <i class="fa fa-terminal" aria-hidden="true"></i>
                                 <h3 class="box-title">Welcome to the DSEM Lab.</h3>
