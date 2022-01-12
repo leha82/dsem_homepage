@@ -371,7 +371,7 @@
                                     <tr style="width:auto;">
                                         <td>
                                             <center>
-                                                <%=                                     i+1                                 %>
+                                                <%=                                     paper_results[0][i][0]                                 %>
                                             </center>
                                         </td>
                                         <td>
@@ -502,7 +502,7 @@
                                     <tr style="width:auto;">
                                         <td>
                                             <center>
-                                                <%=                                     i+1                                %>
+                                                <%=                                     paper_results[1][i][0]                                %>
                                             </center>
                                         </td>
                                         <td>
@@ -822,15 +822,16 @@
                                         <div class="tab-pane active" id="<%=year[i]%>">
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>International Journal</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                    <%                                                  
-                                                    for(let j = 0; j<IJ.length; j++) { 
+                                                    <%                                
+                                                    var setCount = IJ.length;           
+                                                    for(let j = IJ.length-1; j>=0; j--) { 
                                                         str = '';
                                                         for(let k = 3; k<IJ[j].length-5; k++) { 
                                                             str += IJ[j][k] + ", ";
                                                         }
                                                         str = regularExpression(str);
                                                     %>
-                                                        <%= j+1 + ". " + str%>
+                                                        <%= Math.abs(j-setCount) + ". " + str%>
                                                         <br>
                                                         <h11><%="ISSN: " + IJ[j][8] + ", "%></h11>
                                                         <a href="<%=IJ[j][12]%>" target="_blank">
@@ -841,15 +842,16 @@
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Journal</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                    <%                                                
-                                                    for(let j =0; j<DJ.length; j++) { 
+                                                    <%
+                                                    var setCount = DJ.length;                                                
+                                                    for(let j =DJ.length-1; j>=0; j--) { 
                                                         str = '';
                                                         for(let k = 3; k<DJ[j].length-5; k++) {
                                                             str += DJ[j][k] + ", ";
                                                         }
                                                         str = regularExpression(str);  
                                                     %>
-                                                        <%= j+1 + ". " + str%>
+                                                        <%= Math.abs(j-setCount) + ". " + str%>
                                                         <br>
                                                         <h11><%="ISSN: " + DJ[j][8] + ", "%></h11>
                                                         <a href="<%=DJ[j][12]%>" target="_blank">
@@ -860,8 +862,9 @@
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>International Conference</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                    <%                                                  
-                                                    for(let j =0; j<IC.length; j++) { 
+                                                    <%         
+                                                    var setCount = IC.length;                                         
+                                                    for(let j =IC.length-1; j>=0; j--) { 
                                                         str = '';
                                                         for(let k = 3; k<IC[j].length-2; k++) {
                                                             if(k == 3) {
@@ -872,14 +875,15 @@
                                                         }
                                                         str = regularExpression(str);
                                                     %>
-                                                        <%= j+1 + ". " + str%>
+                                                        <%= Math.abs(j-setCount) + ". " + str%>
                                                         <br><br>
                                            <%         }                               %>
                                                 </li>
                                                 <p style="font-size:20px;">&bull;&nbsp;<strong>Domestic Conference</strong></p>
                                                 <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                                    <%                                                  
-                                                    for(let j =0; j<DC.length; j++) { 
+                                                    <%             
+                                                    var setCount = DC.length;                                     
+                                                    for(let j =DC.length-1; j>=0; j--) { 
                                                         str = '';
                                                         for(let k =3; k<DC[j].length-2; k++) {
                                                             if(k == 3) {
@@ -890,7 +894,7 @@
                                                         }
                                                         str = regularExpression(str);
                                                     %>
-                                                        <%= j+1 + ". " + str%>
+                                                        <%= Math.abs(j-setCount) + ". " + str%>
                                                         <%= ", " + DC[j][10]%>
                                                         <br><br>
                                   <%                  }                           %>

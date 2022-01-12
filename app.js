@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const http = require('http');
 const https = require("https");
 const path = require('path');
 const fs = require("fs");
@@ -26,12 +27,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/node_modules',express.static(path.join(__dirname+'/node_modules')));
+app.use('/node_modules', express.static(path.join(__dirname + '/node_modules')));
 
 // ejs views 미들웨어 + 템플릿 엔진(engine: html <-> ejs 렌더링) -->
 app.set('views', __dirname + '/views');
 app.set("view engine", "ejs");
 app.engine('html', require('ejs').renderFile);
+
 
 const options = {
     key: fs.readFileSync("./keys/prv_ast.kunsan.ac.kr.key"),
@@ -43,10 +45,12 @@ const options = {
     ]
 };
 
-https.createServer(options, app).listen(11000, function () {
-    console.log("HTTPS server listening on port " + 11000);
+app.set("port", process.env.PORT || 18080);
+/*
+https.createServer(options, app).listen(18080, function () {
+    console.log("HTTPS server listening on port " + 18080);
 });
-
+*/
 
 // login -->
 app.use(express.json());
@@ -94,15 +98,14 @@ app.post('/researcherUpload', memberUpload.single('researcherUpload'), function 
             callback(err, null);
             return;
         }
-        let sql = 'INSERT INTO researcher(koreanName,department,email,admissionYear,interest) VALUES(?,?,?,?,?)';
-        let insertParameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.ResearchTopics];
-        console.log(insertParameter);
+        let sql = 'INSERT INTO homepage.researcher(koreanName,department,email,admissionYear,interest,description) VALUES(?,?,?,?,?,?);';
+        let insertParameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.ResearchTopics, req.body.description];
         con.query(sql, insertParameter, function (err, results, fields) {
             if (err) throw err;
             console.log(results)
         });
     });
-    res.redirect("/");
+    res.redirect("/members/researcher");
 });
 app.post('/researcherUpdate', memberUpload.single('researcherUpdate'), function (req, res) {
     fs.stat(__dirname + '/public/img/' + req.body.beforeName + ".jpg", (err, result) => { // 이미지파일 존재하는지 검사
@@ -148,11 +151,6 @@ app.post('/researcherUpdate', memberUpload.single('researcherUpdate'), function 
             } catch (e) {
             }
         }
-        if (req.body.beforeName != req.body.name) {
-            fs.rename(__dirname + '/public/img/' + req.body.beforeName + ".jpg", __dirname + '/public/img/' + req.body.name + ".jpg", function (err5) {
-                if (err5) throw err5;
-            });
-        }
     });
     con.getConnection(function (err, connection) {
         if (err) {
@@ -160,41 +158,61 @@ app.post('/researcherUpdate', memberUpload.single('researcherUpdate'), function 
             callback(err, null);
             return;
         }
-        let sql = 'UPDATE researcher SET koreanName=?, department=?, email=?, admissionYear=?, interest=? WHERE id=?';
-        let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.researchTopics, req.body.number];
-        console.log(updateParameter);
-        con.query(sql, updateParameter, (err, results, fields) => {
-            if (err) throw err;
-            console.log(results);
-        });
-        con.query('set @count = 0;' + 'UPDATE researcher SET id = @count:=@count+1;', (err, results) => {
-            if (err) throw err;
-        });
+        console.log("req.body.number: " + req.body.number)
+        console.log("req.body.beforeId: " + req.body.beforeId)
+        if (req.body.beforeId != req.body.number) {
+            con.query('UPDATE homepage.researcher SET id = ? WHERE id=?;', [99, req.body.number], (err, results, fields) => {
+                if (err) throw err;
+            });
+            let sql = 'UPDATE homepage.researcher SET id= ?, koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE id=?;';
+            let updateParameter = [req.body.number, req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.researchTopics, req.body.description, req.body.beforeId];
+            con.query(sql, updateParameter, (err, results, fields) => {
+                if (err) throw err;
+            });
+            con.query('UPDATE homepage.researcher SET id = ? WHERE id = ?;', [req.body.beforeId, 99], (err, results, fields) => {
+                if (err) throw err;
+                con.query('SELECT count(*) AS researcher_length from homepage.researcher;', (err1, results1, fields) => {
+                    if (err1) throw err1;
+                    con.query('ALTER TABLE homepage.researcher AUTO_INCREMENT = ?;', [results1[0].researcher_length], (err2, results2, fields2) => {
+                        if (err2) throw err2;
+                    })
+                });
+            });
+        } else {
+            let sql = 'UPDATE homepage.researcher SET koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE id=?;';
+            let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.researchTopics, req.body.description, req.body.beforeId];
+            con.query(sql, updateParameter, (err, results, fields) => {
+                if (err) throw err;
+            });
+        }
     });
-    res.redirect("/");
+    res.redirect("/members/researcher");
 });
 
 // alumni 등록 및 업데이트(사진포함)
 app.post('/alumniUpload', memberUpload.single('alumniUpload'), function (req, res) {
-    if (req.body.file != undefined) {
+    try {
         fs.rename(__dirname + '/public/img/' + req.file.filename, __dirname + '/public/img/' + req.body.name + path.extname(req.file.originalname), function (err) {
+            console.log("alumni 등록");
             if (err) throw err;
         });
+    } catch (e) {
+        console.log("생성");
     }
     con.getConnection(function (err1, connection) {
         if (err1) {
             connection.release();
             callback(err1, null);
         }
-        let sql = 'INSERT INTO alumni(koreanName,department,email,admissionYear,graduationYear, interest) VALUES(?,?,?,?,?,?)';
+        let sql = 'INSERT INTO alumni(koreanName,department,email,admissionYear,graduationYear, interest, description) VALUES(?,?,?,?,?,?,?);';
         // console.log(sql);
-        let parameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.YearOfGraduation, req.body.ResearchTopics];
+        let parameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.YearOfGraduation, req.body.ResearchTopics, req.body.description];
         con.query(sql, parameter, function (err2, results, fields) {
             if (err2) throw err2;
             console.log(results)
         });
     });
-    res.redirect("/");
+    res.redirect("/members/alumni");
 });
 
 
@@ -242,11 +260,6 @@ app.post('/alumniUpdate', memberUpload.single('alumniUpdate'), function (req, re
             } catch (e) {
             }
         }
-        if (req.body.beforeName != req.body.name) {
-            fs.rename(__dirname + '/public/img/' + req.body.beforeName + ".jpg", __dirname + '/public/img/' + req.body.name + ".jpg", function (err5) {
-                if (err5) throw err5;
-            });
-        }
     });
     con.getConnection(function (err, connection) {
         if (err) {
@@ -254,18 +267,33 @@ app.post('/alumniUpdate', memberUpload.single('alumniUpdate'), function (req, re
             callback(err, null);
             return;
         }
-        let sql = 'UPDATE alumni SET koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=? WHERE id=?';
-        let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.graduationYear, req.body.researchTopics, req.body.number];
-        console.log(updateParameter);
-        con.query(sql, updateParameter, (err, results, fields) => {
-            if (err) throw err;
-            console.log(results);
-        });
-        con.query('set @count = 0;' + 'UPDATE alumni SET id = @count:=@count+1;', (err, results) => {
-            if (err) throw err;
-        });
+        if (req.body.beforeId != req.body.number) {
+            con.query('UPDATE homepage.alumni SET id = ? WHERE id=?;', [99, req.body.number], (err, results, fields) => {
+                if (err) throw err;
+            });
+            let sql = 'UPDATE homepage.alumni SET id=?, koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=?, description=? WHERE id=?;';
+            let updateParameter = [req.body.number, req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.graduationYear, req.body.researchTopics, req.body.description, req.body.beforeId];
+            con.query(sql, updateParameter, (err1, results1, fields1) => {
+                if (err1) throw err1;
+            });
+            con.query('UPDATE homepage.alumni SET id = ? WHERE id = ?;', [req.body.beforeId, 99], (err2, results2, fields2) => {
+                if (err2) throw err2;
+                con.query('SELECT count(*) AS alumni_length from homepage.alumni;', (err3, results3, fields3) => {
+                    if (err3) throw err3;
+                    con.query('ALTER TABLE homepage.alumni AUTO_INCREMENT = ?;', [results3[0].alumni_length], (err4, results4, fields4) => {
+                        if (err4) throw err4;
+                    });
+                });
+            });
+        } else {
+            let sql = 'UPDATE alumni SET koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=?, description=? WHERE id=?;';
+            let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.graduationYear, req.body.researchTopics, req.body.description, req.body.beforeId];
+            con.query(sql, updateParameter, (err, results, fields) => {
+                if (err) throw err;
+            });
+        }
     });
-    res.redirect("/");
+    res.redirect("/members/alumni");
 });
 
 app.post('/iconUpload', iconUpload.single('upload'), function (req, res) {
@@ -277,7 +305,7 @@ app.post('/iconUpload', iconUpload.single('upload'), function (req, res) {
         if (err) throw err;
         console.log("링크 추가");
     })
-    res.redirect("/");
+    res.redirect("/link/linkEdit");
 })
 app.post('/iconDelete', function (req, res) {
     fs.readFile(__dirname + '/public/img/icon/iconInfo/iconInfo.txt', 'utf8', function (err, data) {
@@ -298,7 +326,7 @@ app.post('/iconDelete', function (req, res) {
             }
         });
     });
-    res.redirect("/");
+    res.redirect("/link/linkEdit");
 });
 
 app.post('/iconUpdate', function (req, res) {
@@ -342,16 +370,16 @@ app.post('/iconUpdate', function (req, res) {
             }
         });
     });
-    res.redirect("/");
+    res.redirect("/link/linkEdit");
 });
 
 // 메인 페이지 수정
-const homeUpload = multer({ dest: 'views/home/'});
-app.post('/homeUpdate', homeUpload.single('homeUpload'), function(req, res) {
+const homeUpload = multer({ dest: 'views/home/' });
+app.post('/homeUpdate', homeUpload.single('homeUpload'), function (req, res) {
     console.log("들어옴");
     console.log("req.file.filename: ", req.file.filename);
 
-    fs.rename(__dirname + '/views/home/' + req.file.filename, __dirname + '/views/home/' + 'home' + path.extname(req.file.originalname), function(err) {
+    fs.rename(__dirname + '/views/home/' + req.file.filename, __dirname + '/views/home/' + 'home' + path.extname(req.file.originalname), function (err) {
         if (err) throw err;
         console.log("변경성공!");
     })
@@ -367,21 +395,21 @@ const { publicDecrypt } = require('crypto');
 
 // 멤버 DB
 let professor_db = function (callback) {
-    con.query('SELECT * FROM professor', function (err, results) {
+    con.query('SELECT * FROM professor;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let researcher_db = function (callback) {
-    con.query('SELECT * FROM researcher', function (err, results) {
+    con.query('SELECT * FROM researcher;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let alumni_db = function (callback) {
-    con.query('SELECT * FROM alumni', function (err, results) {
+    con.query('SELECT * FROM alumni;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
@@ -389,14 +417,14 @@ let alumni_db = function (callback) {
 
 // 논문 DB
 let journal_db = function (callback) {
-    con.query('SELECT * FROM journal', function (err, results) {
+    con.query('SELECT * FROM homepage.journal ORDER BY date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let conference_db = function (callback) {
-    con.query('SELECT * FROM conference', function (err, results) {
+    con.query('SELECT * FROM homepage.conference ORDER BY date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
@@ -404,28 +432,28 @@ let conference_db = function (callback) {
 
 // 특허 및 수상 등 DB
 let award_db = function (callback) {
-    con.query('SELECT * FROM award', function (err, results) {
+    con.query('SELECT * FROM homepage.award ORDER BY date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let book_db = function (callback) {
-    con.query('SELECT * FROM book', function (err, results) {
+    con.query('SELECT * FROM homepage.book ORDER BY date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let license_db = function (callback) {
-    con.query('SELECT * FROM license', function (err, results) {
+    con.query('SELECT * FROM homepage.license ORDER BY application_date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let software_db = function (callback) {
-    con.query('SELECT * FROM software', function (err, results) {
+    con.query('SELECT * FROM homepage.software ORDER BY creative_date ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
@@ -447,7 +475,7 @@ app.get("/members/professor", (req, res) => {
         if (err) {
             console.log("페이지 로딩 실패");
             console.log(err.stack);
-            return;
+            return; ``
         }
         res.render("members/professor", {
             userInfo: req.session.user,
@@ -476,6 +504,10 @@ app.get("/members/researcher", (req, res) => {
         for (let i = 0; i < results.length; i++) {
             re_results[i] = Object.values(results[i]);
         }
+        // console.log(re_results[9][11]);
+        // let desciption_results = re_results[11].split("-");
+        // console.log(desciption_results);
+
         let paper_results = [];
         journal_db(function (err, results) {
             if (err) {
@@ -666,7 +698,7 @@ app.get("/others/others", (req, res) => {
                     res.render("others/others", {
                         userInfo: req.session.user,
                         others_results: Object.values(others_results),
-                        iconInfo:iconInfo
+                        iconInfo: iconInfo
                     });
                 });
             });
@@ -698,28 +730,22 @@ app.get("/link/linkEdit", (req, res) => {
         let str = lineArray[i].split(",", 3);
         iconInfo.push(str);
     }
-    res.render("link/linkEdit", {
-        userInfo: req.session.user,
-        iconInfo: iconInfo
-    });
+    if (req.session.user != null) {
+        res.render("link/linkEdit", {
+            userInfo: req.session.user,
+            iconInfo: iconInfo
+        });
+    } else {
+        res.redirect("/");
+    }
 });
 
 app.get("/home/home", (req, res) => {
-    // let iconInfo = [];
-    // let tmp = [];
-    // let text = fs.readFileSync('./public/img/icon/iconInfo/iconInfo.txt');
-    // let lineArray = text.toString().split('\n');
-    // for (i in lineArray) {
-    //     let str = lineArray[i].split(",", 3);
-    //     iconInfo.push(str);
-    // }
     res.render("home/home", {
         userInfo: req.session.user,
         iconInfo: iconInfo
     });
 });
-
-
 
 // 각각의 페이지들 -->
 app.get("/", (req, res) => {
@@ -745,10 +771,13 @@ app.get("/index", (req, res) => {
 });
 
 app.get("/sampleDownload", (req, res) => {
-    filepath = __dirname + "/views/home/sample.ejs"
+    filepath = __dirname + "/views/home/home.ejs"
     res.download(filepath);
 })
 
+app.get("/")
+
+/*
 require('greenlock-express').init({
     packageRoot: __dirname,
     configDir: './greenlock.d',
@@ -756,7 +785,13 @@ require('greenlock-express').init({
     maintainerEmail: 'cwtcwt4096@gmail.com',
 })
     .serve(app);
+*/
 
 // app.listen(11000, () => {
 //     console.log('run');
 // });
+
+
+var server = https.createServer(options, app).listen(app.get("port"), function () {
+    console.log("서버가 시작되었습니다. 포트 : " + app.get("port"));
+})

@@ -42,7 +42,7 @@ router.post('/journal_update', (req, res)=> {
             callback(err, null);
             return;
         }
-        let sql = 'UPDATE journal SET year=?, part=?, date=?, authors=?, title=?, journal_name=?,other=?,ISSN=?,paper_index=?,IF_=?,found_=?,doi=? WHERE seq_id=?';
+        let sql = 'UPDATE journal SET year=?, part=?, date=?, authors=?, title=?, journal_name=?,other=?,ISSN=?,paper_index=?,IF_=?,found_=?,doi=? WHERE seq_id=?;';
         let journal_updateParameter = [req.body.year, req.body.part, req.body.date, req.body.authors, req.body.title, req.body.journal_name, req.body.other, req.body.ISSN, req.body.paper_index, req.body.IF_, req.body.found_, req.body.doi, req.body.id];
         con.query(sql, journal_updateParameter, (err, results, fields) =>{
             if(err) throw err;
@@ -59,7 +59,7 @@ router.post('/conference_insert', (req, res)=> {
             callback(err, null);
             return;
         }
-        let sql = 'INSERT INTO conference(year,part,date,authors,title, proceeding, ISSN, place, found, remarks) VALUES(?,?,?,?,?,?,?,?,?,?)';
+        let sql = 'INSERT INTO conference(year,part,date,authors,title, proceeding, ISSN, place, found, remarks) VALUES(?,?,?,?,?,?,?,?,?,?);';
         let conference_insertParameter= [req.body.year, req.body.part, req.body.date, req.body.authors, req.body.title, req.body.proceeding, req.body.ISSN, req.body.place, req.body.found, req.body.remarks];
         con.query(sql, conference_insertParameter, function(err, results, fields) {
             if(err) throw err;
@@ -89,7 +89,7 @@ router.post('/conference_update', (req, res)=> {
             callback(err, null);
             return;
         }
-        let sql = 'UPDATE conference SET year=?, part=?, date=?, authors=?, title=?, proceeding=?,ISSN=?,place=?,found=?,remarks=? WHERE seq_id=?';
+        let sql = 'UPDATE conference SET year=?, part=?, date=?, authors=?, title=?, proceeding=?,ISSN=?,place=?,found=?,remarks=? WHERE seq_id=?;';
         let conference_updateParameter = [req.body.year, req.body.part, req.body.date, req.body.authors, req.body.title, req.body.proceeding, req.body.ISSN, req.body.place, req.body.found, req.body.remarks, req.body.id];
         con.query(sql, conference_updateParameter, (err, results, fields) =>{
             if(err) throw err;

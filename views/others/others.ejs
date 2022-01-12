@@ -331,6 +331,7 @@
     </header>
 <% 
     let year = ['특허', '수상', '저서', 'SW'];
+    //console.log(others_results[0][1][2]);
 %> 
     <!-- #New, 논문-->
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style=" padding-left: 150px; padding-top: 60px;">
@@ -488,7 +489,7 @@
                                 <tr style="width:auto;">
                                     <td>
                                         <center>
-                                            <%=                                     i+1                                 %>
+                                            <%=                                     others_results[0][i][0]                                 %>
                                         </center>
                                     </td>
                                     <td>
@@ -592,7 +593,7 @@
                                 <tr style="width:auto;">
                                     <td>
                                         <center>
-                                            <%=                                     i+1                                %>
+                                            <%=                                     others_results[1][i][0]                                %>
                                         </center>
                                     </td>
                                     <td>
@@ -684,7 +685,7 @@
                                 <tr style="width:auto;">
                                     <td>
                                         <center>
-                                            <%=                                     i+1                                %>
+                                            <%=                                     others_results[2][i][0]                                %>
                                         </center>
                                     </td>
                                     <td>
@@ -790,7 +791,7 @@
                                 <tr style="width:auto;">
                                     <td>
                                         <center>
-                                            <%=                                     i+1                                %>
+                                            <%=                                     others_results[3][i][0]                                %>
                                         </center>
                                     </td>
                                     <td>
@@ -1076,161 +1077,162 @@
                 </section>
             </aside>
         <aside class="right-side" style="margin-left: 220px; margin-top: 30px;">
-        <div class="content-header" style="height: 30px;">
-            <h1>Others
-                <%              if(userInfo!=null) {     %>
-                    &nbsp;
-                    <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
-                        <h14 style="font-size: 15px;">
-                            Edit
-                        </h14>
-                    </a>
-                    <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
-                        <h14 style="font-size: 15px;">
-                            New
-                        </h14>
-                    </a>
-                    <%              }                    %>
-            </h1>
-        </div>
-        <section class="content">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="box box-info">
-                        <div class="box-header">
-                        </div>
-                        <div class="box-body">
-                            <div class="nav-tabs-custom">
-                                <ul class="nav nav-tabs">
-                                    <li class="nav-item active">
-                                        <a class="nav-link active" href="#All" data-toggle="tab" id="#All">
-                                            All
-                                        </a>
-                                    </li>
-                                    <% for(let i = 0; i<year.length; i++) { %>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="<%="#"+year[i]%>" data-toggle="tab" id="<%="#"+year[i]%>">
-                                                <%= year[i]%>
+            <div class="content-header" style="height: 30px;">
+                <h1>Others
+                    <%              if(userInfo!=null) {     %>
+                        &nbsp;
+                        <a href="#" data-toggle="modal" data-target="#list" type="button" class="btn btn-default" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                            <h14 style="font-size: 15px;">
+                                Edit
+                            </h14>
+                        </a>
+                        <a href="#" data-toggle="modal" data-target="#new" type="button" class="btn btn-primary" style="float:right; height: 35px; margin: 0px 3px 3px 0px;">
+                            <h14 style="font-size: 15px;">
+                                New
+                            </h14>
+                        </a>
+                        <%              }                    %>
+                </h1>
+            </div>
+            <section class="content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box box-info">
+                            <div class="box-header">
+                            </div>
+                            <div class="box-body">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item active">
+                                            <a class="nav-link active" href="#All" data-toggle="tab" id="#All">
+                                                All
                                             </a>
                                         </li>
-                                    <% }%>
-                                </ul>
-                            </div>
-                            <div class="tab-content">
-                            <% 
-                                function regularExpression(str) {
-                                    str = str.replace(/,{2,}/gi, ",");
-                                    str = str.replace(".,",",");
-                                    str = str.replace(/,\s{1,}/gi, ", ");
-                                    str = str.replace(/, ,{1,}/gi, "");
-                                    str = str.replace(/,\s*$/, "");
+                                        <% for(let i = 0; i<year.length; i++) { %>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="<%="#"+year[i]%>" data-toggle="tab" id="<%="#"+year[i]%>">
+                                                    <%= year[i]%>
+                                                </a>
+                                            </li>
+                                        <% }%>
+                                    </ul>
+                                </div>
+                                <div class="tab-content">
+                                <% 
+                                    function regularExpression(str) {
+                                        str = str.replace(/,{2,}/gi, ",");
+                                        str = str.replace(".,",",");
+                                        str = str.replace(/,\s{1,}/gi, ", ");
+                                        str = str.replace(/, ,{1,}/gi, "");
+                                        str = str.replace(/,\s*$/, "");
 
-                                    return str; 
-                                }
-                            %>
-                                <div class="tab-pane active" id="All">
-                                <p style="font-size:20px;">&bull;&nbsp;<strong>특허</strong></p>
-                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                    <%                                                  
-                                    var count = 0;
-                                    var str = ''; 
-                                        for(let j = 0; j<others_results[0].length; j++) {
-                                            if(others_results[0][j][4] != '') {
-                                            str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
-                                            } else {
-                                                str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
-                                            }
+                                        return str; 
+                                    }
+                                %>
+                                    <div class="tab-pane active" id="All">
+                                    <p style="font-size:20px;">&bull;&nbsp;<strong>특허</strong></p>
+                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                        <%                                                  
+                                        var count = 0;
+                                        var str = ''; 
+                                            for(let j = 0; j<others_results[0].length; j++) {
+                                                if(others_results[0][j][4] != '') {
+                                                str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                } else {
+                                                    str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                }
+                                                str = regularExpression(str);
+                                                %>
+                                                <%= count+1 + ". " + str%>
+                                                <br><br>
+                                                <% count++ 
+                                            } %>
+                                    </li>
+                                    <br>
+                                    <p style="font-size:20px;">&bull;&nbsp;<strong>수상</strong></p>
+                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                        <%                                                
+                                        count = 0;
+                                        str = ''; 
+                                        for(let j =0; j<others_results[1].length; j++) {
+                                            str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4]; 
                                             str = regularExpression(str);
                                             %>
                                             <%= count+1 + ". " + str%>
-                                            <br><br>
-                                            <% count++ 
-                                        } %>
-                                </li>
-                                <br>
-                                <p style="font-size:20px;">&bull;&nbsp;<strong>수상</strong></p>
-                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                    <%                                                
-                                    count = 0;
-                                    str = ''; 
-                                    for(let j =0; j<others_results[1].length; j++) {
-                                        str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4]; 
-                                        str = regularExpression(str);
-                                        %>
-                                        <%= count+1 + ". " + str%>
-                                            <br><br>
-                                            <% count++;                          
-                                    }  %>
-                                </li>
-                                <br>
-                                <p style="font-size:20px;">&bull;&nbsp;<strong>저서</strong></p>
-                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                    <%                                                  
-                                    count = 0; 
-                                    for(let j =0; j<others_results[2].length; j++) { 
-                                        str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
-                                        str = regularExpression(str);
-                                        %>
-                                        <%= count+1 + ". " + str%>
-                                            <br><br>
-                                            <%                                                          count++;                          
-                                    }                               %>
-                                </li>
-                                <br>
-                                <p style="font-size:20px;">&bull;&nbsp;<strong>소프트웨어 등록</strong></p>
-                                <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                    <%                                                  
-                                    count = 0;
-                                    for(let j =0; j<others_results[3].length; j++) {
-                                        str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
-                                        str = regularExpression(str);
-                                        %>
-                                        <%= count+1 + ". " + str %>
-                                            <br><br>
-                                        <%  count++;                           
-                                    }                               %>
-                                </li>
-                                </div>
-                                <% for(let i =0; i<others_results.length; i++) { %>
-                                    <div class="tab-pane" id="<%=year[i]%>">
-                                        <p style="font-size:20px;">&bull;&nbsp;<strong><%=year[i]%></strong></p>
-                                        <li style="font-size: 16px; font-weight: 500; list-style: none;">
-                                        <% for(let j = 0; j<others_results[i].length; j++) { 
-                                            str = '' 
-                                            switch(i) {
-                                                case 0:
-                                                    if(others_results[0][j][4] != '') {
-                                                        str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
-                                                        } else {
-                                                            str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
-                                                        }
-                                                    break;
-                                                case 1:
-                                                    str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4];
-                                                    break;
-                                                case 2:
-                                                    str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
-                                                    break;
-                                                case 3:
-                                                    str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
-                                                    break;
-                                            }
+                                                <br><br>
+                                                <% count++;                          
+                                        }  %>
+                                    </li>
+                                    <br>
+                                    <p style="font-size:20px;">&bull;&nbsp;<strong>저서</strong></p>
+                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                        <%                                                  
+                                        count = 0; 
+                                        for(let j =0; j<others_results[2].length; j++) { 
+                                            str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
                                             str = regularExpression(str);
-                                            %> 
-                                            <%= j+1 + ". " + str%> 
-                                            <br><br>
-                                        <% } %>
-                                        </li>
+                                            %>
+                                            <%= count+1 + ". " + str%>
+                                                <br><br>
+                                                <%                                                          count++;                          
+                                        }                               %>
+                                    </li>
+                                    <br>
+                                    <p style="font-size:20px;">&bull;&nbsp;<strong>소프트웨어 등록</strong></p>
+                                    <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                        <%                                                  
+                                        count = 0;
+                                        for(let j =0; j<others_results[3].length; j++) {
+                                            str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
+                                            str = regularExpression(str);
+                                            %>
+                                            <%= count+1 + ". " + str %>
+                                                <br><br>
+                                            <%  count++;                           
+                                        }                               %>
+                                    </li>
                                     </div>
-                                <% } %>
+                                    <% for(let i =0; i<others_results.length; i++) { %>
+                                        <div class="tab-pane" id="<%=year[i]%>">
+                                            <p style="font-size:20px;">&bull;&nbsp;<strong><%=year[i]%></strong></p>
+                                            <li style="font-size: 16px; font-weight: 500; list-style: none;">
+                                            <% for(let j = 0; j<others_results[i].length; j++) { 
+                                                str = '' 
+                                                switch(i) {
+                                                    case 0:
+                                                        if(others_results[0][j][4] != '') {
+                                                            str = others_results[0][j][1] + ', ' + others_results[0][j][2] + " ~ " + others_results[0][j][4] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                            } else {
+                                                                str = others_results[0][j][1] + ', ' + others_results[0][j][2] + ', ' + others_results[0][j][3] + ', ' + others_results[0][j][8] + ', ' + others_results[0][j][6];
+                                                            }
+                                                        break;
+                                                    case 1:
+                                                        str = others_results[1][j][1] + ', ' + others_results[1][j][5] + ', ' + others_results[1][j][2] + ', ' +others_results[1][j][3] + ', ' + others_results[1][j][4];
+                                                        break;
+                                                    case 2:
+                                                        str = others_results[2][j][1] + ', ' + others_results[2][j][3] + ', ' + others_results[2][j][4] + ', ' + others_results[2][j][5] + ', ' + 'ISBN: ' + others_results[2][j][6];
+                                                        break;
+                                                    case 3:
+                                                        str = others_results[3][j][1] + ', ' + others_results[3][j][8] + ', ' + others_results[3][j][4] + ', ' + others_results[3][j][2] + ', ' + others_results[3][j][7] + ', ' + '등록번호: ' + others_results[3][j][3]; 
+                                                        break;
+                                                }
+                                                str = regularExpression(str);
+                                                %> 
+                                                <%= j+1 + ". " + str%> 
+                                                <br><br>
+                                            <% } %>
+                                            </li>
+                                        </div>
+                                    <% } %>
+                                </div>
                             </div>
                         </div>
-                        <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
-                            <i class="fas fa-arrow-up"</i>
-                        </a>
                     </div>
-                </section>
-            </aside>
-        </div>
+                </div>
+            </section>
+        </aside>
+            <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
+                <i class="fas fa-arrow-up"</i>
+            </a>
 </body>
 </html>

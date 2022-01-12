@@ -49,14 +49,18 @@
                 td.each(function (i) {
                     memberInfo[i] = td.eq(i).text().trim();
                 })
-                $("input[name=number]").attr('value', memberInfo[0]);
+                $('select.number option[value=' + memberInfo[0] +']').attr('selected', 'selected');
                 $("input[name=name]").attr('value', memberInfo[1]);
                 $("input[name=department]").attr('value', memberInfo[2]);
                 $("input[name=Email]").attr('value', memberInfo[3]);
                 $("input[name=yearOfAdmission]").attr('value', memberInfo[4]);
                 $("input[name=graduationYear]").attr('value', memberInfo[5]);
                 $("input[name=researchTopics]").attr('value', memberInfo[6]);
-                $("input[name=beforeName]").attr('value', memberInfo[7]);
+                $("textarea[class=description]").text(memberInfo[7]);
+
+                // hidden 타입 데이터
+                $("input[name=beforeId]").attr('value', memberInfo[0]);
+                $("input[name=beforeName]").attr('value', memberInfo[1]);
             });
         });
     </script>
@@ -72,6 +76,16 @@
             $('.top').click( function() {
                 $('html, body').animate({scrollTop : 0}, 400);
                 return false;
+            });
+        });
+    </script>
+    <!-- <form> POST 메소드, <pre> 태그 엔터눌러도 제출되지  않도록 장치-->
+    <script>
+        $(document).ready(function() {
+            $("input[name='description']").keydown(function() {
+                if(event.keyCode === 13) {
+                    event.preventDefault();
+                }
             });
         });
     </script>
@@ -284,30 +298,37 @@
     <div class="modal fade" id="new" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" padding-left: 150px; padding-top: 120px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 580px;">
-                <div class="modal-header" style="height: 50px;">
-                    <center style="font-size: 18px;">New</center>
+            <div class="modal-content" style="width: 640px; height: 650px;">
+                <div class="modal-header" style="height: 50px; text-align:center;">
+                    New
                 </div>
                 <div class="modal-body">
                     <form method="POST" enctype="multipart/form-data" action="/alumniUpload" style="width:550px">
                         <div class="form-group">
-        <%                  let new_member=['name','department' , 'Email' , 'YearOfAdmission' , 'YearOfGraduation','ResearchTopics' ];
-                            let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', '',''];
+        <%                  let new_member=['name','department' , 'Email' , 'YearOfAdmission' , 'YearOfGraduation','ResearchTopics','description'];
+                            let placeholder_member = ['', '', 'ex) abc123 (at) gmail (dot) com', '', '','','- "-"을 입력하면 \n- 불릿기호가 생성됩니다. \n'];
                             for(let i=0; i<new_member.length; i++) {
         %>
-                                <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                                    <h13 style="margin-left: 50px;">
-        <%=                             new_member[i] + ':' %>
-                                    </h13>
-                                    <input class='<%=new_member[i]%>' name='<%=new_member[i]%>' id='<%=new_member[i]%>' style="margin-left:50px; width: 350px" value='' placeholder = '<%=placeholder_member[i]%>'/>
-                                </div>
-        <%                      }           %>
+                            <div style="margin-left:30px; width: 60px;">
+                                <% if(i != new_member.length-1) { %>
+                                <h13 style="margin-left: 30px;">
+                                    <%=         new_member[i] + ':' %>
+                                </h13>
+                                <input class='<%=new_member[i]%>' name='<%=new_member[i]%>' id='<%=new_member[i]%>' style="margin-left:30px; width: 350px" value='' placeholder = '<%=placeholder_member[i]%>'/>
+                                <% } else { %>
+                                <h13 style="margin-left: 30px;">
+                                    <%=         new_member[i] + '*:' %>
+                                </h13>
+                                    <textarea class='<%=new_member[i]%>' name='<%=new_member[i]%>' id='<%=new_member[i]%>' style="margin-left:30px; width: 500px; height: 70px; white-space: pre;" value='' placeholder = '<%=placeholder_member[i]%>'></textarea>
+                                <% } %>
+                            </div>
+        <%                      }                                       %>
                         </div>
                         <div class="form-group">
-                            <input type="file" name="alumniUpload" id="file" style = "width:400px; margin-left: 100px;" placeholder="파일 선택"/>
+                            <input type="file" name="researcherUpload" id="file" style = "width:400px; margin-left: 60px;" placeholder="파일 선택"/>
                         </div>
                         <br>
-                        <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                        <button type="reset" class="btn btn-default clear"  data-dismiss="modal" style="font-size: 16px;float:right; margin-left:5px">close</button>
                         <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
                     </form>
                 </div>
@@ -319,7 +340,7 @@
     <div class="modal fade" id="list" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
         style=" margin-left: -300px; padding-top: 70px;">
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 1100px; height: 700px; margin-right:200px">
+            <div class="modal-content" style="margin-left: -120px; margin-top:-10px; width: 1300px; height: 800px;">
                 <button type="submit" class="btn btn-default" data-dismiss="modal" style="float:right">Close</button>
                 <div class="modal-header" style="height: 50px;">
                     <center style="font-size: 18px;">
@@ -329,15 +350,15 @@
                     </center>
                 </div>
                 <!-- <br> -->
-                <table class="table table-hover memberTable" id="memberTable" style="margin-left:10px; width:1050px">
+                <table class="table table-hover memberTable" id="memberTable" style="margin-left: auto; margin-right: auto;">
                     <thread>
                         <tr>
                             <th>
                                 <center>
-                                    Number
+                                    Num
                                 </center>
                             </th>
-                            <th style="width: 150px;">
+                            <th>
                                 <center>Name</center>
                             </th>
                             <th>
@@ -356,6 +377,9 @@
                                 <center>ResearchTopics</center>
                             </th>
                             <th>
+                                <center>description</center>
+                            </th>
+                            <th>
                                 <center>Edit</center>
                             </th>
                             <th>
@@ -368,37 +392,42 @@
                             <tr>
                                 <td>
                                     <center>
-<%=                                     i+1                                 %>
+<%=                                     alumni_results[i][0]                                 %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:70px">
                                     <center>
 <%=                                     alumni_results[i][1]            %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:130px">
                                     <center>
 <%=                                     alumni_results[i][3]            %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:140px">
                                     <center>
 <%=                                     alumni_results[i][4]            %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:50px">
                                     <center>
 <%=                                     alumni_results[i][5]            %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:50px">
                                     <center>
 <%=                                     alumni_results[i][6]            %>
                                     </center>
                                 </td>
-                                <td>
+                                <td style="width:180px">
                                     <center>
 <%=                                     alumni_results[i][7]            %>
+                                    </center>
+                                </td>
+                                <td style="width:300px">
+                                    <center>
+<%=                                     alumni_results[i][10]            %>
                                     </center>
                                 </td>
                                 <td>
@@ -431,35 +460,46 @@
         style=" padding-left: 70px; padding-top: 80px;">
 
         <div class="modal-dialog">
-            <div class="modal-content" style="width: 600px; height: 600px;">
+            <div class="modal-content" style="width: 660px; height: 710px;">
                 <div class="modal-header" style="height: 50px;">
                     <center style="font-size: 18px;">Edit</center>
                 </div>
                 <div class="modal-body">
                     <form method="POST" enctype="multipart/form-data" action="/alumniUpdate" style="width:550px">
-<%                  let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission', 'graduationYear','researchTopics' ]; 
-                    for(let i=0; i<edit_member.length; i++) { 
-%>
-                        <div style="margin-right: 10px; margin-left:50px; width: 60px;">
-                            <h13 style="margin-left: 50px;">
-<%=                             edit_member[i] + ':'    %>
+<%                  let edit_member=['number','name','department' , 'Email' , 'yearOfAdmission', 'graduationYear','researchTopics','description']; 
+                    for(let i=0; i<edit_member.length; i++) { %>
+                        <div style="margin-left:30px; width: 60px;">
+                            <% if(i != edit_member.length-1) { %>
+                            <h13 style="margin-left: 30px;">
+                    <%=                                 edit_member[i] + ':'    %>
                             </h13>
-<%                          if(i == 0) {            %>
-                                <input type='text' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' value = '' style="margin-left:50px; width: 350px;" readonly/>
-<%                          } else {                %> 
-                                <input class='<%=edit_member[i]%>' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' style="margin-left:50px; width: 350px" value=''/>
-<%                          }                       %>
+                            <% } else { %>
+                                <h13 style="margin-left: 30px;">
+                    <%=                                 edit_member[i] + '*:'    %>
+                                </h13>
+                            <% } %>
+                    <%                              if(i == 0) {            %>
+                                <!-- <input type='text' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' value = '' style="margin-left:30px; width: 350px;"/> -->
+                                <select class='number' name='number' id='number' style="margin-left: 30px;">
+                                    <% for(let j=0; j<alumni_results.length; j++) { %>
+                                        <option value='<%=j+1%>'><%=j+1%></option>
+                                    <% } %> 
+                                </select> 
+                    <%                              } else if(i < edit_member.length-1){                %> 
+                                <input class='<%=edit_member[i]%>' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' style="margin-left:30px; width: 350px" value=''/>
+                    <%                              } else {                      %>
+                                <textarea class='<%=edit_member[i]%>' name='<%=edit_member[i]%>' id='<%=edit_member[i]%>' style="margin-left:30px; width: 500px; height: 70px; white-space: pre;" value='' placeholder='- "-"을 입력하면 불릿기호가 생성됩니다.'></textarea>
+                        <% } %>
                         </div>
-<%                      }                               %>
-                    <input type='hidden' name='beforeName' id='beforeName' value = '' style="margin-left:50px; width: 350px;"/>
+                    <%                          }                               %>
+                        <input type='hidden' name='beforeId' id='beforeId' value = '<%=edit_member[0]%>' style="margin-left:50px; width: 350px;"/>
+                        <input type='hidden' name='beforeName' id='beforeName' value = '<%=edit_member[1]%>' style="margin-left:50px; width: 350px;"/>
+                    </div>
                     <div class="form-group">
-                        <!-- <label class="btn btn-primary btn-file" style="margin-left: 100px;" name="labelImg" for="file"> -->
-                            <!-- 파일추가 -->
-                            <input type="file" name="alumniUpdate" id='updateImg'>
-                        <!-- </label> -->
+                        <input type="file" name="researcherUpdate" id="file" id="file" style="margin-left:80px" >
                     </div>
                     <br>
-                    <button type="reset" class="btn btn-default clear" style="font-size: 16px;float:right; margin-left:5px">clear</button>
+                    <button type="reset" class="btn btn-default" data-dismiss="modal" style="font-size: 16px;float:right; margin-left:5px">close</button>
                     <button type="submit" class="btn btn-primary" style="font-size: 16px;float:right;">Save</button>
                     </form>
                 </div>
@@ -585,8 +625,8 @@
                     <div class="box-header">
                     </div>
 <%                  for(let i=0; i<alumni_results.length; i++) {        %>
-                        <div class="box-body">
-                            <img src = <%="/img/" +alumni_results[i][1] + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left"/>
+                        <div class="box-body" style="height: 200px;">
+                            <img src = <%="/img/" +alumni_results[i][1] + ".jpg" %> onerror="javascript:this.src='/img/default.png'" align="left" style="width:160px; height:187px;"/>
                             <div class="alumniName">
                                 <h10>
                                     <strong>
@@ -597,26 +637,65 @@
                             <li>
                                 Department : <%= alumni_results[i][3]%>
                             </li>
-                            <li>
-                                E-mail : <%= alumni_results[i][4]%>
-                            </li>
-                            <li>
-                                Year of admission : <%= alumni_results[i][5]%>
-                            </li>
-                            <li>
-                                Year of graduation : <%= alumni_results[i][6]%>
-                            </li>
-                            <li>
-                                Research topics :<%= alumni_results[i][7]%>
-                            </li>
-                            <button class="<%="memberName"+alumni_results[i][1]%>" style="border: 0; outline:0; height: 32px; color: black; font-size:14px;" >
-                                실적보기
-                                <br>
-                            </button>
-                            <div class="<%="performance"+alumni_results[i][1]%>">
-                            </div>
-                        </div>
-<%                  } %>
+                            <% 
+                            var desciptionList = [];
+                            if(alumni_results[i][10] != null) {
+                                 if(alumni_results[i][10].includes("-")) {
+                                     desciptionList = alumni_results[i][10].split("-");
+                                 }
+                             }
+                         %>
+
+                         <% 
+                             if(alumni_results[i][10] != null) {
+                                 if(alumni_results[i][10].length > 0) {
+                                     if(desciptionList.length > 0) {
+                                         for(let j = 1 ; j<desciptionList.length; j++) { 
+                         %>
+                                             <li>
+                                                 <%= desciptionList[j] %>
+                                             </li>
+                         <%              } %>
+                         <%              if(desciptionList.length == 4) {%>
+                                             <br>
+                         <%              } else if(desciptionList.length == 3){
+                                             for(let a = 0; a<2; a++) { %>
+                                                 <br>
+                         <%                  } %>
+                         <%              } else if(desciptionList.length == 2){
+                                             for(let a = 0; a<3; a++) { %>
+                                                 <br>
+                         <%                  } %>
+                         <%              } else if(desciptionList.length == 1){ 
+                                             for(let a = 0; a<4; a++) { %>
+                                                 <br>
+                                         <%  } %>
+                         <%              } %>          
+                         <%          } else { %>
+                                             <li>
+                                                 <%= alumni_results[i][10] %>
+                                             </li>
+                                             <br><br><br>
+                         <%          }   %>                                                
+
+                         <%      } else { %>
+                                     <pre style="width: 500px; height: 95px; border:none; background-color: white; white-space: pre-line; font-size: 16px; font-family: none;">
+                                         <%= // 업데이트 등 수정하다가 공백으로 되어 있을 때 %>
+                                     </pre>
+                         <%      } %>
+                         
+                         <% } else { %>
+                                 <pre style="width: 500px; height: 95px; border:none; background-color: white; white-space: pre-line; font-size: 16px; font-family: none;">
+                                     <%= // 아예 null 값%>
+                                 </pre>
+                         <% } %>
+                         <button class="<%="memberName"+alumni_results[i][1]%>" style="border: 0; outline:0; height: 32px; color: black; font-size:14px;" >
+                            실적보기
+                        </button>
+                    </div>
+                    <div class="<%="performance"+alumni_results[i][1]%>">
+                    </div>
+                    <%                  } %>
                     <a href="#" class="top" style="position: fixed; left:95%; bottom:50px; display:none; font-size:30px; color:black">
                         <i class="fas fa-arrow-up"></i>
                     </a>

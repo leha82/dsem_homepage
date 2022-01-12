@@ -23,7 +23,7 @@ router.post('/alumni_delete', (req, res)=> {
             return;
         }
 
-        con.query('DELETE FROM alumni WHERE koreanName=?', [req.body.delete_member], (err, results) =>{
+        con.query('DELETE FROM alumni WHERE koreanName=?;', [req.body.delete_member], (err, results) =>{
             if(err) throw err;
         });
         con.query('set @count = 0;' + 'UPDATE alumni SET id = @count:=@count+1;', (err, results) => {

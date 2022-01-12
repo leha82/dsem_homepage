@@ -10,7 +10,7 @@ router.post('/login', (req, res)=> {
             callback(err, null);
             return;
         }
-        con.query(`SELECT * FROM login WHERE uid=? AND pw=?`,[req.body.uid,req.body.pw],(err,result)=>{
+        con.query(`SELECT * FROM login WHERE uid=? AND pw=?;`,[req.body.uid,req.body.pw],(err,result)=>{
             if(err) throw err;
             else if(result[0]) {
                 req.session.user = result[0];

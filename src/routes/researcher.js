@@ -22,7 +22,7 @@ router.post('/researcher_delete', (req, res) => {
             callback(err, null);
             return;
         }
-        con.query('DELETE FROM researcher WHERE koreanName=?', [req.body.delete_member], (err, results) => {
+        con.query('DELETE FROM researcher WHERE koreanName=?;', [req.body.delete_member], (err, results) => {
             if (err) throw err;
         });
         con.query('set @count = 0;' + 'UPDATE researcher SET id = @count:=@count+1;', (err, results) => {

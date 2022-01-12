@@ -24,27 +24,31 @@
         });
     </script>
     <script>
-        $(".Link_updateBtn").click(function() {
-            var linkUpdateInfo = [];
-            var Link_updateBtn = $(this);
+        $(document).ready(function() {
+            $(".Link_updateBtn").click(function() {
+                var linkUpdateInfo = [];
+                var Link_updateBtn = $(this);
 
-            var tr = Link_updateBtn.parent().parent().parent();
-            var td = tr.children();
+                var tr = Link_updateBtn.parent().parent().parent();
+                var td = tr.children();
 
-            td.each(function(i) {
-                linkUpdateInfo[i] = td.eq(i).text().trim();
-            })
-            $("input[name=before]").attr('value', linkUpdateInfo[0]);
-            $('select.number option[value=' + linkUpdateInfo[0] +']').attr('selected', 'selected');
-            $("input[name=Title]").attr('value', linkUpdateInfo[1]);
-            $("input[name=fileName]").attr('value', linkUpdateInfo[2]);
-            $("input[name=Link]").attr('value', linkUpdateInfo[3]);
+                td.each(function(i) {
+                    linkUpdateInfo[i] = td.eq(i).text().trim();
+                })
+                $("input[name=before]").attr('value', linkUpdateInfo[0]);
+                $('select.number option[value=' + linkUpdateInfo[0] +']').attr('selected', 'selected');
+                $("input[name=Title]").attr('value', linkUpdateInfo[1]);
+                $("input[name=fileName]").attr('value', linkUpdateInfo[2]);
+                $("input[name=Link]").attr('value', linkUpdateInfo[3]);
+            });
         });
     </script>
     <script>
-        $(".post_iconUpdate").click(function() {
-            document.getElementById("iconUpdate").submit();
-        })
+        $(document).ready(function() {
+            $(".post_iconUpdate").click(function() {
+                document.getElementById("iconUpdate").submit();
+            })
+        });
     </script>
     <script>
         $(document).on('click', '.menuSelect', function () {
@@ -296,7 +300,7 @@
                                 <br>
                                 <form method="POST" enctype="multipart/form-data" action="/iconUpload" style="width:550px">
                                     <div class="form-group">
-                                        <input class="imgPath" placeholder="아이콘에 적용할 이미지 파일을 넣어주세요." style="width:400px" readonly>
+                                        <input class="imgPath" placeholder="대표 이미지를 넣어주세요." style="width:400px" readonly>
                                         <label for="file">파일찾기</label>
                                         <input type="file" name="upload" id="file" style = "width:400px" placeholder="파일 선택"/>
                                     </div>

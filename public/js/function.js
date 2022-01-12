@@ -46,29 +46,6 @@ function professor_update() {
     location.reload();
 }
 
-// researcher 
-// function researcher() {
-//     const researcher_save_param = {
-//         name: $('#researcherInsert_name').val(),
-//         department: $('#researcherInsert_department').val(),
-//         Email: $('#researcherInsert_Email').val(),
-//         YearOfAdmission: $('#researcherInsert_yearOfAdmission').val(),
-//         ResearchTopics: $('#researcherInsert_researchTopics').val(),
-//     }
-//     $.post('/researcher/researcher', researcher_save_param, (returnData) => {
-//         if (returnData.key) {
-//             location.reload();
-//         } else {
-//             $('#researcherInsert_name').val('');
-//             $('#researcherInsert_department').val('');
-//             $('#researcherInsert_Email').val('');
-//             $('#researcherInsert_yearOfAdmission').val('');
-//             $('#researcherInsert_researchTopics').val('');
-//         }
-//     })
-//     location.reload();
-// }
-
 function researcher_delete(delete_name) {
     const researcher_remove_param = {
         delete_img: delete_name + ".jpg",
@@ -85,41 +62,6 @@ function researcher_delete(delete_name) {
     }
 }
 
-// function researcher_update() {
-//     const researcher_update_param = {
-//         id: $('#researcherUpdate_number').val(),
-//         name: $('#researcherUpdate_name').val(),
-//         department: $('#researcherUpdate_department').val(),
-//         Email: $('#researcherUpdate_Email').val(),
-//         YearOfAdmission: $('#researcherUpdate_yearOfAdmission').val(),
-//         ResearchTopics: $('#researcherUpdate_researchTopics').val(),
-//     }
-//     $.post('/researcher/researcher_update', researcher_update_param, (returnData) => {
-//         if (returnData.key) {
-//             location.reload();
-//         }
-//     })
-//     location.reload();
-// }
-
-// alumni 
-// function alumni() {
-//     const alumni_save_param = {
-//         name: $('#alumniInsert_name').val(),
-//         department: $('#alumniInsert_department').val(),
-//         Email: $('#alumniInsert_Email').val(),
-//         YearOfAdmission: $('#alumniInsert_yearOfAdmission').val(),
-//         YearOfGraduation: $('#alumniInsert_yearOfGraduation').val(),
-//         ResearchTopics: $('#alumniInsert_researchTopics').val(),
-//     }
-//     $.post('/alumni/alumni', alumni_save_param, (returnData) => {
-//         if (returnData.key) {
-//             location.reload();
-//         }
-//     })
-//     location.reload();
-// }
-
 function alumni_delete(delete_name) {
     const alumni_remove_param = {
         delete_img: delete_name + ".jpg",
@@ -135,24 +77,6 @@ function alumni_delete(delete_name) {
         return;
     }
 }
-
-// function alumni_update() {
-//     const researcher_update_param = {
-//         id: $('#alumniUpdate_number').val(),
-//         name: $('#alumniUpdate_name').val(),
-//         department: $('#alumniUpdate_department').val(),
-//         Email: $('#alumniUpdate_Email').val(),
-//         YearOfAdmission: $('#alumniUpdate_yearOfAdmission').val(),
-//         YearOfGraduation: $('#alumniUpdate_yearOfGraduation').val(),
-//         ResearchTopics: $('#alumniUpdate_researchTopics').val(),
-//     }
-//     $.post('/alumni/alumni_update', researcher_update_param, (returnData) => {
-//         if (returnData.key) {
-//             location.reload();
-//         }
-//     })
-//     location.reload();
-// }
 
 // paper페이지 - conference
 function journal_insert() {
