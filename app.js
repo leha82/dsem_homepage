@@ -98,11 +98,14 @@ app.post('/researcherUpload', memberUpload.single('researcherUpload'), function 
             callback(err, null);
             return;
         }
-        let sql = 'INSERT INTO homepage.researcher(koreanName,department,email,admissionYear,interest,description) VALUES(?,?,?,?,?,?);';
-        let insertParameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.ResearchTopics, req.body.description];
-        con.query(sql, insertParameter, function (err, results, fields) {
-            if (err) throw err;
-            console.log(results)
+        con.query('SELECT count(*) AS researcher_length from homepage.researcher;', (err1, results1, fields) => {
+            if (err1) throw err1;
+            let sql = 'INSERT INTO homepage.researcher(koreanName,department,email,admissionYear,interest,description,seq_order) VALUES(?,?,?,?,?,?,?);';
+            let insertParameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.ResearchTopics, req.body.description, results1[0].researcher_length + 1];
+            con.query(sql, insertParameter, function (err, results, fields) {
+                if (err) throw err;
+                console.log(results)
+            });
         });
     });
     res.redirect("/members/researcher");
@@ -124,6 +127,8 @@ app.post('/researcherUpdate', memberUpload.single('researcherUpdate'), function 
         } else { // 기존 이미지가 있음
             try {
                 console.log("기존 이미지 있음");
+                console.log(req.body.updateImg)
+                console.log("여기: " + req.file.filename)
                 if (req.body.updateImg != undefined) { // 이미지 등록함
                     console.log("내용만 바꿀때");
                     fs.unlink(__dirname + '/public/img/' + req.body.beforeName + ".jpg", (err2) => {
@@ -161,25 +166,25 @@ app.post('/researcherUpdate', memberUpload.single('researcherUpdate'), function 
         console.log("req.body.number: " + req.body.number)
         console.log("req.body.beforeId: " + req.body.beforeId)
         if (req.body.beforeId != req.body.number) {
-            con.query('UPDATE homepage.researcher SET id = ? WHERE id=?;', [99, req.body.number], (err, results, fields) => {
+            con.query('UPDATE homepage.researcher SET seq_order = ? WHERE seq_order=?;', [99, req.body.number], (err, results, fields) => {
                 if (err) throw err;
             });
-            let sql = 'UPDATE homepage.researcher SET id= ?, koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE id=?;';
+            let sql = 'UPDATE homepage.researcher SET seq_order= ?, koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE seq_order=?;';
             let updateParameter = [req.body.number, req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.researchTopics, req.body.description, req.body.beforeId];
-            con.query(sql, updateParameter, (err, results, fields) => {
-                if (err) throw err;
-            });
-            con.query('UPDATE homepage.researcher SET id = ? WHERE id = ?;', [req.body.beforeId, 99], (err, results, fields) => {
-                if (err) throw err;
-                con.query('SELECT count(*) AS researcher_length from homepage.researcher;', (err1, results1, fields) => {
-                    if (err1) throw err1;
-                    con.query('ALTER TABLE homepage.researcher AUTO_INCREMENT = ?;', [results1[0].researcher_length], (err2, results2, fields2) => {
-                        if (err2) throw err2;
-                    })
+            con.query(sql, updateParameter, (err1, results1, fields1) => {
+                if (err1) throw err1;
+                con.query('UPDATE homepage.researcher SET seq_order = ? WHERE seq_order = ?;', [req.body.beforeId, 99], (err2, results2, fields2) => {
+                    if (err2) throw err2;
+                    con.query('SELECT count(*) AS researcher_length from homepage.researcher;', (err3, results3, fields3) => {
+                        if (err3) throw err3;
+                        con.query('ALTER TABLE homepage.researcher AUTO_INCREMENT = ?;', [results3[0].researcher_length], (err4, results4, fields4) => {
+                            if (err4) throw err4;
+                        })
+                    });
                 });
             });
         } else {
-            let sql = 'UPDATE homepage.researcher SET koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE id=?;';
+            let sql = 'UPDATE homepage.researcher SET koreanName=?, department=?, email=?, admissionYear=?, interest=?, description=? WHERE seq_order=?;';
             let updateParameter = [req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.researchTopics, req.body.description, req.body.beforeId];
             con.query(sql, updateParameter, (err, results, fields) => {
                 if (err) throw err;
@@ -204,12 +209,14 @@ app.post('/alumniUpload', memberUpload.single('alumniUpload'), function (req, re
             connection.release();
             callback(err1, null);
         }
-        let sql = 'INSERT INTO alumni(koreanName,department,email,admissionYear,graduationYear, interest, description) VALUES(?,?,?,?,?,?,?);';
-        // console.log(sql);
-        let parameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.YearOfGraduation, req.body.ResearchTopics, req.body.description];
-        con.query(sql, parameter, function (err2, results, fields) {
-            if (err2) throw err2;
-            console.log(results)
+        con.query('SELECT count(*) AS alumni_length from homepage.alumni;', (err1, results1, fields) => {
+            if (err1) throw err1;
+            let sql = 'INSERT INTO homepage.alumni(koreanName,department,email,admissionYear,graduationYear, interest, description, seq_order) VALUES(?,?,?,?,?,?,?,?);';
+            let parameter = [req.body.name, req.body.department, req.body.Email, req.body.YearOfAdmission, req.body.YearOfGraduation, req.body.ResearchTopics, req.body.description, results1[0].alumni_length + 1];
+            con.query(sql, parameter, function (err2, results, fields) {
+                if (err2) throw err2;
+                console.log(results)
+            });
         });
     });
     res.redirect("/members/alumni");
@@ -268,20 +275,20 @@ app.post('/alumniUpdate', memberUpload.single('alumniUpdate'), function (req, re
             return;
         }
         if (req.body.beforeId != req.body.number) {
-            con.query('UPDATE homepage.alumni SET id = ? WHERE id=?;', [99, req.body.number], (err, results, fields) => {
+            con.query('UPDATE homepage.alumni SET seq_order = ? WHERE seq_order=?;', [99, req.body.number], (err, results, fields) => {
                 if (err) throw err;
             });
-            let sql = 'UPDATE homepage.alumni SET id=?, koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=?, description=? WHERE id=?;';
+            let sql = 'UPDATE homepage.alumni SET seq_order=?, koreanName=?, department=?, email=?, admissionYear=?, graduationYear=?, interest=?, description=? WHERE seq_order=?;';
             let updateParameter = [req.body.number, req.body.name, req.body.department, req.body.Email, req.body.yearOfAdmission, req.body.graduationYear, req.body.researchTopics, req.body.description, req.body.beforeId];
             con.query(sql, updateParameter, (err1, results1, fields1) => {
                 if (err1) throw err1;
-            });
-            con.query('UPDATE homepage.alumni SET id = ? WHERE id = ?;', [req.body.beforeId, 99], (err2, results2, fields2) => {
-                if (err2) throw err2;
-                con.query('SELECT count(*) AS alumni_length from homepage.alumni;', (err3, results3, fields3) => {
-                    if (err3) throw err3;
-                    con.query('ALTER TABLE homepage.alumni AUTO_INCREMENT = ?;', [results3[0].alumni_length], (err4, results4, fields4) => {
-                        if (err4) throw err4;
+                con.query('UPDATE homepage.alumni SET seq_order = ? WHERE seq_order = ?;', [req.body.beforeId, 99], (err2, results2, fields2) => {
+                    if (err2) throw err2;
+                    con.query('SELECT count(*) AS alumni_length from homepage.alumni;', (err3, results3, fields3) => {
+                        if (err3) throw err3;
+                        con.query('ALTER TABLE homepage.alumni AUTO_INCREMENT = ?;', [results3[0].alumni_length], (err4, results4, fields4) => {
+                            if (err4) throw err4;
+                        })
                     });
                 });
             });
@@ -402,14 +409,14 @@ let professor_db = function (callback) {
 }
 
 let researcher_db = function (callback) {
-    con.query('SELECT * FROM researcher;', function (err, results) {
+    con.query('SELECT * FROM researcher ORDER BY seq_order ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });
 }
 
 let alumni_db = function (callback) {
-    con.query('SELECT * FROM alumni;', function (err, results) {
+    con.query('SELECT * FROM alumni ORDER BY seq_order ASC;', function (err, results) {
         if (err) throw err;
         callback(null, results);
     });

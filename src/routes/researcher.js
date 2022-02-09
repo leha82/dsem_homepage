@@ -28,6 +28,9 @@ router.post('/researcher_delete', (req, res) => {
         con.query('set @count = 0;' + 'UPDATE researcher SET id = @count:=@count+1;', (err, results) => {
             if (err) throw err;
         });
+        con.query('set @count = 0;' + 'UPDATE researcher SET seq_order = @count:=@count+1;', (err, results) => {
+            if (err) throw err;
+        });
     });
 });
 

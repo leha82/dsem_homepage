@@ -29,6 +29,9 @@ router.post('/alumni_delete', (req, res)=> {
         con.query('set @count = 0;' + 'UPDATE alumni SET id = @count:=@count+1;', (err, results) => {
             if(err) throw err;
         });
+        con.query('set @count = 0;' + 'UPDATE alumni SET seq_order = @count:=@count+1;', (err, results) => {
+            if (err) throw err;
+        });
     });
 });
 
